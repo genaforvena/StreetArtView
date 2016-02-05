@@ -13,7 +13,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main_content, ArtListFragment.newInstance()).commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_content, ArtListFragment.newInstance())
+                .commit();
     }
 }
