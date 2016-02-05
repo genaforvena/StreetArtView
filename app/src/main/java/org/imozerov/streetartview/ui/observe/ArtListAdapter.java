@@ -18,7 +18,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by imozerov on 05.02.16.
  */
 public class ArtListAdapter extends RecyclerView.Adapter<ArtListAdapter.ViewHolder> {
-    private final List<ArtObjectUi> data;
+    private List<ArtObjectUi> data;
 
     public ArtListAdapter(@NonNull List<ArtObjectUi> data) {
         this.data = data;
@@ -28,6 +28,9 @@ public class ArtListAdapter extends RecyclerView.Adapter<ArtListAdapter.ViewHold
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View rootView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.art_object_in_list, parent, false);
+        rootView.setOnClickListener((v) -> {
+
+        });
         ViewHolder viewHolder = new ViewHolder(rootView);
         return viewHolder;
     }
@@ -45,6 +48,11 @@ public class ArtListAdapter extends RecyclerView.Adapter<ArtListAdapter.ViewHold
         return data.size();
     }
 
+    public void setData(List<ArtObjectUi> aArtObjectUis) {
+        data = aArtObjectUis;
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView author;
         public TextView artObjectName;
@@ -57,6 +65,4 @@ public class ArtListAdapter extends RecyclerView.Adapter<ArtListAdapter.ViewHold
             thumb = (CircleImageView) itemView.findViewById(R.id.art_object_view_in_list_thumb);
         }
     }
-
-
 }

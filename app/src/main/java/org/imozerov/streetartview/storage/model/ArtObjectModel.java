@@ -15,7 +15,7 @@ public class ArtObjectModel extends RealmObject {
     @PrimaryKey
     private String id;
     private String name;
-    private AuthorUi author;
+    private AuthorModel author;
     private String description;
     private String thumbPicUrl;
     private RealmList<RealmString> picsUrls;
@@ -36,11 +36,11 @@ public class ArtObjectModel extends RealmObject {
         name = aName;
     }
 
-    public AuthorUi getAuthor() {
+    public AuthorModel getAuthor() {
         return author;
     }
 
-    public void setAuthor(AuthorUi aAuthor) {
+    public void setAuthor(AuthorModel aAuthor) {
         author = aAuthor;
     }
 

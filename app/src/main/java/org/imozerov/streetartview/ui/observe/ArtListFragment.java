@@ -1,5 +1,6 @@
 package org.imozerov.streetartview.ui.observe;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,14 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.imozerov.streetartview.R;
-import org.imozerov.streetartview.ui.model.ArtObjectUi;
-import org.imozerov.streetartview.ui.model.AuthorUi;
+import org.imozerov.streetartview.storage.DataSource;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class ArtListFragment extends Fragment {
+    private static final String TAG = "ArtListFragment";
+
     private RecyclerView listView;
+    private CompositeSubscription compositeSubscription;
+    private ArtListAdapter adapter;
+
 
     public ArtListFragment() {
     }
@@ -32,23 +40,35 @@ public class ArtListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_art_list, container, false);
+        Context context = getContext();
 
         listView = (RecyclerView) rootView.findViewById(R.id.art_objects_recycler_view);
         listView.setHasFixedSize(true);
-        listView.setLayoutManager(new LinearLayoutManager(getContext()));
+        listView.setLayoutManager(new LinearLayoutManager(context));
 
-        List<ArtObjectUi> artObjectUiStub = new ArrayList<>();
-        artObjectUiStub.add(new ArtObjectUi("1", "Name",
-                new AuthorUi("1", "Vasya", "Molodez"),
-                "Description", "Thumb", new ArrayList<>()));
-        artObjectUiStub.add(new ArtObjectUi("2", "Name2",
-                new AuthorUi("1", "Vasya", "Molodez"),
-                "Description", "Thumb", new ArrayList<>()));
-        artObjectUiStub.add(new ArtObjectUi("3", "Name3",
-                new AuthorUi("1", "Vasya", "Molodez"),
-                "Description", "Thumb", new ArrayList<>()));
-        listView.setAdapter(new ArtListAdapter(artObjectUiStub));
+        adapter = new ArtListAdapter(new ArrayList<>());
+        listView.setAdapter(adapter);
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        compositeSubscription = new CompositeSubscription();
+        compositeSubscription.add(
+                new DataSource()
+                .listArtObjects()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((aArtObjectUiList) -> {
+                    adapter.setData(aArtObjectUiList);
+                }));
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        compositeSubscription.unsubscribe();
     }
 }
