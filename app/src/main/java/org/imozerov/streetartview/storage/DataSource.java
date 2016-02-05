@@ -20,8 +20,6 @@ public class DataSource {
         Realm realm = Realm.getDefaultInstance();
         return realm.allObjects(RealmArtObject.class)
                 .asObservable()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(Schedulers.io())
                 .map((realmModels) -> {
                     List<ArtObjectUi> listOfArtObjects = new ArrayList<>(realmModels.size());
                     for (RealmArtObject model : realmModels) {

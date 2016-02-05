@@ -46,7 +46,7 @@ public class StreetArtViewApp extends Application {
         realmArtObject.setThumbPicUrl("Pic");
         realmArtObject.setPicsUrls(new RealmList<>());
 
-        realm.copyToRealm(realmArtObject);
+        realm.copyToRealmOrUpdate(realmArtObject);
         realm.commitTransaction();
         realm.close();
 
