@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +32,6 @@ public class ArtListFragment extends Fragment {
 
     public static ArtListFragment newInstance() {
         ArtListFragment fragment = new ArtListFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -56,19 +55,22 @@ public class ArtListFragment extends Fragment {
     public void onStart() {
         super.onStart();
         compositeSubscription = new CompositeSubscription();
-        compositeSubscription.add(
-                new DataSource()
-                .listArtObjects()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((aArtObjectUiList) -> {
-                    adapter.setData(aArtObjectUiList);
-                }));
+        startFetchingArtObjectsFromDataSource();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         compositeSubscription.unsubscribe();
+    }
+
+    private void startFetchingArtObjectsFromDataSource() {
+        compositeSubscription.add(
+                new DataSource()
+                .listArtObjects()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((aArtObjectUiList) -> {
+                    adapter.setData(aArtObjectUiList);
+                }));
     }
 }

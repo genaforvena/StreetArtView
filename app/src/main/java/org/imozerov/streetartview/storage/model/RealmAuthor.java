@@ -6,7 +6,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by imozerov on 05.02.16.
  */
-public class AuthorModel extends RealmObject {
+public class RealmAuthor extends RealmObject {
     @PrimaryKey
     private String id;
     private String name;

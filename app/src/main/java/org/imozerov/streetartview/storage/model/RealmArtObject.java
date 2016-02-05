@@ -1,9 +1,5 @@
 package org.imozerov.streetartview.storage.model;
 
-import org.imozerov.streetartview.ui.model.AuthorUi;
-
-import java.util.List;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -11,11 +7,11 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by imozerov on 05.02.16.
  */
-public class ArtObjectModel extends RealmObject {
+public class RealmArtObject extends RealmObject {
     @PrimaryKey
     private String id;
     private String name;
-    private AuthorModel author;
+    private RealmAuthor author;
     private String description;
     private String thumbPicUrl;
     private RealmList<RealmString> picsUrls;
@@ -36,11 +32,11 @@ public class ArtObjectModel extends RealmObject {
         name = aName;
     }
 
-    public AuthorModel getAuthor() {
+    public RealmAuthor getAuthor() {
         return author;
     }
 
-    public void setAuthor(AuthorModel aAuthor) {
+    public void setAuthor(RealmAuthor aAuthor) {
         author = aAuthor;
     }
 
