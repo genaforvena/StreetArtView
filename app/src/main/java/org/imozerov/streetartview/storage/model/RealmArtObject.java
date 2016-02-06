@@ -14,6 +14,8 @@ public class RealmArtObject extends RealmObject {
     private RealmAuthor author;
     private String description;
     private String thumbPicUrl;
+    private double lat;
+    private double lng;
     private RealmList<RealmString> picsUrls;
 
     public String getId() {
@@ -62,5 +64,21 @@ public class RealmArtObject extends RealmObject {
 
     public void setPicsUrls(RealmList<RealmString> aPicsUrls) {
         picsUrls = aPicsUrls;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double aLat) {
+        lat = aLat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double aLng) {
+        lng = aLng;
     }
 }

@@ -1,5 +1,10 @@
 package org.imozerov.streetartview.ui.model;
 
+import org.imozerov.streetartview.storage.model.RealmArtObject;
+import org.imozerov.streetartview.storage.model.RealmAuthor;
+import org.imozerov.streetartview.storage.model.RealmString;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,5 +30,21 @@ public class ArtObjectUi {
         description = aDescription;
         thumbPicUrl = aThumbPicUrl;
         picsUrls = aPicsUrls;
+    }
+
+    public ArtObjectUi(RealmArtObject realmArtObject) {
+        RealmAuthor realmAuthor = realmArtObject.getAuthor();
+
+        List<String> picUrls = new ArrayList<>();
+        for (RealmString realmString : realmArtObject.getPicsUrls()) {
+            picUrls.add(realmString.getValue());
+        }
+
+        this.id = realmArtObject.getId();
+        this.name = realmArtObject.getName();
+        this.author =  new AuthorUi(realmAuthor);
+        this.description = realmArtObject.getDescription();
+        this.thumbPicUrl = realmArtObject.getThumbPicUrl();
+        this.picsUrls = picUrls;
     }
 }

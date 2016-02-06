@@ -1,4 +1,4 @@
-package org.imozerov.streetartview.ui.observe;
+package org.imozerov.streetartview.ui.catalog;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

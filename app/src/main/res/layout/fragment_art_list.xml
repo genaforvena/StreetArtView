@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="org.imozerov.streetartview.ui.observe.ArtListFragment">
+             tools:context="org.imozerov.streetartview.ui.catalog.ArtListFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/art_objects_recycler_view"
@@ -13,7 +13,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="Add item"
         android:id="@+id/button"
         android:layout_gravity="center_horizontal|bottom"/>
 

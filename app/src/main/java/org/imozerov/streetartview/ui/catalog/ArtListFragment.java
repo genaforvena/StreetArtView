@@ -1,4 +1,4 @@
-package org.imozerov.streetartview.ui.observe;
+package org.imozerov.streetartview.ui.catalog;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import io.realm.Realm;
 import io.realm.RealmList;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class ArtListFragment extends Fragment {

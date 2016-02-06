@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import org.imozerov.streetartview.R;
-import org.imozerov.streetartview.ui.observe.ArtListFragment;
+import org.imozerov.streetartview.ui.catalog.ArtListFragment;
 
 public class MainActivity extends AppCompatActivity {
 
