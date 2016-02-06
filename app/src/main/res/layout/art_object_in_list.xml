@@ -6,7 +6,6 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/art_object_view_in_list_thumb"
-        android:src="@drawable/__leak_canary_icon"
         android:layout_width="96dp"
         android:layout_height="96dp" />
 
