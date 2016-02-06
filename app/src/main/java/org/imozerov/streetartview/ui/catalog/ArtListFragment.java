@@ -2,7 +2,7 @@ package org.imozerov.streetartview.ui.catalog;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,24 +12,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.imozerov.streetartview.R;
+import org.imozerov.streetartview.StreetArtViewApp;
 import org.imozerov.streetartview.storage.DataSource;
-import org.imozerov.streetartview.storage.model.RealmArtObject;
-import org.imozerov.streetartview.storage.model.RealmAuthor;
 
 import java.util.ArrayList;
 
-import io.realm.Realm;
-import io.realm.RealmList;
+import javax.inject.Inject;
+
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class ArtListFragment extends Fragment {
     private static final String TAG = "ArtListFragment";
 
-    private RecyclerView listView;
-    private CompositeSubscription compositeSubscription;
     private ArtListAdapter adapter;
+    private RecyclerView listView;
 
+    private CompositeSubscription compositeSubscription;
+
+    @Inject DataSource dataSource;
 
     public ArtListFragment() {
     }
@@ -37,6 +38,12 @@ public class ArtListFragment extends Fragment {
     public static ArtListFragment newInstance() {
         ArtListFragment fragment = new ArtListFragment();
         return fragment;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((StreetArtViewApp) getActivity().getApplication()).getStorageComponent().inject(this);
     }
 
     @Override
@@ -52,27 +59,10 @@ public class ArtListFragment extends Fragment {
         adapter = new ArtListAdapter(new ArrayList<>());
         listView.setAdapter(adapter);
 
-        // TODO Remove this button from here and from xml. It is needed just for testing.
+        // TODO Remove this button from here and from xml. It is needed just for now.
         rootView.findViewById(R.id.button).setOnClickListener((v) -> {
             Log.d(TAG, "adding new ");
-            Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
-            RealmAuthor realmAuthor = new RealmAuthor();
-            realmAuthor.setId("1");
-            realmAuthor.setName("Vasya");
-            realmAuthor.setDescription("Description");
-
-            RealmArtObject realmArtObject = new RealmArtObject();
-            realmArtObject.setAuthor(realmAuthor);
-            realmArtObject.setDescription("Description");
-            realmArtObject.setName("Name");
-            realmArtObject.setId(String.valueOf(SystemClock.currentThreadTimeMillis()));
-            realmArtObject.setThumbPicUrl("Pic");
-            realmArtObject.setPicsUrls(new RealmList<>());
-
-            realm.copyToRealmOrUpdate(realmArtObject);
-            realm.commitTransaction();
-            realm.close();
+            dataSource.addArtObjectStub();
         });
 
         return rootView;
@@ -93,11 +83,10 @@ public class ArtListFragment extends Fragment {
 
     private void startFetchingArtObjectsFromDataSource() {
         compositeSubscription.add(
-                new DataSource()
-                .listArtObjects()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((aArtObjectUiList) -> {
-                    adapter.setData(aArtObjectUiList);
-                }));
+                dataSource.listArtObjects()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe((aArtObjectUiList) -> {
+                            adapter.setData(aArtObjectUiList);
+                        }));
     }
 }

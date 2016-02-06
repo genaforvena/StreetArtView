@@ -7,7 +7,6 @@ import org.imozerov.streetartview.R;
 import org.imozerov.streetartview.ui.catalog.ArtListFragment;
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,5 +16,10 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.main_content, ArtListFragment.newInstance())
                 .commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

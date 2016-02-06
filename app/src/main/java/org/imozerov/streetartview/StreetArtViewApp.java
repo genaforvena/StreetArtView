@@ -4,18 +4,15 @@ import android.app.Application;
 
 import com.squareup.leakcanary.LeakCanary;
 
-import org.imozerov.streetartview.storage.model.RealmArtObject;
-import org.imozerov.streetartview.storage.model.RealmAuthor;
-
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmList;
-import io.realm.RealmMigration;
 
 /**
  * Created by imozerov on 05.02.16.
  */
 public class StreetArtViewApp extends Application {
+    private AppComponent storageComponent;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -30,6 +27,15 @@ public class StreetArtViewApp extends Application {
                 .build();
         Realm.setDefaultConfiguration(config);
 
+        storageComponent = DaggerAppComponent
+                .builder()
+                .appModule(new AppModule())
+                .build();
+
         LeakCanary.install(this);
+    }
+
+    public AppComponent getStorageComponent() {
+        return storageComponent;
     }
 }
