@@ -47,6 +47,9 @@ android {
     }
 }
 
+final RUNNER_VERSION = '0.4.1'
+final ESPRESSO_VERSION = '2.2.1'
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -69,4 +72,10 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.+'
 
     compile 'de.hdodenhof:circleimageview:2.0.0'
+
+    androidTestCompile 'com.android.support:support-annotations:23.1.1'
+    androidTestCompile "com.android.support.test:runner:${RUNNER_VERSION}"
+    androidTestCompile "com.android.support.test:rules:${RUNNER_VERSION}"
+    androidTestCompile "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:${ESPRESSO_VERSION}"
 }
