@@ -56,7 +56,7 @@ public class ArtListFragment extends Fragment {
         listView.setHasFixedSize(true);
         listView.setLayoutManager(new LinearLayoutManager(context));
 
-        adapter = new ArtListAdapter(new ArrayList<>());
+        adapter = new ArtListAdapter(getContext(), new ArrayList<>());
         listView.setAdapter(adapter);
 
         // TODO Remove this button from here and from xml. It is needed just for now.
@@ -85,8 +85,6 @@ public class ArtListFragment extends Fragment {
         compositeSubscription.add(
                 dataSource.listArtObjects()
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe((aArtObjectUiList) -> {
-                            adapter.setData(aArtObjectUiList);
-                        }));
+                        .subscribe(adapter::setData));
     }
 }
