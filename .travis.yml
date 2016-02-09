@@ -28,4 +28,4 @@ env:
 notifications:
   email: true
 
-sudo: false
+sudo: true
