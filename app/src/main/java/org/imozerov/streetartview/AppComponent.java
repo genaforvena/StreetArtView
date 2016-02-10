@@ -1,5 +1,6 @@
 package org.imozerov.streetartview;
 
+import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity;
 import org.imozerov.streetartview.ui.catalog.ArtListFragment;
 
 import javax.inject.Singleton;
@@ -13,4 +14,5 @@ import dagger.Component;
 @Component(modules = AppModule.class)
 public interface AppComponent {
     void inject(ArtListFragment fragment);
+    void inject(DetailArtObjectActivity activity);
 }

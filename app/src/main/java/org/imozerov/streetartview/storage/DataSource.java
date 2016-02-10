@@ -1,17 +1,19 @@
+
 package org.imozerov.streetartview.storage;
 
 import android.os.SystemClock;
+
+import io.realm.Realm;
+import io.realm.RealmList;
 
 import org.imozerov.streetartview.storage.model.RealmArtObject;
 import org.imozerov.streetartview.storage.model.RealmAuthor;
 import org.imozerov.streetartview.ui.model.ArtObjectUi;
 
+import rx.Observable;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmList;
-import rx.Observable;
 
 /**
  * Created by imozerov on 05.02.16.
@@ -33,6 +35,14 @@ public class DataSource {
                     }
                     return listOfArtObjects;
                 });
+    }
+
+    public Observable<ArtObjectUi> getArtObject(String id) {
+        return realm.where(RealmArtObject.class)
+                .equalTo("id", id)
+                .findFirst()
+                .asObservable()
+                .map(t -> new ArtObjectUi((RealmArtObject) t));
     }
 
     public void addArtObjectStub() {
