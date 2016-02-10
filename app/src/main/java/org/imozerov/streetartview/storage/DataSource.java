@@ -1,17 +1,16 @@
+
 package org.imozerov.streetartview.storage;
 
 import android.os.SystemClock;
 
 import io.realm.Realm;
 import io.realm.RealmList;
-import io.realm.RealmObject;
 
 import org.imozerov.streetartview.storage.model.RealmArtObject;
 import org.imozerov.streetartview.storage.model.RealmAuthor;
 import org.imozerov.streetartview.ui.model.ArtObjectUi;
 
 import rx.Observable;
-import rx.functions.Func1;
 
 import java.util.ArrayList;
 import java.util.List;

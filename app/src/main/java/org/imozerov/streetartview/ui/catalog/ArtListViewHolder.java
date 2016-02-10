@@ -10,7 +10,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import org.imozerov.streetartview.R;
 import org.imozerov.streetartview.ui.detail.ArtObjectDetailOpener;
-import org.imozerov.streetartview.ui.model.ArtObjectUi;
 
 /**
  * Created by sergei on 09.02.16.
@@ -22,14 +21,14 @@ public class ArtListViewHolder extends RecyclerView.ViewHolder {
 
     String artObjectId;
 
-    public ArtListViewHolder(Context aContext, View itemView) {
+    public ArtListViewHolder(Context context, View itemView) {
         super(itemView);
 
         ArtObjectDetailOpener detailOpener;
         try {
-            detailOpener = (ArtObjectDetailOpener) aContext;
+            detailOpener = (ArtObjectDetailOpener) context;
         } catch (ClassCastException cce) {
-            throw new RuntimeException("Activity must implement ArtObjectDetailOpener interface");
+            throw new RuntimeException("ExploreArtActivity must implement ArtObjectDetailOpener interface");
         }
 
         this.author = (TextView) itemView.findViewById(R.id.art_object_view_in_list_author);
@@ -38,9 +37,9 @@ public class ArtListViewHolder extends RecyclerView.ViewHolder {
 
         itemView.setOnClickListener(v -> {
             if (this.artObjectId != null) {
-                detailOpener.openDetailActivity(this.artObjectId);
+                detailOpener.openArtObjectDetails(this.artObjectId);
             } else {
-                throw new RuntimeException("ViewHolder cannot show details because artObjectId is invalid");
+                throw new RuntimeException("ArtListViewHolder cannot show details because artObjectId is invalid");
             }
         });
     }

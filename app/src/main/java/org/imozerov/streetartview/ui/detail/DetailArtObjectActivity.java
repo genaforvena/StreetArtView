@@ -1,10 +1,10 @@
+
 package org.imozerov.streetartview.ui.detail;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import org.imozerov.streetartview.IntentUtils;
 import org.imozerov.streetartview.R;
 import org.imozerov.streetartview.StreetArtViewApp;
 import org.imozerov.streetartview.storage.DataSource;
@@ -19,6 +19,8 @@ import javax.inject.Inject;
  */
 public class DetailArtObjectActivity extends AppCompatActivity {
 
+    public static final String EXTRA_KEY_ART_OBJECT_DETAIL_ID = "EXTRA_KEY_ART_OBJECT_DETAIL_ID";
+
     private CompositeSubscription compositeSubscription;
 
     @Inject
@@ -26,6 +28,8 @@ public class DetailArtObjectActivity extends AppCompatActivity {
 
     private TextView idTextView;
     private TextView nameTextView;
+
+    private String artObjectId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,8 @@ public class DetailArtObjectActivity extends AppCompatActivity {
 
         this.idTextView = (TextView) findViewById(R.id.art_object_view_in_list_author);
         this.nameTextView = (TextView) findViewById(R.id.art_object_view_in_list_name);
+
+        this.artObjectId = getIntent().getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID);
     }
 
     @Override
@@ -54,7 +60,7 @@ public class DetailArtObjectActivity extends AppCompatActivity {
 
     private void startFetchingArtObject() {
         this.compositeSubscription.add(
-                dataSource.getArtObject(getIntent().getStringExtra(IntentUtils.EXTRA_KEY_ART_OBJECT_DETAIL_ID))
+                dataSource.getArtObject(this.artObjectId)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(t -> {
                             this.idTextView.setText(t.id);

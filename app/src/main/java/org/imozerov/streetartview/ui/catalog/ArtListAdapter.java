@@ -46,8 +46,8 @@ public class ArtListAdapter extends RecyclerView.Adapter<ArtListViewHolder> {
         return data.size();
     }
 
-    public void setData(List<ArtObjectUi> aArtObjectUis) {
-        this.data = aArtObjectUis;
+    public void setData(List<ArtObjectUi> artObjectUis) {
+        this.data = artObjectUis;
         notifyDataSetChanged();
     }
 }
