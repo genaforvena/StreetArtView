@@ -11,10 +11,10 @@ import org.imozerov.streetartview.R
 
 /**
  * A simple [Fragment] subclass.
- * Use the [MapFragment.newInstance] factory method to
+ * Use the [ArtMapFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MapFragment : Fragment() {
+class ArtMapFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,12 +22,12 @@ class MapFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_blank, container, false)
+        return inflater!!.inflate(R.layout.fragment_art_map, container, false)
     }
 
     companion object {
-        fun newInstance(): MapFragment {
-            val fragment = MapFragment()
+        fun newInstance(): ArtMapFragment {
+            val fragment = ArtMapFragment()
             return fragment
         }
     }

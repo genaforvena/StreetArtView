@@ -11,14 +11,14 @@ import org.imozerov.streetartview.ui.catalog.ArtListFragment
 import org.imozerov.streetartview.ui.detail.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
 import org.imozerov.streetartview.ui.helper.replaceFragment
-import org.imozerov.streetartview.ui.map.MapFragment
+import org.imozerov.streetartview.ui.map.ArtMapFragment
 
 class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     val MAIN_CONTENT_TAG = "MainContent"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_explore_art)
 
         if (savedInstanceState == null) {
             replaceMainContentWith(ArtListFragment.newInstance())
@@ -29,12 +29,10 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
 
     private fun swapMainContent() {
         val currentFragment = supportFragmentManager.findFragmentByTag(MAIN_CONTENT_TAG)
-        if (currentFragment is ArtListFragment) {
-            replaceMainContentWith(MapFragment.newInstance())
-        } else if (currentFragment is MapFragment) {
-            replaceMainContentWith(ArtListFragment.newInstance())
-        } else {
-            throw RuntimeException("Unknown fragment in main content! " + currentFragment);
+        when (currentFragment) {
+            is ArtListFragment -> replaceMainContentWith(ArtMapFragment.newInstance())
+            is ArtMapFragment -> replaceMainContentWith(ArtListFragment.newInstance())
+            else -> throw RuntimeException("Unknown fragment in main content! " + currentFragment);
         }
     }
 

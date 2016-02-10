@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="org.imozerov.streetartview.ui.map.MapFragment">
+             tools:context="org.imozerov.streetartview.ui.map.ArtMapFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
