@@ -37,7 +37,7 @@ public class DetailArtObjectActivity extends AppCompatActivity {
 
         ((StreetArtViewApp) getApplication()).getStorageComponent().inject(this);
 
-        setContentView(R.layout.art_object_in_list);
+        setContentView(R.layout.activity_detail);
 
         this.idTextView = (TextView) findViewById(R.id.art_object_view_in_list_author);
         this.nameTextView = (TextView) findViewById(R.id.art_object_view_in_list_name);
