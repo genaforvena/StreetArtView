@@ -1,5 +1,6 @@
 package org.imozerov.streetartview.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -7,10 +8,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.ui.catalog.ArtListFragment
+import org.imozerov.streetartview.ui.detail.ArtObjectDetailOpener
+import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
 import org.imozerov.streetartview.ui.helper.replaceFragment
 import org.imozerov.streetartview.ui.map.MapFragment
 
-class MainActivity : AppCompatActivity() {
+class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     val MAIN_CONTENT_TAG = "MainContent"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,4 +39,11 @@ class MainActivity : AppCompatActivity() {
     private fun replaceMainContentWith(fragment: Fragment) {
         replaceFragment(R.id.main_content, fragment, MAIN_CONTENT_TAG)
     }
+
+    override fun openArtObjectDetails(id: String?) {
+        val intent = Intent(this, DetailArtObjectActivity::class.java)
+        intent.putExtra(DetailArtObjectActivity.EXTRA_KEY_ART_OBJECT_DETAIL_ID, id)
+        startActivity(intent)
+    }
+
 }
