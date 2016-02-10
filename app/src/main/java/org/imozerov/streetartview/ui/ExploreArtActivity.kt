@@ -20,12 +20,14 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        replaceMainContentWith(ArtListFragment.newInstance())
+        if (savedInstanceState == null) {
+            replaceMainContentWith(ArtListFragment.newInstance())
+        }
 
-        floating_button.setOnClickListener { v -> swapFragments() }
+        floating_button.setOnClickListener { v -> swapMainContent() }
     }
 
-    private fun swapFragments() {
+    private fun swapMainContent() {
         val currentFragment = supportFragmentManager.findFragmentByTag(MAIN_CONTENT_TAG)
         if (currentFragment is ArtListFragment) {
             replaceMainContentWith(MapFragment.newInstance())
