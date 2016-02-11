@@ -11,25 +11,19 @@ import kotlinx.android.synthetic.main.fragment_art_list.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.DataSource
+import org.imozerov.streetartview.ui.ArtListPresenter
+import org.imozerov.streetartview.ui.interfaces.ArtView
 import org.imozerov.streetartview.ui.interfaces.Filterable
 import org.imozerov.streetartview.ui.model.ArtObjectUi
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
-class ArtListFragment : Fragment(), Filterable {
-    private val TAG = "AlertListFragment"
+class ArtListFragment : Fragment(), Filterable, ArtView {
+    private val TAG = "ArtListFragment"
 
-    private var listFilterQuery: String = ""
-    private var fetchSubscription: Subscription? = null
+    private var presenter: ArtListPresenter? = null
     private var adapter: ArtListAdapter? = null
 
     @Inject lateinit var dataSource: DataSource
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        (activity.application as StreetArtViewApp).storageComponent.inject(this)
-    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -41,6 +35,7 @@ class ArtListFragment : Fragment(), Filterable {
         rootView.art_objects_recycler_view.layoutManager = LinearLayoutManager(context)
         rootView.art_objects_recycler_view.adapter = adapter
 
+        // TODO remove this button!
         rootView.button.setOnClickListener { v ->
             Log.d(TAG, "adding new ")
             dataSource.addArtObjectStub()
@@ -49,28 +44,29 @@ class ArtListFragment : Fragment(), Filterable {
         return rootView
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        (activity.application as StreetArtViewApp).storageComponent.inject(this)
+    }
+
     override fun onStart() {
         super.onStart()
-        fetchSubscription = startFetchingArtObjectsFromDataSource()
+        presenter = ArtListPresenter(dataSource, this)
+        presenter!!.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        fetchSubscription?.unsubscribe()
+        presenter!!.onStop()
+        presenter = null
+    }
+
+    override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
+        adapter!!.setData(artObjectUis)
     }
 
     override fun applyFilter(queryToApply: String) {
-        listFilterQuery = queryToApply
-        fetchSubscription?.unsubscribe()
-        fetchSubscription = startFetchingArtObjectsFromDataSource()
-    }
-
-    private fun startFetchingArtObjectsFromDataSource(): Subscription {
-        return dataSource
-                .listArtObjects()
-                .map { it.filter { it.matches(listFilterQuery) } }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { adapter!!.setData(it) }
+        presenter!!.applyFilter(queryToApply)
     }
 
     companion object {
