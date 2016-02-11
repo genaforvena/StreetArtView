@@ -39,15 +39,14 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     override fun onStart() {
         super.onStart()
 
-        val searchSubscription = RxSearchView.queryTextChanges(search_view)
+        val searchSubscription = RxSearchView
+                .queryTextChanges(search_view)
                 .doOnNext { Log.v(TAG, "Filtering $it") }
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     val fragment = supportFragmentManager
                             .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewpager.currentItem)
-                    fragment?.run {
-                        (fragment as Filterable).applyFilter(it.toString())
-                    }
+                    (fragment as? Filterable)?.applyFilter(it.toString())
                 }
 
         compositeSubscription = CompositeSubscription();

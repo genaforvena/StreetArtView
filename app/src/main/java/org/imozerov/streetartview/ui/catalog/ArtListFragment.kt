@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 class ArtListFragment : Fragment(), Filterable {
     private var adapter: ArtListAdapter? = null
-    private var compositeSubscription: CompositeSubscription? = null
+    private var fetchSubscription: Subscription? = null
 
     @Inject lateinit var dataSource: DataSource
 
@@ -51,17 +51,19 @@ class ArtListFragment : Fragment(), Filterable {
 
     override fun onStart() {
         super.onStart()
-        compositeSubscription = CompositeSubscription()
-        compositeSubscription!!.add(startFetchingArtObjectsFromDataSource())
+        fetchSubscription = startFetchingArtObjectsFromDataSource()
     }
 
     override fun onStop() {
         super.onStop()
-        compositeSubscription!!.unsubscribe()
+        fetchSubscription?.unsubscribe()
     }
 
     override fun applyFilter(queryToApply: String) {
         // TODO implement actual filtering
+        query = queryToApply
+        fetchSubscription?.unsubscribe()
+        fetchSubscription = startFetchingArtObjectsFromDataSource()
     }
 
     private fun startFetchingArtObjectsFromDataSource(): Subscription {
