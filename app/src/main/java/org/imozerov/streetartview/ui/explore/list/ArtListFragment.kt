@@ -1,4 +1,4 @@
-package org.imozerov.streetartview.ui.catalog
+package org.imozerov.streetartview.ui.explore.list
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -11,9 +11,9 @@ import kotlinx.android.synthetic.main.fragment_art_list.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.DataSource
-import org.imozerov.streetartview.ui.ArtListPresenter
-import org.imozerov.streetartview.ui.interfaces.ArtView
-import org.imozerov.streetartview.ui.interfaces.Filterable
+import org.imozerov.streetartview.ui.explore.ArtListPresenter
+import org.imozerov.streetartview.ui.explore.interfaces.ArtView
+import org.imozerov.streetartview.ui.explore.interfaces.Filterable
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 import javax.inject.Inject
 

@@ -1,7 +1,7 @@
-package org.imozerov.streetartview.ui
+package org.imozerov.streetartview.ui.explore
 
 import org.imozerov.streetartview.storage.DataSource
-import org.imozerov.streetartview.ui.interfaces.ArtView
+import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 
