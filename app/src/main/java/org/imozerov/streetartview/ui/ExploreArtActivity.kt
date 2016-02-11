@@ -3,47 +3,88 @@ package org.imozerov.streetartview.ui
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
 import kotlinx.android.synthetic.main.activity_explore_art.*
-
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.ui.catalog.ArtListFragment
 import org.imozerov.streetartview.ui.detail.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
-import org.imozerov.streetartview.ui.helper.replaceFragment
+import org.imozerov.streetartview.ui.interfaces.Filterable
 import org.imozerov.streetartview.ui.map.ArtMapFragment
+import rx.android.schedulers.AndroidSchedulers
+import rx.subscriptions.CompositeSubscription
+import java.util.*
 
 class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
-    val MAIN_CONTENT_TAG = "MainContent"
+    val TAG = "ExploreArtActivity"
+
+    private var compositeSubscription : CompositeSubscription? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(TAG, "onCreate()")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_explore_art)
 
-        if (savedInstanceState == null) {
-            replaceMainContentWith(ArtListFragment.newInstance())
-        }
-
-        floating_button.setOnClickListener { v -> swapMainContent() }
+        val adapter = Adapter(supportFragmentManager)
+        adapter.addFragment(ArtListFragment.newInstance(), "List")
+        adapter.addFragment(ArtMapFragment.newInstance(), "Map")
+        viewpager.adapter = adapter
+        tabs.setupWithViewPager(viewpager)
     }
 
-    private fun swapMainContent() {
-        val currentFragment = supportFragmentManager.findFragmentByTag(MAIN_CONTENT_TAG)
-        when (currentFragment) {
-            is ArtListFragment -> replaceMainContentWith(ArtMapFragment.newInstance())
-            is ArtMapFragment -> replaceMainContentWith(ArtListFragment.newInstance())
-            else -> throw RuntimeException("Unknown fragment in main content! " + currentFragment);
-        }
+    override fun onStart() {
+        super.onStart()
+
+        val searchSubscription = RxSearchView
+                .queryTextChanges(search_view)
+                .doOnNext { Log.v(TAG, "Filtering $it") }
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    val fragment = supportFragmentManager
+                            .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewpager.currentItem)
+                    (fragment as? Filterable)?.applyFilter(it.toString())
+                }
+
+        compositeSubscription = CompositeSubscription();
+        compositeSubscription!!.add(searchSubscription)
     }
 
-    private fun replaceMainContentWith(fragment: Fragment) {
-        replaceFragment(R.id.main_content, fragment, MAIN_CONTENT_TAG)
+    override fun onStop() {
+        super.onStop()
+        compositeSubscription!!.clear()
     }
 
     override fun openArtObjectDetails(id: String?) {
+        Log.d(TAG, "openArtObjectDetails($id)")
         val intent = Intent(this, DetailArtObjectActivity::class.java)
         intent.putExtra(DetailArtObjectActivity.EXTRA_KEY_ART_OBJECT_DETAIL_ID, id)
         startActivity(intent)
+    }
+
+    internal class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+        private val mFragments = ArrayList<Fragment>()
+        private val mFragmentTitles = ArrayList<String>()
+
+        fun addFragment(fragment: Fragment, title: String) {
+            mFragments.add(fragment)
+            mFragmentTitles.add(title)
+        }
+
+        override fun getItem(position: Int): Fragment {
+            return mFragments[position]
+        }
+
+        override fun getCount(): Int {
+            return mFragments.size
+        }
+
+        override fun getPageTitle(position: Int): CharSequence {
+            return mFragmentTitles[position]
+        }
     }
 
 }

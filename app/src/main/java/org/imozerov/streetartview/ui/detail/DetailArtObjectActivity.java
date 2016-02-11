@@ -63,8 +63,8 @@ public class DetailArtObjectActivity extends AppCompatActivity {
                 dataSource.getArtObject(this.artObjectId)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(t -> {
-                            this.idTextView.setText(t.id);
-                            this.nameTextView.setText(t.name);
+                            this.idTextView.setText(t.getId());
+                            this.nameTextView.setText(t.getName());
                         }));
     }
 }
