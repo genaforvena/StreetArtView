@@ -15,16 +15,16 @@ import org.imozerov.streetartview.ui.interfaces.Filterable
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
-import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
 class ArtListFragment : Fragment(), Filterable {
-    private var adapter: ArtListAdapter? = null
+    private val TAG = "AlertListFragment"
+
+    private var listFilterQuery: String = ""
     private var fetchSubscription: Subscription? = null
+    private var adapter: ArtListAdapter? = null
 
     @Inject lateinit var dataSource: DataSource
-
-    private var query: String = ""
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -60,8 +60,7 @@ class ArtListFragment : Fragment(), Filterable {
     }
 
     override fun applyFilter(queryToApply: String) {
-        // TODO implement actual filtering
-        query = queryToApply
+        listFilterQuery = queryToApply
         fetchSubscription?.unsubscribe()
         fetchSubscription = startFetchingArtObjectsFromDataSource()
     }
@@ -69,14 +68,12 @@ class ArtListFragment : Fragment(), Filterable {
     private fun startFetchingArtObjectsFromDataSource(): Subscription {
         return dataSource
                 .listArtObjects()
-                .map { it.filter { it.matches(query) } }
+                .map { it.filter { it.matches(listFilterQuery) } }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { adapter!!.setData(it) }
     }
 
     companion object {
-        private val TAG = "ArtListFragment"
-
         fun newInstance(): ArtListFragment {
             val fragment = ArtListFragment()
             return fragment
