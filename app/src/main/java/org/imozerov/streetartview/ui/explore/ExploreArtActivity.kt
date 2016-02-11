@@ -1,4 +1,4 @@
-package org.imozerov.streetartview.ui
+package org.imozerov.streetartview.ui.explore
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,11 +10,11 @@ import android.util.Log
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
 import kotlinx.android.synthetic.main.activity_explore_art.*
 import org.imozerov.streetartview.R
-import org.imozerov.streetartview.ui.catalog.ArtListFragment
-import org.imozerov.streetartview.ui.detail.ArtObjectDetailOpener
+import org.imozerov.streetartview.ui.explore.list.ArtListFragment
+import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
-import org.imozerov.streetartview.ui.interfaces.Filterable
-import org.imozerov.streetartview.ui.map.ArtMapFragment
+import org.imozerov.streetartview.ui.explore.interfaces.Filterable
+import org.imozerov.streetartview.ui.explore.map.ArtMapFragment
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 import java.util.*

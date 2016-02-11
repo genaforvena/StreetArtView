@@ -1,4 +1,4 @@
-package org.imozerov.streetartview.ui.detail;
+package org.imozerov.streetartview.ui.detail.interfaces;
 
 /**
  * Created by sergei on 10.02.16.

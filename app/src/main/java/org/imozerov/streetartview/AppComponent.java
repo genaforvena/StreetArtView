@@ -1,7 +1,7 @@
 package org.imozerov.streetartview;
 
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity;
-import org.imozerov.streetartview.ui.catalog.ArtListFragment;
+import org.imozerov.streetartview.ui.explore.list.ArtListFragment;
 
 import javax.inject.Singleton;
 

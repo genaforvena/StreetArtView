@@ -1,4 +1,4 @@
-package org.imozerov.streetartview.ui.catalog
+package org.imozerov.streetartview.ui.explore.list
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView

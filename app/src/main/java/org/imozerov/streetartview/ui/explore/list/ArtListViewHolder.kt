@@ -1,4 +1,4 @@
-package org.imozerov.streetartview.ui.catalog
+package org.imozerov.streetartview.ui.explore.list
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -9,7 +9,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.art_object_in_list.view.*
 
 import org.imozerov.streetartview.R
-import org.imozerov.streetartview.ui.detail.ArtObjectDetailOpener
+import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 
 /**
  * Created by sergei on 09.02.16.

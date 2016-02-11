@@ -1,4 +1,4 @@
-package org.imozerov.streetartview.ui.map
+package org.imozerov.streetartview.ui.explore.map
 
 
 import android.os.Bundle
@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import org.imozerov.streetartview.R
-import org.imozerov.streetartview.ui.interfaces.Filterable
+import org.imozerov.streetartview.ui.explore.interfaces.Filterable
 
 /**
  * A simple [Fragment] subclass.

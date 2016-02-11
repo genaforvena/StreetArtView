@@ -1,4 +1,4 @@
-package org.imozerov.streetartview.ui.interfaces
+package org.imozerov.streetartview.ui.explore.interfaces
 
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
