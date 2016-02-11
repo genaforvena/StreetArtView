@@ -11,18 +11,20 @@ import kotlinx.android.synthetic.main.fragment_art_list.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.DataSource
+import org.imozerov.streetartview.ui.interfaces.Filterable
 import org.imozerov.streetartview.ui.model.ArtObjectUi
+import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
-import java.util.*
 import javax.inject.Inject
 
-class ArtListFragment : Fragment() {
-
+class ArtListFragment : Fragment(), Filterable {
     private var adapter: ArtListAdapter? = null
     private var compositeSubscription: CompositeSubscription? = null
 
     @Inject lateinit var dataSource: DataSource
+
+    private var query: String = ""
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -34,12 +36,11 @@ class ArtListFragment : Fragment() {
         val rootView = inflater!!.inflate(R.layout.fragment_art_list, container, false)
         val context = context
 
-        adapter = ArtListAdapter(getContext(), ArrayList<ArtObjectUi>())
+        adapter = ArtListAdapter(getContext(), java.util.ArrayList<ArtObjectUi>())
         rootView.art_objects_recycler_view.setHasFixedSize(true)
         rootView.art_objects_recycler_view.layoutManager = LinearLayoutManager(context)
         rootView.art_objects_recycler_view.adapter = adapter
 
-        // TODO Remove this button from here and from xml. It is needed just for now.
         rootView.button.setOnClickListener { v ->
             Log.d(TAG, "adding new ")
             dataSource.addArtObjectStub()
@@ -51,7 +52,7 @@ class ArtListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         compositeSubscription = CompositeSubscription()
-        startFetchingArtObjectsFromDataSource()
+        compositeSubscription!!.add(startFetchingArtObjectsFromDataSource())
     }
 
     override fun onStop() {
@@ -59,11 +60,16 @@ class ArtListFragment : Fragment() {
         compositeSubscription!!.unsubscribe()
     }
 
-    private fun startFetchingArtObjectsFromDataSource() {
-        compositeSubscription!!.add(
-                dataSource.listArtObjects()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { adapter!!.setData(it) })
+    override fun applyFilter(queryToApply: String) {
+        // TODO implement actual filtering
+    }
+
+    private fun startFetchingArtObjectsFromDataSource(): Subscription {
+        return dataSource
+                .listArtObjects()
+                .map { it.filter { it.matches(query) } }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { adapter!!.setData(it) }
     }
 
     companion object {

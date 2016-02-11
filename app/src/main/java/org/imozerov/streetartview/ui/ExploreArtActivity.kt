@@ -7,17 +7,22 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
 import kotlinx.android.synthetic.main.activity_explore_art.*
-
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.ui.catalog.ArtListFragment
 import org.imozerov.streetartview.ui.detail.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
+import org.imozerov.streetartview.ui.interfaces.Filterable
 import org.imozerov.streetartview.ui.map.ArtMapFragment
+import rx.android.schedulers.AndroidSchedulers
+import rx.subscriptions.CompositeSubscription
 import java.util.*
 
 class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     val TAG = "ExploreArtActivity"
+
+    private var compositeSubscription : CompositeSubscription? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
@@ -29,6 +34,29 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         adapter.addFragment(ArtMapFragment.newInstance(), "Map")
         viewpager.adapter = adapter
         tabs.setupWithViewPager(viewpager)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val searchSubscription = RxSearchView.queryTextChanges(search_view)
+                .doOnNext { Log.v(TAG, "Filtering $it") }
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    val fragment = supportFragmentManager
+                            .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewpager.currentItem)
+                    fragment?.run {
+                        (fragment as Filterable).applyFilter(it.toString())
+                    }
+                }
+
+        compositeSubscription = CompositeSubscription();
+        compositeSubscription!!.add(searchSubscription)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        compositeSubscription!!.clear()
     }
 
     override fun openArtObjectDetails(id: String?) {
