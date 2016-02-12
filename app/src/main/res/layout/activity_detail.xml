@@ -20,7 +20,7 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <org.imozerov.streetartview.SquareImageView
+            <org.imozerov.streetartview.ui.detail.SquareImageView
                 android:id="@+id/art_object_detail_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
