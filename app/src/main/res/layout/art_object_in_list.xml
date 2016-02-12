@@ -24,7 +24,7 @@
                 android:src="@drawable/einstein"/>
 
             <TextView
-                android:id="@+id/art_object_view_in_list_author"
+                android:id="@+id/art_object_view_in_list_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -32,19 +32,19 @@
                 android:layout_toEndOf="@+id/art_object_in_list_image"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="Medium Text"
+                android:text="Art object title"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <TextView
-                android:id="@+id/art_object_view_in_list_name"
+                android:id="@+id/art_object_view_in_list_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/art_object_view_in_list_author"
+                android:layout_below="@+id/art_object_view_in_list_name"
                 android:layout_marginLeft="10dp"
                 android:layout_toEndOf="@+id/art_object_in_list_image"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="Medium Text"
+                android:text="Author's name"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <TextView
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-                android:layout_below="@+id/art_object_view_in_list_name"
+                android:layout_below="@+id/art_object_view_in_list_author"
                 android:layout_margin="10dp"
                 android:layout_toEndOf="@+id/art_object_in_list_image"
                 android:ellipsize="end"
