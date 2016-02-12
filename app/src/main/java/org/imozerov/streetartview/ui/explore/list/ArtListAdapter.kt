@@ -24,6 +24,7 @@ class ArtListAdapter(private val context: Context, private var data: List<ArtObj
         holder.artObjectName.text = artObject.name
         holder.author.text = artObject.author.name
         holder.artObjectId = artObject.id
+        holder.description.text = artObject.description
     }
 
     override fun getItemCount(): Int {
@@ -31,7 +32,7 @@ class ArtListAdapter(private val context: Context, private var data: List<ArtObj
     }
 
     fun setData(artObjectUis: List<ArtObjectUi>) {
-        this.data = artObjectUis
+        data = artObjectUis
         notifyDataSetChanged()
     }
 }

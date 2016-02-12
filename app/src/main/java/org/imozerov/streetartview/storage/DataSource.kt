@@ -48,7 +48,7 @@ class DataSource(internal var realm: Realm) {
 
         val realmArtObject = RealmArtObject()
         realmArtObject.author = realmAuthor
-        realmArtObject.description = "Description"
+        realmArtObject.description = "Description should be a bit bigger than just a one word. That's why I'm writing this!"
         realmArtObject.name = "Name"
         realmArtObject.id = SystemClock.currentThreadTimeMillis().toString()
         realmArtObject.thumbPicUrl = "Pic"
