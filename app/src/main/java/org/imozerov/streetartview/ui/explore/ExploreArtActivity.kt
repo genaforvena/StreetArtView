@@ -1,5 +1,6 @@
 package org.imozerov.streetartview.ui.explore
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -78,7 +79,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         Log.d(TAG, "openArtObjectDetails($id)")
         val intent = Intent(this, DetailArtObjectActivity::class.java)
         intent.putExtra(DetailArtObjectActivity.EXTRA_KEY_ART_OBJECT_DETAIL_ID, id)
-        startActivity(intent)
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
     }
 
     internal class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
