@@ -1,5 +1,5 @@
 
-package org.imozerov.streetartview;
+package org.imozerov.streetartview.ui.detail;
 
 import android.content.Context;
 import android.util.AttributeSet;

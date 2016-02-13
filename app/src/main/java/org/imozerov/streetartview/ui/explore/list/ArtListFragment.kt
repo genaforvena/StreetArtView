@@ -31,9 +31,6 @@ class ArtListFragment : Fragment(), Filterable, ArtView {
         rootView.art_objects_recycler_view.layoutManager = LinearLayoutManager(context)
         rootView.art_objects_recycler_view.adapter = adapter
 
-        // TODO remove this button, when server is ready!
-        rootView.button.setOnClickListener { v -> presenter!!.addArtObjectStub()}
-
         return rootView
     }
 

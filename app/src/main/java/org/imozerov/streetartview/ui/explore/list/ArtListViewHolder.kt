@@ -3,12 +3,9 @@ package org.imozerov.streetartview.ui.explore.list
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
-
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.art_object_in_list.view.*
-
-import org.imozerov.streetartview.R
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 
 /**
@@ -17,7 +14,8 @@ import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 class ArtListViewHolder(context: Context, itemView: View) : RecyclerView.ViewHolder(itemView) {
     internal var author: TextView
     internal var artObjectName: TextView
-    internal var thumb: CircleImageView
+    internal var thumb: ImageView
+    internal var description: TextView
 
     internal var artObjectId: String? = null
 
@@ -31,7 +29,9 @@ class ArtListViewHolder(context: Context, itemView: View) : RecyclerView.ViewHol
 
         author = itemView.art_object_view_in_list_author
         artObjectName = itemView.art_object_view_in_list_name
-        thumb = itemView.art_object_view_in_list_thumb
+        thumb = itemView.art_object_in_list_image
+        description = itemView.art_object_view_in_list_description
+
 
         itemView.setOnClickListener { v -> detailOpener.openArtObjectDetails(artObjectId) }
     }
