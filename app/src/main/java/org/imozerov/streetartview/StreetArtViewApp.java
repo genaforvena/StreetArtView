@@ -1,8 +1,10 @@
 package org.imozerov.streetartview;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -12,6 +14,7 @@ import io.realm.RealmConfiguration;
  */
 public class StreetArtViewApp extends Application {
     private AppComponent storageComponent;
+    private RefWatcher refWatcher;
 
     @Override
     public void onCreate() {
@@ -32,10 +35,15 @@ public class StreetArtViewApp extends Application {
                 .appModule(new AppModule())
                 .build();
 
-        LeakCanary.install(this);
+        refWatcher = LeakCanary.install(this);
     }
 
     public AppComponent getStorageComponent() {
         return storageComponent;
+    }
+
+    public static RefWatcher getRefWatcher(Context context) {
+        StreetArtViewApp application = (StreetArtViewApp) context.getApplicationContext();
+        return application.refWatcher;
     }
 }

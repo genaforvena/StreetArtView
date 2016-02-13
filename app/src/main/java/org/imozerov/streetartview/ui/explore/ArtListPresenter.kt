@@ -30,14 +30,10 @@ class ArtListPresenter(private val view: ArtView) {
     }
 
     fun applyFilter(query: String) {
+        Log.v(TAG, "Applying filter $query")
         filterQuery = query
         fetchSubscription?.unsubscribe()
         fetchSubscription = startFetchingArtObjectsFromDataSource()
-    }
-
-    fun addArtObjectStub() {
-        Log.d(TAG, "adding new stub")
-        dataSource.addArtObjectStub()
     }
 
     private fun startFetchingArtObjectsFromDataSource(): Subscription {

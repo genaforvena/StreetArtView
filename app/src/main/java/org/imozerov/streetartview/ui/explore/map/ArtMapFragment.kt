@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import org.imozerov.streetartview.R
+import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
 
 /**
@@ -27,6 +28,12 @@ class ArtMapFragment : Fragment(), Filterable {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_art_map, container, false)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val refWatcher = StreetArtViewApp.getRefWatcher(activity);
+        refWatcher.watch(this);
     }
 
     companion object {
