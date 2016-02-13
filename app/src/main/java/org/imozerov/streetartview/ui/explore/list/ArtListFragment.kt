@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.squareup.leakcanary.RefWatcher
 import kotlinx.android.synthetic.main.fragment_art_list.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
@@ -47,6 +48,12 @@ class ArtListFragment : Fragment(), Filterable, ArtView {
     override fun onDestroyView() {
         super.onDestroyView()
         presenter = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val refWatcher = StreetArtViewApp.getRefWatcher(activity);
+        refWatcher.watch(this);
     }
 
     override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
