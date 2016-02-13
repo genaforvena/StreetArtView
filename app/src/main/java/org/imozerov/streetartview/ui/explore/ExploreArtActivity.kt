@@ -1,5 +1,6 @@
 package org.imozerov.streetartview.ui.explore
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -7,13 +8,14 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
 import kotlinx.android.synthetic.main.activity_explore_art.*
 import org.imozerov.streetartview.R
-import org.imozerov.streetartview.ui.explore.list.ArtListFragment
-import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
+import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
+import org.imozerov.streetartview.ui.explore.list.ArtListFragment
 import org.imozerov.streetartview.ui.explore.map.ArtMapFragment
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
@@ -22,7 +24,7 @@ import java.util.*
 class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     val TAG = "ExploreArtActivity"
 
-    private var compositeSubscription : CompositeSubscription? = null
+    private var compositeSubscription: CompositeSubscription? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
@@ -62,7 +64,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         Log.d(TAG, "openArtObjectDetails($id)")
         val intent = Intent(this, DetailArtObjectActivity::class.java)
         intent.putExtra(DetailArtObjectActivity.EXTRA_KEY_ART_OBJECT_DETAIL_ID, id)
-        startActivity(intent)
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
     }
 
     internal class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
