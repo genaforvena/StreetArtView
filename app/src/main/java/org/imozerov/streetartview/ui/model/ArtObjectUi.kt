@@ -1,10 +1,7 @@
 package org.imozerov.streetartview.ui.model
 
 import org.imozerov.streetartview.storage.model.RealmArtObject
-import org.imozerov.streetartview.storage.model.RealmAuthor
-import org.imozerov.streetartview.storage.model.RealmString
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by imozerov on 05.02.16.
@@ -16,19 +13,25 @@ class ArtObjectUi {
     val description: String
     val thumbPicUrl: String
     val picsUrls: List<String>
+    val lat: Double
+    val lng: Double
 
     constructor(aId: String,
                 aName: String,
                 aAuthor: AuthorUi,
                 aDescription: String,
                 aThumbPicUrl: String,
-                aPicsUrls: List<String>) {
+                aPicsUrls: List<String>,
+                aLat: Double,
+                aLng: Double) {
         id = aId
         name = aName
         author = aAuthor
         description = aDescription
         thumbPicUrl = aThumbPicUrl
         picsUrls = aPicsUrls
+        lat = aLat
+        lng = aLng
     }
 
     constructor(realmArtObject: RealmArtObject) {
@@ -45,6 +48,8 @@ class ArtObjectUi {
         description = realmArtObject.description
         thumbPicUrl = realmArtObject.thumbPicUrl
         picsUrls = picUrls
+        lat = realmArtObject.lat
+        lng = realmArtObject.lng
     }
 
     fun matches(query: String) : Boolean {
