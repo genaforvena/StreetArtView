@@ -157,4 +157,17 @@ public class Artwork {
     public void setPhotos(List<Photo> photos) {
         this.photos = photos;
     }
+
+    @Override
+    public String toString() {
+        return "Artwork{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", location=" + location +
+                ", status=" + status +
+                ", artists=" + artists +
+                ", photos=" + photos +
+                '}';
+    }
 }

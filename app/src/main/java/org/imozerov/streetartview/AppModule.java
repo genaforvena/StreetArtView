@@ -1,6 +1,7 @@
 package org.imozerov.streetartview;
 
 import android.app.Application;
+import android.os.Handler;
 
 import org.imozerov.streetartview.storage.DataSource;
 
@@ -36,6 +37,6 @@ public class AppModule {
     @Provides
     @Singleton
     public DataSource provideDataSource(Realm realm) {
-        return new DataSource(realm);
+        return new DataSource(realm, new Handler());
     }
 }

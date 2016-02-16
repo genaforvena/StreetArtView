@@ -1,9 +1,12 @@
 package org.imozerov.streetartview.storage
 
+import android.os.Handler
 import android.os.SystemClock
+import android.util.Log
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmObject
+import org.imozerov.streetartview.network.FetchService
 import org.imozerov.streetartview.network.model.Artwork
 import org.imozerov.streetartview.storage.model.RealmArtObject
 import org.imozerov.streetartview.storage.model.RealmAuthor
@@ -16,16 +19,18 @@ import java.util.*
 /**
  * Created by imozerov on 05.02.16.
  */
-class DataSource(private val realm: Realm) {
+class DataSource(private val realm: Realm, private val handler: Handler) {
+    val TAG = "DataSource"
 
     fun insert(artworks: MutableList<Artwork>) {
+        Log.d(TAG, "inserting $artworks")
         val realmObjects = artworks.map {
             val realmArtObject = RealmArtObject()
             realmArtObject.copyDataFromJson(it)
             return@map realmArtObject
         }
 
-        realm.batchInsertOrUpdate(realmObjects)
+        handler.post { realm.batchInsertOrUpdate(realmObjects) }
     }
 
     fun listArtObjects(): Observable<List<ArtObjectUi>> {
@@ -56,7 +61,7 @@ class DataSource(private val realm: Realm) {
 
     fun addArtObjectStub() {
         val realmAuthor = RealmAuthor()
-        with(realmAuthor) {
+        with (realmAuthor) {
             id = "1"
             name = "Vasya"
             description = "Description"
@@ -72,7 +77,7 @@ class DataSource(private val realm: Realm) {
             picsUrls = RealmList<RealmString>()
         }
 
-        realm.insertOrUpdate(realmArtObject)
+        handler.post { realm.insertOrUpdate(realmArtObject) }
     }
 }
 

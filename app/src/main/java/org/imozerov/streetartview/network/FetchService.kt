@@ -15,6 +15,9 @@ class FetchService : IntentService("FetchService") {
     @Inject
     lateinit var restClient: RestClient
 
+    @Inject
+    lateinit var dataSource: DataSource
+
     override fun onHandleIntent(intent: Intent?) {
         if (intent != null) {
             val action = intent.action
@@ -37,10 +40,6 @@ class FetchService : IntentService("FetchService") {
 
         val responseJson = response.body().artworks
 
-        // TODO add injection of the data source!
-        // For now it cannot be done as it can lead to access to the realm instance
-        // from the wrong thread.
-        val dataSource = DataSource(Realm.getDefaultInstance())
         dataSource.insert(responseJson)
     }
 
