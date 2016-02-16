@@ -4,9 +4,11 @@ import android.os.SystemClock
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmObject
+import org.imozerov.streetartview.network.model.Artwork
 import org.imozerov.streetartview.storage.model.RealmArtObject
 import org.imozerov.streetartview.storage.model.RealmAuthor
 import org.imozerov.streetartview.storage.model.RealmString
+import org.imozerov.streetartview.storage.model.copyDataFromJson
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.Observable
 import java.util.*
@@ -15,6 +17,14 @@ import java.util.*
  * Created by imozerov on 05.02.16.
  */
 class DataSource(internal var realm: Realm) {
+
+    fun insert(artwork: Artwork) {
+        realm.beginTransaction()
+        val realmArtObject = RealmArtObject()
+        realmArtObject.copyDataFromJson(artwork)
+        realm.copyToRealmOrUpdate(realmArtObject)
+        realm.commitTransaction()
+    }
 
     fun listArtObjects(): Observable<List<ArtObjectUi>> {
         return realm

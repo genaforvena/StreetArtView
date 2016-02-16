@@ -36,7 +36,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_explore_art)
 
-        (application as StreetArtViewApp).storageComponent.inject(this);
+        (application as StreetArtViewApp).appComponent.inject(this);
 
         val adapter = Adapter(supportFragmentManager)
         adapter.addFragment(ArtListFragment.newInstance(), "List")

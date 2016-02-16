@@ -1,5 +1,7 @@
 package org.imozerov.streetartview;
 
+import android.app.Application;
+
 import org.imozerov.streetartview.storage.DataSource;
 
 import javax.inject.Singleton;
@@ -13,6 +15,18 @@ import io.realm.Realm;
  */
 @Module
 public class AppModule {
+    Application application;
+
+    public AppModule(Application application) {
+        this.application = application;
+    }
+
+    @Provides
+    @Singleton
+    Application providesApplication() {
+        return application;
+    }
+
     @Provides
     @Singleton
     public Realm provideRealm() {
