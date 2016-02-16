@@ -16,14 +16,16 @@ import java.util.*
 /**
  * Created by imozerov on 05.02.16.
  */
-class DataSource(internal var realm: Realm) {
+class DataSource(private val realm: Realm) {
 
-    fun insert(artwork: Artwork) {
-        realm.beginTransaction()
-        val realmArtObject = RealmArtObject()
-        realmArtObject.copyDataFromJson(artwork)
-        realm.copyToRealmOrUpdate(realmArtObject)
-        realm.commitTransaction()
+    fun insert(artworks: MutableList<Artwork>) {
+        val realmObjects = artworks.map {
+            val realmArtObject = RealmArtObject()
+            realmArtObject.copyDataFromJson(it)
+            return@map realmArtObject
+        }
+
+        realm.batchInsertOrUpdate(realmObjects)
     }
 
     fun listArtObjects(): Observable<List<ArtObjectUi>> {
@@ -31,6 +33,9 @@ class DataSource(internal var realm: Realm) {
                 .allObjects(RealmArtObject::class.java)
                 .asObservable()
                 .cache()
+                // Do not try to use flatMap().toList() here
+                // as onComplete() will never be called so
+                // No call to toList() will be performed.
                 .map {
                     val listOfArtObjects = ArrayList<ArtObjectUi>(it.size)
                     for (model in it) {
@@ -50,21 +55,35 @@ class DataSource(internal var realm: Realm) {
     }
 
     fun addArtObjectStub() {
-        realm.beginTransaction()
         val realmAuthor = RealmAuthor()
-        realmAuthor.id = "1"
-        realmAuthor.name = "Vasya"
-        realmAuthor.description = "Description"
+        with(realmAuthor) {
+            id = "1"
+            name = "Vasya"
+            description = "Description"
+        }
 
         val realmArtObject = RealmArtObject()
-        realmArtObject.author = realmAuthor
-        realmArtObject.description = "Description should be a bit bigger than just a one word. That's why I'm writing this!"
-        realmArtObject.name = "Name"
-        realmArtObject.id = SystemClock.currentThreadTimeMillis().toString()
-        realmArtObject.thumbPicUrl = "Pic"
-        realmArtObject.picsUrls = RealmList<RealmString>()
+        with (realmArtObject) {
+            author = realmAuthor
+            description = "Description should be a bit bigger than just a one word. That's why I'm writing this!"
+            name = "Name"
+            id = SystemClock.currentThreadTimeMillis().toString()
+            thumbPicUrl = "Pic"
+            picsUrls = RealmList<RealmString>()
+        }
 
-        realm.copyToRealmOrUpdate(realmArtObject)
-        realm.commitTransaction()
+        realm.insertOrUpdate(realmArtObject)
     }
+}
+
+fun Realm.insertOrUpdate(realmObject: RealmObject) {
+    beginTransaction()
+    copyToRealmOrUpdate(realmObject)
+    commitTransaction()
+}
+
+fun Realm.batchInsertOrUpdate(realmObjects: List<RealmObject>) {
+    beginTransaction()
+    copyToRealmOrUpdate(realmObjects)
+    commitTransaction()
 }

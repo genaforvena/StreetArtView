@@ -40,9 +40,7 @@ class FetchService : IntentService("FetchService") {
 
         val responseJson = response.body().artworks
 
-        for (artWork in responseJson) {
-            dataSource.insert(artWork)
-        }
+        dataSource.insert(responseJson)
     }
 
     companion object {
