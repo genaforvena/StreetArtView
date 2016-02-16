@@ -1,13 +1,12 @@
 package org.imozerov.streetartview.network
 
 import android.app.IntentService
-import android.content.Intent
 import android.content.Context
+import android.content.Intent
 import android.util.Log
+import io.realm.Realm
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.DataSource
-import org.imozerov.streetartview.storage.model.RealmArtObject
-import org.imozerov.streetartview.storage.model.copyDataFromJson
 import javax.inject.Inject
 
 class FetchService : IntentService("FetchService") {
@@ -15,8 +14,6 @@ class FetchService : IntentService("FetchService") {
 
     @Inject
     lateinit var restClient: RestClient
-    @Inject
-    lateinit var dataSource: DataSource
 
     override fun onHandleIntent(intent: Intent?) {
         if (intent != null) {
@@ -40,6 +37,10 @@ class FetchService : IntentService("FetchService") {
 
         val responseJson = response.body().artworks
 
+        // TODO add injection of the data source!
+        // For now it cannot be done as it can lead to access to the realm instance
+        // from the wrong thread.
+        val dataSource = DataSource(Realm.getDefaultInstance())
         dataSource.insert(responseJson)
     }
 
