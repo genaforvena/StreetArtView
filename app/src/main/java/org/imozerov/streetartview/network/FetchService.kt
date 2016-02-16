@@ -20,12 +20,10 @@ class FetchService : IntentService("FetchService") {
 
     override fun onHandleIntent(intent: Intent?) {
         if (intent != null) {
+            (application as StreetArtViewApp).netComponent.inject(this)
+
             val action = intent.action
             if (ACTION_FETCH_ART_OBJECTS == action) {
-                // We have to inject objects here as we cannot pass realm instance between threads
-                // so this initialization cannot be done in onCreate callback.
-                // Although practically it will work in the same way (onCreate is called on each call for IntentService)
-                (application as StreetArtViewApp).netComponent.inject(this)
                 handleStartFetchAction()
             }
         }
