@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0-beta2'
+        classpath 'com.android.tools.build:gradle:2.0.0-beta4'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -83,6 +83,8 @@ dependencies {
 
     compile 'io.realm:realm-android:0.87.4'
 
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'com.squareup.picasso:picasso:2.5.2'
 
     compile 'com.android.support:recyclerview-v7:23.1.1'

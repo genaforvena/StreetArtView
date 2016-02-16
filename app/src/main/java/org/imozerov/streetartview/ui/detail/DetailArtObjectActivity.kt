@@ -26,7 +26,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        (application as StreetArtViewApp).storageComponent.inject(this)
+        (application as StreetArtViewApp).appComponent.inject(this)
 
         artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
     }

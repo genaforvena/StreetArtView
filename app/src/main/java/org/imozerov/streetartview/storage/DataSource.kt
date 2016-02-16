@@ -1,12 +1,17 @@
 package org.imozerov.streetartview.storage
 
+import android.os.Handler
 import android.os.SystemClock
+import android.util.Log
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmObject
+import org.imozerov.streetartview.network.FetchService
+import org.imozerov.streetartview.network.model.Artwork
 import org.imozerov.streetartview.storage.model.RealmArtObject
 import org.imozerov.streetartview.storage.model.RealmAuthor
 import org.imozerov.streetartview.storage.model.RealmString
+import org.imozerov.streetartview.storage.model.copyDataFromJson
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.Observable
 import java.util.*
@@ -14,13 +19,28 @@ import java.util.*
 /**
  * Created by imozerov on 05.02.16.
  */
-class DataSource(internal var realm: Realm) {
+class DataSource(private val realm: Realm, private val handler: Handler) {
+    val TAG = "DataSource"
+
+    fun insert(artworks: MutableList<Artwork>) {
+        Log.d(TAG, "inserting $artworks")
+        val realmObjects = artworks.map {
+            val realmArtObject = RealmArtObject()
+            realmArtObject.copyDataFromJson(it)
+            return@map realmArtObject
+        }
+
+        handler.post { realm.batchInsertOrUpdate(realmObjects) }
+    }
 
     fun listArtObjects(): Observable<List<ArtObjectUi>> {
         return realm
                 .allObjects(RealmArtObject::class.java)
                 .asObservable()
                 .cache()
+                // Do not try to use flatMap().toList() here
+                // as onComplete() will never be called so
+                // No call to toList() will be performed.
                 .map {
                     val listOfArtObjects = ArrayList<ArtObjectUi>(it.size)
                     for (model in it) {
@@ -40,21 +60,35 @@ class DataSource(internal var realm: Realm) {
     }
 
     fun addArtObjectStub() {
-        realm.beginTransaction()
         val realmAuthor = RealmAuthor()
-        realmAuthor.id = "1"
-        realmAuthor.name = "Vasya"
-        realmAuthor.description = "Description"
+        with (realmAuthor) {
+            id = "1"
+            name = "Vasya"
+            description = "Description"
+        }
 
         val realmArtObject = RealmArtObject()
-        realmArtObject.author = realmAuthor
-        realmArtObject.description = "Description should be a bit bigger than just a one word. That's why I'm writing this!"
-        realmArtObject.name = "Name"
-        realmArtObject.id = SystemClock.currentThreadTimeMillis().toString()
-        realmArtObject.thumbPicUrl = "Pic"
-        realmArtObject.picsUrls = RealmList<RealmString>()
+        with (realmArtObject) {
+            author = realmAuthor
+            description = "Description should be a bit bigger than just a one word. That's why I'm writing this!"
+            name = "Name"
+            id = SystemClock.currentThreadTimeMillis().toString()
+            thumbPicUrl = "Pic"
+            picsUrls = RealmList<RealmString>()
+        }
 
-        realm.copyToRealmOrUpdate(realmArtObject)
-        realm.commitTransaction()
+        handler.post { realm.insertOrUpdate(realmArtObject) }
     }
+}
+
+fun Realm.insertOrUpdate(realmObject: RealmObject) {
+    beginTransaction()
+    copyToRealmOrUpdate(realmObject)
+    commitTransaction()
+}
+
+fun Realm.batchInsertOrUpdate(realmObjects: List<RealmObject>) {
+    beginTransaction()
+    copyToRealmOrUpdate(realmObjects)
+    commitTransaction()
 }

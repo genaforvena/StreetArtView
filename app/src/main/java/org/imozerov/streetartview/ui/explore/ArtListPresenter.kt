@@ -21,7 +21,7 @@ class ArtListPresenter(private val view: ArtView) {
     lateinit var dataSource: DataSource
 
     fun onStart(application: StreetArtViewApp) {
-        application.storageComponent.inject(this)
+        application.appComponent.inject(this)
         fetchSubscription = startFetchingArtObjectsFromDataSource()
     }
 
