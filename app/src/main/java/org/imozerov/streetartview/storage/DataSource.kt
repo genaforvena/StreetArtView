@@ -60,31 +60,35 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
     }
 
     fun addArtObjectStub() {
-        val names: Array<String> = arrayOf("Vasya", "Nikita", "Dima", "Alexander", "Sergey",
+        val names = arrayOf("Vasya", "Nikita", "Dima", "Alexander", "Sergey",
                 "Vlad", "Andrey", "Artem", "Ivan", "Anton", "Maxim")
-        val lastNames: Array<String> = arrayOf("Smirnov", "Ivanov", "Kuznetsov","Popov", "Sokolov",
+        val lastNames = arrayOf("Smirnov", "Ivanov", "Kuznetsov","Popov", "Sokolov",
                 "Lebedev", "Kozlov", "Novikov", "Morozov", "Petrov")
 
-        val firstArtPart: Array<String> = arrayOf("The Last", "The Starry", "The Persistence of",
+        val firstArtPart = arrayOf("The Last", "The Starry", "The Persistence of",
                 "American", "The Creation of", "The Art of", "The School of", "Portrait of",
                 "Massacre of", "The Treachery")
-        val lastArtPart: Array<String> = arrayOf("Supper", "Night", "Memory", "Gothic", "Adam",
+        val lastArtPart = arrayOf("Supper", "Night", "Memory", "Gothic", "Adam",
                 "Painting", "Athens", "a Man", "the Innocents", "Images")
 
         val realmAuthor = RealmAuthor()
-        realmAuthor.id = SystemClock.currentThreadTimeMillis().toString()
-        realmAuthor.name = randomFrom(names) + " " + randomFrom(lastNames)
-        realmAuthor.description = "The best artist in the world"
+        with (realmAuthor) {
+            id = SystemClock.currentThreadTimeMillis().toString()
+            name = "${randomFrom(names)} ${randomFrom(lastNames)}"
+            description = "The best artist in the world"
+        }
 
         val realmArtObject = RealmArtObject()
-        realmArtObject.author = realmAuthor
-        realmArtObject.description = "The Moderniest Art Work Ever"
-        realmArtObject.name = randomFrom(firstArtPart) + " " + randomFrom(lastArtPart)
-        realmArtObject.id = SystemClock.currentThreadTimeMillis().toString()
-        realmArtObject.thumbPicUrl = "Pic"
-        realmArtObject.picsUrls = RealmList<RealmString>()
-        realmArtObject.lat = getRandomBetween(56.26, 56.33)
-        realmArtObject.lng = getRandomBetween(43.86, 44.05)
+        with (realmArtObject) {
+            author = realmAuthor
+            description = "The Moderniest Art Work Ever"
+            name = "${randomFrom(firstArtPart)} ${randomFrom(lastArtPart)}"
+            id = SystemClock.currentThreadTimeMillis().toString()
+            thumbPicUrl = "Pic"
+            picsUrls = RealmList<RealmString>()
+            lat = getRandomBetween(56.26, 56.33)
+            lng = getRandomBetween(43.86, 44.05)
+        }
 
         handler.post { realm.insertOrUpdate(realmArtObject) }
     }

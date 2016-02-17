@@ -19,11 +19,6 @@ import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ArtMapFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ArtMapFragment : Fragment(), Filterable, ArtView {
     val FRAGMENT_TAG = "MapFragment"
 
@@ -37,15 +32,14 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val mapFragment : SupportMapFragment = SupportMapFragment.newInstance()
+        val mapFragment: SupportMapFragment = SupportMapFragment.newInstance()
         childFragmentManager
                 .beginTransaction()
-                .add(map.id, mapFragment, FRAGMENT_TAG)
+                .replace(map.id, mapFragment, FRAGMENT_TAG)
                 .commit()
 
-        mapFragment.getMapAsync { googleMap ->
-            googleMap.moveCamera(
-                    CameraUpdateFactory.newLatLngZoom(LatLng(56.3298063,44.0095144), 14f))
+        mapFragment.getMapAsync {
+            it.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(56.3298063, 44.0095144), 14f))
         }
     }
 
@@ -70,18 +64,17 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     }
 
     override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
-        (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment)
-                .getMapAsync { googleMap ->
-                    googleMap.clear()
-                    for(uiObject in artObjectUis){
-                        googleMap.addMarker(MarkerOptions()
-                                .position(LatLng(uiObject.lat,uiObject.lng))
-                                .title(uiObject.author.name)
-                                .snippet(uiObject.name)
+        (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment).getMapAsync { googleMap ->
+            googleMap.clear()
+            artObjectUis.map {
+                googleMap.addMarker(
+                        MarkerOptions().position(LatLng(it.lat, it.lng))
+                                .title(it.author.name)
+                                .snippet(it.name)
                                 .icon(BitmapDescriptorFactory.defaultMarker(
                                         BitmapDescriptorFactory.HUE_AZURE)))
-                    }
-                }
+            }
+        }
     }
 
     override fun applyFilter(queryToApply: String) {
