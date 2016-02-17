@@ -6,6 +6,7 @@ import android.content.Intent
 import android.util.Log
 import io.realm.Realm
 import org.imozerov.streetartview.StreetArtViewApp
+import org.imozerov.streetartview.network.internal.RestClient
 import org.imozerov.streetartview.storage.DataSource
 import javax.inject.Inject
 

@@ -10,6 +10,8 @@ import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
+import org.imozerov.streetartview.network.internal.RestClient;
+
 import javax.inject.Singleton;
 
 import dagger.Module;

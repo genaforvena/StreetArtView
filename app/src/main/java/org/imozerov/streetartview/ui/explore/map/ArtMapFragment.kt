@@ -25,48 +25,14 @@ import org.imozerov.streetartview.ui.model.ArtObjectUi
  * create an instance of this fragment.
  */
 class ArtMapFragment : Fragment(), Filterable, ArtView {
+    val FRAGMENT_TAG = "MapFragment"
 
     private var presenter: ArtListPresenter? = null
 
-    override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
-        (childFragmentManager.findFragmentByTag("MapFragment") as SupportMapFragment)
-                .getMapAsync { googleMap ->
-                    googleMap.clear()
-                    for(uiObject in artObjectUis){
-                        googleMap.addMarker(MarkerOptions()
-                                .position(LatLng(uiObject.lat,uiObject.lng))
-                                .title(uiObject.author.name)
-                                .snippet(uiObject.name)
-                                .icon(BitmapDescriptorFactory.defaultMarker(
-                                        BitmapDescriptorFactory.HUE_AZURE)))
-                    }
-                }
-    }
-
-    override fun applyFilter(queryToApply: String) {
-        presenter!!.applyFilter(queryToApply)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
         presenter = ArtListPresenter(this)
-
         return inflater!!.inflate(R.layout.fragment_art_map, container, false)
-    }
-
-    override fun onDestroyView() {
-        presenter = null
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        val refWatcher = StreetArtViewApp.getRefWatcher(activity);
-        refWatcher.watch(this);
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -74,7 +40,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         val mapFragment : SupportMapFragment = SupportMapFragment.newInstance()
         childFragmentManager
                 .beginTransaction()
-                .add(map.id, mapFragment, "MapFragment")
+                .add(map.id, mapFragment, FRAGMENT_TAG)
                 .commit()
 
         mapFragment.getMapAsync { googleMap ->
@@ -92,6 +58,36 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         super.onStop()
         presenter!!.onStop()
     }
+
+    override fun onDestroyView() {
+        presenter = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val refWatcher = StreetArtViewApp.getRefWatcher(activity);
+        refWatcher.watch(this);
+    }
+
+    override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
+        (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment)
+                .getMapAsync { googleMap ->
+                    googleMap.clear()
+                    for(uiObject in artObjectUis){
+                        googleMap.addMarker(MarkerOptions()
+                                .position(LatLng(uiObject.lat,uiObject.lng))
+                                .title(uiObject.author.name)
+                                .snippet(uiObject.name)
+                                .icon(BitmapDescriptorFactory.defaultMarker(
+                                        BitmapDescriptorFactory.HUE_AZURE)))
+                    }
+                }
+    }
+
+    override fun applyFilter(queryToApply: String) {
+        presenter!!.applyFilter(queryToApply)
+    }
+
     companion object {
         fun newInstance(): ArtMapFragment {
             val fragment = ArtMapFragment()
