@@ -24,6 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.add.AddArtObjectActivity">
+        </activity>
+
         <activity android:name=".ui.detail.DetailArtObjectActivity">
         </activity>
 

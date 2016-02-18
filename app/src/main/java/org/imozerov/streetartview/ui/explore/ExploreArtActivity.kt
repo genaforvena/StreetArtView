@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_explore_art.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.DataSource
+import org.imozerov.streetartview.ui.add.AddArtObjectActivity
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
@@ -61,7 +62,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         val addArtObjectSubscription = RxView.clicks(add_art_object_button)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    dataSource.addArtObjectStub()
+                    openAddArtObjectDetails()
                 }
 
         compositeSubscription = CompositeSubscription();
@@ -78,6 +79,12 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         Log.d(TAG, "openArtObjectDetails($id)")
         val intent = Intent(this, DetailArtObjectActivity::class.java)
         intent.putExtra(DetailArtObjectActivity.EXTRA_KEY_ART_OBJECT_DETAIL_ID, id)
+        startActivity(intent)
+    }
+
+    fun openAddArtObjectDetails() {
+        Log.d(TAG, "openAddArtObjectDetails")
+        val intent = Intent(this, AddArtObjectActivity::class.java)
         startActivity(intent)
     }
 
