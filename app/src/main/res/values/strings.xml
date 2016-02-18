@@ -4,4 +4,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="art_object_detail_image">Art object detail image</string>
+    <string name="use_current_location">Use current location</string>
+    <string name="choose_location_on_map">Choose location on map</string>
+
+    <!-- Add new art object-->
+    <string name="art_object_name">Art object name</string>
+    <string name="art_object_author">Art object author</string>
+
 </resources>
