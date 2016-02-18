@@ -4,7 +4,6 @@ import android.app.IntentService
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import io.realm.Realm
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.DataSource
 import javax.inject.Inject
@@ -30,15 +29,20 @@ class FetchService : IntentService("FetchService") {
     }
 
     private fun handleStartFetchAction() {
-        val response = restClient.artWorksEndpoint.list().execute()
-        if (!response.isSuccess) {
-            Log.e(TAG, "Unable to fetch data from server! ${response.code()}")
-            return
+        try {
+            val response = restClient.artWorksEndpoint.list().execute()
+
+            if (!response.isSuccess) {
+                Log.e(TAG, "Unable to fetch data from server! ${response.code()}")
+                return
+            }
+
+            val responseJson = response.body().artworks
+
+            dataSource.insert(responseJson)
+        } catch (exception: java.net.UnknownHostException) {
+            Log.e(TAG, "Unknown host exception. It can be caused by turned off network connection")
         }
-
-        val responseJson = response.body().artworks
-
-        dataSource.insert(responseJson)
     }
 
     companion object {
