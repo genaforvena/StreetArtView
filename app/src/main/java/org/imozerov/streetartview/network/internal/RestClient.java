@@ -1,4 +1,4 @@
-package org.imozerov.streetartview.network;
+package org.imozerov.streetartview.network.internal;
 
 import org.imozerov.streetartview.network.endpoints.ArtWorksEndpoint;
 

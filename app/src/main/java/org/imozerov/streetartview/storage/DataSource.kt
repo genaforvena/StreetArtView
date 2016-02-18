@@ -60,34 +60,56 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
     }
 
     fun addArtObjectStub() {
+        val names = arrayOf("Vasya", "Nikita", "Dima", "Alexander", "Sergey",
+                "Vlad", "Andrey", "Artem", "Ivan", "Anton", "Maxim")
+        val lastNames = arrayOf("Smirnov", "Ivanov", "Kuznetsov","Popov", "Sokolov",
+                "Lebedev", "Kozlov", "Novikov", "Morozov", "Petrov")
+
+        val firstArtPart = arrayOf("The Last", "The Starry", "The Persistence of",
+                "American", "The Creation of", "The Art of", "The School of", "Portrait of",
+                "Massacre of", "The Treachery")
+        val lastArtPart = arrayOf("Supper", "Night", "Memory", "Gothic", "Adam",
+                "Painting", "Athens", "a Man", "the Innocents", "Images")
+
         val realmAuthor = RealmAuthor()
         with (realmAuthor) {
-            id = "1"
-            name = "Vasya"
-            description = "Description"
+            id = SystemClock.currentThreadTimeMillis().toString()
+            name = "${randomFrom(names)} ${randomFrom(lastNames)}"
+            description = "The best artist in the world"
         }
 
         val realmArtObject = RealmArtObject()
         with (realmArtObject) {
             author = realmAuthor
-            description = "Description should be a bit bigger than just a one word. That's why I'm writing this!"
-            name = "Name"
+            description = "The Moderniest Art Work Ever"
+            name = "${randomFrom(firstArtPart)} ${randomFrom(lastArtPart)}"
             id = SystemClock.currentThreadTimeMillis().toString()
             thumbPicUrl = "Pic"
             picsUrls = RealmList<RealmString>()
+            lat = getRandomBetween(56.26, 56.33)
+            lng = getRandomBetween(43.86, 44.05)
         }
 
         handler.post { realm.insertOrUpdate(realmArtObject) }
     }
 }
 
-fun Realm.insertOrUpdate(realmObject: RealmObject) {
+private fun getRandomBetween(from: Double, to: Double): Double{
+    return from + (Math.random() * (to - from))
+}
+
+private fun randomFrom(list: Array<String>): String{
+    val position: Int = (Math.random() * list.size).toInt()
+    return list.elementAt(position)
+}
+
+private fun Realm.insertOrUpdate(realmObject: RealmObject) {
     beginTransaction()
     copyToRealmOrUpdate(realmObject)
     commitTransaction()
 }
 
-fun Realm.batchInsertOrUpdate(realmObjects: List<RealmObject>) {
+private fun Realm.batchInsertOrUpdate(realmObjects: List<RealmObject>) {
     beginTransaction()
     copyToRealmOrUpdate(realmObjects)
     commitTransaction()
