@@ -54,6 +54,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     }
 
     override fun onDestroyView() {
+        super.onDestroyView()
         presenter = null
     }
 
