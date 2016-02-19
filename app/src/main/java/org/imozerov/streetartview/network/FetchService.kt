@@ -40,8 +40,8 @@ class FetchService : IntentService("FetchService") {
             val responseJson = response.body().artworks
 
             dataSource.insert(responseJson)
-        } catch (exception: java.net.UnknownHostException) {
-            Log.e(TAG, "Unknown host exception. It can be caused by turned off network connection")
+        } catch (exception: java.io.IOException) {
+            Log.w(TAG, "Unable to sync art objects with server", exception)
         }
     }
 
