@@ -4,7 +4,6 @@ import android.app.IntentService
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import io.realm.Realm
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.network.internal.RestClient
 import org.imozerov.streetartview.storage.DataSource
@@ -31,15 +30,20 @@ class FetchService : IntentService("FetchService") {
     }
 
     private fun handleStartFetchAction() {
-        val response = restClient.artWorksEndpoint.list().execute()
-        if (!response.isSuccess) {
-            Log.e(TAG, "Unable to fetch data from server! ${response.code()}")
-            return
+        try {
+            val response = restClient.artWorksEndpoint.list().execute()
+
+            if (!response.isSuccess) {
+                Log.e(TAG, "Unable to fetch data from server! ${response.code()}")
+                return
+            }
+
+            val responseJson = response.body().artworks
+
+            dataSource.insert(responseJson)
+        } catch (exception: java.io.IOException) {
+            Log.w(TAG, "Unable to sync art objects with server", exception)
         }
-
-        val responseJson = response.body().artworks
-
-        dataSource.insert(responseJson)
     }
 
     companion object {
