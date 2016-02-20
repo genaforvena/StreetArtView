@@ -50,13 +50,11 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
                 }
     }
 
-    fun getArtObject(id: String): Observable<ArtObjectUi> {
-        return realm
+    fun getArtObject(id: String): ArtObjectUi {
+        return ArtObjectUi(realm
                 .where(RealmArtObject::class.java)
                 .equalTo("id", id)
-                .findFirst()
-                .asObservable<RealmObject>()
-                .map { ArtObjectUi(it as RealmArtObject) }
+                .findFirst())
     }
 
     fun addArtObjectStub() {

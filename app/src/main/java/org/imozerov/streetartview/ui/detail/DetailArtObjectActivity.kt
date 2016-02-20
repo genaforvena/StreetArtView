@@ -38,13 +38,8 @@ class DetailArtObjectActivity : AppCompatActivity() {
 
     val TAG = "DetailArtObjectActivity"
 
-    private var compositeSubscription: CompositeSubscription? = null
-
     @Inject
     lateinit var dataSource: DataSource
-    private var artObjectId: String? = null
-
-    private var mapFragment: SupportMapFragment? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,42 +47,22 @@ class DetailArtObjectActivity : AppCompatActivity() {
 
         (application as StreetArtViewApp).appComponent.inject(this)
 
-        artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
+        val artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
+        val artObjectUi = dataSource.getArtObject(artObjectId)
 
-        mapFragment = SupportMapFragment.newInstance()
-        supportFragmentManager
-                .beginTransaction()
-                .replace(art_object_detail_map.id, mapFragment)
-                .commit()
-    }
+        art_object_detail_name.text = artObjectUi.name
+        art_object_detail_author.text = artObjectUi.author.name
+        art_object_detail_description.text = artObjectUi.description
 
-    override fun onStart() {
-        super.onStart()
-        compositeSubscription = CompositeSubscription()
-        compositeSubscription!!.add(startFetchingArtObject())
-    }
+        val adapter = GalleryPagerAdapter(this, artObjectUi.picsUrls)
+        art_object_detail_image_pager.adapter = adapter
 
-    public override fun onStop() {
-        super.onStop()
-        compositeSubscription!!.unsubscribe()
-    }
-
-    private fun startFetchingArtObject(): Subscription {
-        return dataSource.getArtObject(artObjectId!!)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { artObjectUi ->
-                    art_object_detail_name.text = artObjectUi.name
-                    art_object_detail_author.text = artObjectUi.author.name
-                    art_object_detail_description.text = artObjectUi.description
-
-                    val adapter = GalleryPagerAdapter(this, artObjectUi.picsUrls)
-                    art_object_detail_image_pager.adapter = adapter
-
-                    mapFragment?.getMapAsync {
-                        it.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(artObjectUi.lat, artObjectUi.lng), 14f))
-                        it.addArtObject(artObjectUi)
-                    }
-                }
+        val mapFragment = SupportMapFragment.newInstance()
+        supportFragmentManager.beginTransaction().replace(art_object_detail_map.id, mapFragment).commit()
+        mapFragment.getMapAsync {
+            it.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(artObjectUi.lat, artObjectUi.lng), 14f))
+            it.addArtObject(artObjectUi)
+        }
     }
 
     internal inner class GalleryPagerAdapter(val context: Context, val images: List<String>) : PagerAdapter() {
