@@ -3,10 +3,8 @@ package org.imozerov.streetartview.ui.explore.list
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-
-import org.imozerov.streetartview.R
+import org.imozerov.streetartview.R.layout.item_art_object_in_list
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
 /**
@@ -14,7 +12,7 @@ import org.imozerov.streetartview.ui.model.ArtObjectUi
  */
 class ArtListAdapter(private val context: Context, private var data: List<ArtObjectUi>?) : RecyclerView.Adapter<ArtListViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtListViewHolder {
-        val rootView = LayoutInflater.from(parent.context).inflate(R.layout.art_object_in_list, parent, false)
+        val rootView = LayoutInflater.from(parent.context).inflate(item_art_object_in_list, parent, false)
         return ArtListViewHolder(this.context, rootView)
     }
 
