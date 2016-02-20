@@ -1,5 +1,7 @@
 package org.imozerov.streetartview.storage
 
+import android.location.Location
+import android.net.Uri
 import android.os.Handler
 import android.os.SystemClock
 import android.util.Log
@@ -53,10 +55,42 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
                 .findFirst())
     }
 
+    fun addArtObject(newName: String, newAuthor: String, newImageUrl: Uri?, location: Location?) {
+        val realmAuthor = RealmAuthor()
+        with (realmAuthor) {
+            id = SystemClock.currentThreadTimeMillis().toString()
+            name = newAuthor
+            photo = "http://photos.state.gov/libraries/media/788/images/500x500-sample.jpg"
+        }
+
+        val realmAuthors = RealmList<RealmAuthor>()
+        realmAuthors.add(realmAuthor)
+
+        val realmLocation = RealmLocation()
+        with(realmLocation) {
+            address = "Some address, 34"
+            lat = location!!.latitude
+            lng = location.longitude
+        }
+
+        val realmArtObject = RealmArtObject()
+        with (realmArtObject) {
+            authors = realmAuthors
+            description = "The Moderniest Art Work Ever"
+            name = newName
+            id = SystemClock.currentThreadTimeMillis().toString()
+            thumbPicUrl = newImageUrl.toString()
+            picsUrls = RealmList<RealmString>()
+            setLocation(realmLocation)
+        }
+
+        handler.post { realm.insertOrUpdate(realmArtObject) }
+    }
+
     fun addArtObjectStub() {
         val names = arrayOf("Vasya", "Nikita", "Dima", "Alexander", "Sergey",
                 "Vlad", "Andrey", "Artem", "Ivan", "Anton", "Maxim")
-        val lastNames = arrayOf("Smirnov", "Ivanov", "Kuznetsov","Popov", "Sokolov",
+        val lastNames = arrayOf("Smirnov", "Ivanov", "Kuznetsov", "Popov", "Sokolov",
                 "Lebedev", "Kozlov", "Novikov", "Morozov", "Petrov")
 
         val firstArtPart = arrayOf("The Last", "The Starry", "The Persistence of",
@@ -97,11 +131,11 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
     }
 }
 
-private fun getRandomBetween(from: Double, to: Double): Double{
+private fun getRandomBetween(from: Double, to: Double): Double {
     return from + (Math.random() * (to - from))
 }
 
-private fun randomFrom(list: Array<String>): String{
+private fun randomFrom(list: Array<String>): String {
     val position: Int = (Math.random() * list.size).toInt()
     return list.elementAt(position)
 }

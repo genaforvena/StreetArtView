@@ -10,10 +10,10 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import com.bumptech.glide.Glide
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.art_object_gallery_item.view.*
 import org.imozerov.streetartview.R
@@ -56,6 +56,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
             it.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(artObjectUi.lat, artObjectUi.lng), 14f))
             it.addArtObject(artObjectUi)
         }
+
     }
 
     internal inner class GalleryPagerAdapter(val context: Context, val images: List<String>) : PagerAdapter() {
@@ -90,8 +91,8 @@ class DetailArtObjectActivity : AppCompatActivity() {
             }
             art_object_detail_image_picker.addView(thumbView)
 
-            Picasso.with(context).load(images[position]).into(itemView.image_preview)
-            Picasso.with(context).load(images[position]).into(thumbView)
+            Glide.with(context).load(images[position]).into(itemView.image_preview)
+            Glide.with(context).load(images[position]).into(thumbView)
 
             return itemView
         }
