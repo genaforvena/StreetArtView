@@ -10,5 +10,6 @@
     <!-- Add new art object-->
     <string name="art_object_name">Art object name</string>
     <string name="art_object_author">Art object author</string>
+    <string name="save">Save</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package org.imozerov.streetartview;
 
+import org.imozerov.streetartview.ui.add.AddArtObjectActivity;
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity;
 import org.imozerov.streetartview.ui.explore.ArtListPresenter;
 import org.imozerov.streetartview.ui.explore.ExploreArtActivity;
@@ -17,4 +18,5 @@ public interface AppComponent {
     void inject(ExploreArtActivity exploreArtActivity);
     void inject(ArtListPresenter artListPresenter);
     void inject(DetailArtObjectActivity activity);
+    void inject(AddArtObjectActivity activity);
 }

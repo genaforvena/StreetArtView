@@ -1,12 +1,13 @@
 package org.imozerov.streetartview.storage
 
+import android.location.Location
+import android.net.Uri
 import android.os.Handler
 import android.os.SystemClock
 import android.util.Log
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmObject
-import org.imozerov.streetartview.network.FetchService
 import org.imozerov.streetartview.network.model.Artwork
 import org.imozerov.streetartview.storage.model.RealmArtObject
 import org.imozerov.streetartview.storage.model.RealmAuthor
@@ -59,10 +60,33 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
                 .map { ArtObjectUi(it as RealmArtObject) }
     }
 
+    fun addArtObject(newName: String, newAuthor: String, newImageUrl: Uri?, location: Location?) {
+        val realmAuthor = RealmAuthor()
+        with (realmAuthor) {
+            id = SystemClock.currentThreadTimeMillis().toString()
+            name = newAuthor
+            description = "The best artist in the world"
+        }
+
+        val realmArtObject = RealmArtObject()
+        with (realmArtObject) {
+            author = realmAuthor
+            description = "The Moderniest Art Work Ever"
+            name = newName
+            id = SystemClock.currentThreadTimeMillis().toString()
+            thumbPicUrl = newImageUrl.toString()
+            picsUrls = RealmList<RealmString>()
+            lat = location!!.latitude
+            lng = location.longitude
+        }
+
+        handler.post { realm.insertOrUpdate(realmArtObject) }
+    }
+
     fun addArtObjectStub() {
         val names = arrayOf("Vasya", "Nikita", "Dima", "Alexander", "Sergey",
                 "Vlad", "Andrey", "Artem", "Ivan", "Anton", "Maxim")
-        val lastNames = arrayOf("Smirnov", "Ivanov", "Kuznetsov","Popov", "Sokolov",
+        val lastNames = arrayOf("Smirnov", "Ivanov", "Kuznetsov", "Popov", "Sokolov",
                 "Lebedev", "Kozlov", "Novikov", "Morozov", "Petrov")
 
         val firstArtPart = arrayOf("The Last", "The Starry", "The Persistence of",
@@ -94,11 +118,11 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
     }
 }
 
-private fun getRandomBetween(from: Double, to: Double): Double{
+private fun getRandomBetween(from: Double, to: Double): Double {
     return from + (Math.random() * (to - from))
 }
 
-private fun randomFrom(list: Array<String>): String{
+private fun randomFrom(list: Array<String>): String {
     val position: Int = (Math.random() * list.size).toInt()
     return list.elementAt(position)
 }
