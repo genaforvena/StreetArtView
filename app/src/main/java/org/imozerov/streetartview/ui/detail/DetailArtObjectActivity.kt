@@ -1,11 +1,9 @@
 package org.imozerov.streetartview.ui.detail
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.view.PagerAdapter
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,14 +16,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.art_object_gallery_item.view.*
-import kotlinx.android.synthetic.main.fragment_art_map.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.DataSource
 import org.imozerov.streetartview.ui.extensions.addArtObject
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
 /**
@@ -48,14 +42,13 @@ class DetailArtObjectActivity : AppCompatActivity() {
         (application as StreetArtViewApp).appComponent.inject(this)
 
         val artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
-        val artObjectUi = dataSource.getArtObject(artObjectId)
 
+        val artObjectUi = dataSource.getArtObject(artObjectId)
         art_object_detail_name.text = artObjectUi.name
         art_object_detail_author.text = artObjectUi.author.name
         art_object_detail_description.text = artObjectUi.description
 
-        val adapter = GalleryPagerAdapter(this, artObjectUi.picsUrls)
-        art_object_detail_image_pager.adapter = adapter
+        art_object_detail_image_pager.adapter = GalleryPagerAdapter(this, artObjectUi.picsUrls)
 
         val mapFragment = SupportMapFragment.newInstance()
         supportFragmentManager.beginTransaction().replace(art_object_detail_map.id, mapFragment).commit()
