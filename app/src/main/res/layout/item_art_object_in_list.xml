@@ -21,8 +21,7 @@
                 android:id="@+id/art_object_in_list_image"
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/einstein"/>
+                android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/art_object_view_in_list_name"

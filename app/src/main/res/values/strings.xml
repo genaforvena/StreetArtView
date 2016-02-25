@@ -8,8 +8,11 @@
     <string name="choose_location_on_map">Choose location on map</string>
 
     <!-- Add new art object-->
-    <string name="art_object_name">Art object name</string>
-    <string name="art_object_author">Art object author</string>
+    <string name="gallery">Gallery</string>
+    <string name="take_photo">Take photo</string>
     <string name="save">Save</string>
+    <string name="art_object_author">Art object author</string>
+    <string name="art_object_name">Art object name</string>
+    <string name="art_object_description">Art object description</string>
 
 </resources>

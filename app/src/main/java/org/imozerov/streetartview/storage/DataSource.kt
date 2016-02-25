@@ -60,27 +60,9 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
                 .map { ArtObjectUi(it as RealmArtObject) }
     }
 
-    fun addArtObject(newName: String, newAuthor: String, newImageUrl: Uri?, location: Location?) {
-        val realmAuthor = RealmAuthor()
-        with (realmAuthor) {
-            id = SystemClock.currentThreadTimeMillis().toString()
-            name = newAuthor
-            description = "The best artist in the world"
-        }
-
-        val realmArtObject = RealmArtObject()
-        with (realmArtObject) {
-            author = realmAuthor
-            description = "The Moderniest Art Work Ever"
-            name = newName
-            id = SystemClock.currentThreadTimeMillis().toString()
-            thumbPicUrl = newImageUrl.toString()
-            picsUrls = RealmList<RealmString>()
-            lat = location!!.latitude
-            lng = location.longitude
-        }
-
-        handler.post { realm.insertOrUpdate(realmArtObject) }
+    fun addArtObject(newArtObject: RealmArtObject/*, location: Location?*/) {
+        println("Novikov addArtObject")
+        handler.post { realm.insertOrUpdate(newArtObject) }
     }
 
     fun addArtObjectStub() {

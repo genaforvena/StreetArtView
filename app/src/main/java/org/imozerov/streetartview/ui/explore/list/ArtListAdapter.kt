@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import org.imozerov.streetartview.R.layout.item_art_object_in_list
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
@@ -18,7 +19,7 @@ class ArtListAdapter(private val context: Context, private var data: List<ArtObj
 
     override fun onBindViewHolder(holder: ArtListViewHolder, position: Int) {
         val artObject = data!![position]
-        // TODO Ask picasso to fill the holder.thumb
+        Glide.with(context).load(artObject.thumbPicUrl).into(holder.thumb)
         holder.artObjectName.text = artObject.name
         holder.author.text = artObject.author.name
         holder.artObjectId = artObject.id
