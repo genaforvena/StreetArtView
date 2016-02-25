@@ -85,7 +85,6 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
         }
 
         handler.post { realm.insertOrUpdate(realmArtObject) }
-    }
 
     fun addArtObjectStub() {
         val names = arrayOf("Vasya", "Nikita", "Dima", "Alexander", "Sergey",
@@ -124,7 +123,7 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
             id = SystemClock.currentThreadTimeMillis().toString()
             thumbPicUrl = "Pic"
             picsUrls = RealmList<RealmString>()
-            location = realmLocation
+            setLocation(realmLocation)
         }
 
         handler.post { realm.insertOrUpdate(realmArtObject) }
