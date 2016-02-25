@@ -17,6 +17,7 @@ import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.ui.explore.ArtListPresenter
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
+import org.imozerov.streetartview.ui.extensions.addArtObject
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
 class ArtMapFragment : Fragment(), Filterable, ArtView {
@@ -68,12 +69,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment).getMapAsync { googleMap ->
             googleMap.clear()
             artObjectUis.map {
-                googleMap.addMarker(
-                        MarkerOptions().position(LatLng(it.lat, it.lng))
-                                .title(it.author.name)
-                                .snippet(it.name)
-                                .icon(BitmapDescriptorFactory.defaultMarker(
-                                        BitmapDescriptorFactory.HUE_AZURE)))
+                googleMap.addArtObject(it)
             }
         }
     }

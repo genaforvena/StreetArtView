@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">StreetArtView</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="art_object_detail_image">Art object detail image</string>
+    <string name="map_fragment_pager_label">Map</string>
+    <string name="list_fragment_pager_label">List</string>
 </resources>

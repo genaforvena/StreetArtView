@@ -39,8 +39,8 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         (application as StreetArtViewApp).appComponent.inject(this);
 
         val adapter = Adapter(supportFragmentManager)
-        adapter.addFragment(ArtListFragment.newInstance(), "List")
-        adapter.addFragment(ArtMapFragment.newInstance(), "Map")
+        adapter.addFragment(ArtMapFragment.newInstance(), getString(R.string.map_fragment_pager_label))
+        adapter.addFragment(ArtListFragment.newInstance(), getString(R.string.list_fragment_pager_label))
         viewpager.adapter = adapter
         tabs.setupWithViewPager(viewpager)
     }
