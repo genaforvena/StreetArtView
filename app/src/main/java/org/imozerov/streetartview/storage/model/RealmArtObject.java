@@ -11,74 +11,65 @@ public class RealmArtObject extends RealmObject {
     @PrimaryKey
     private String id;
     private String name;
-    private RealmAuthor author;
+    private RealmList<RealmAuthor> authors;
     private String description;
     private String thumbPicUrl;
-    private double lat;
-    private double lng;
+    private RealmLocation location;
     private RealmList<RealmString> picsUrls;
 
     public String getId() {
         return id;
     }
 
-    public void setId(String aId) {
-        id = aId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String aName) {
-        name = aName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public RealmAuthor getAuthor() {
-        return author;
+    public RealmList<RealmAuthor> getAuthors() {
+        return authors;
     }
 
-    public void setAuthor(RealmAuthor aAuthor) {
-        author = aAuthor;
+    public void setAuthors(RealmList<RealmAuthor> authors) {
+        this.authors = authors;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String aDescription) {
-        description = aDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getThumbPicUrl() {
         return thumbPicUrl;
     }
 
-    public void setThumbPicUrl(String aThumbPicUrl) {
-        thumbPicUrl = aThumbPicUrl;
+    public void setThumbPicUrl(String thumbPicUrl) {
+        this.thumbPicUrl = thumbPicUrl;
+    }
+
+    public RealmLocation getLocation() {
+        return location;
+    }
+
+    public void setLocation(RealmLocation location) {
+        this.location = location;
     }
 
     public RealmList<RealmString> getPicsUrls() {
         return picsUrls;
     }
 
-    public void setPicsUrls(RealmList<RealmString> aPicsUrls) {
-        picsUrls = aPicsUrls;
-    }
-
-    public double getLat() {
-        return lat;
-    }
-
-    public void setLat(double aLat) {
-        lat = aLat;
-    }
-
-    public double getLng() {
-        return lng;
-    }
-
-    public void setLng(double aLng) {
-        lng = aLng;
+    public void setPicsUrls(RealmList<RealmString> picsUrls) {
+        this.picsUrls = picsUrls;
     }
 }

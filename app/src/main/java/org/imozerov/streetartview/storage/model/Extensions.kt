@@ -7,28 +7,35 @@ import org.imozerov.streetartview.network.model.Artwork
  * Created by imozerov on 16.02.16.
  */
 fun RealmArtObject.copyDataFromJson(artwork: Artwork) {
-    this.id = artwork.id
-    this.description = artwork.description
-    this.name = artwork.name
-    this.thumbPicUrl = artwork.photos[0].thmb
+    id = artwork.id
+    description = artwork.description
+    name = artwork.name
 
-    val artistFromJson = artwork.artists[0]
-    val realmAuthor = RealmAuthor()
-    // TODO art object may have several authors! Migrate model!
-    realmAuthor.id = artistFromJson.id
-    realmAuthor.description = ""
-    realmAuthor.name = artistFromJson.name
-    // Artist may have photo!
-//    realmAuthor.photo
-    this.author = realmAuthor
-
-    this.picsUrls = RealmList()
-    for (photo in artwork.photos) {
-        val url = RealmString()
-        url.value = photo.big
-        this.picsUrls.add(url)
+    authors = RealmList()
+    if (artwork.artists != null) {
+        artwork.artists.map {
+            val realmAuthor = RealmAuthor()
+            realmAuthor.id = it.id
+            realmAuthor.name = it.name
+            realmAuthor.photo = it.photo
+            authors.add(realmAuthor)
+        }
     }
 
-    this.lat = artwork.location.lat
-    this.lng = artwork.location.lng
+    picsUrls = RealmList()
+    if (artwork.photos != null && artwork.photos.size > 0) {
+        thumbPicUrl = artwork.photos[0].thmb
+        artwork.photos.map {
+            val url = RealmString()
+            url.value = it.big
+            this.picsUrls.add(url)
+        }
+    }
+
+    location = RealmLocation()
+    with(location) {
+        address = artwork.location.address
+        lat = artwork.location.lat
+        lng = artwork.location.lng
+    }
 }

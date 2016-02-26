@@ -9,34 +9,14 @@ import java.util.*
 class ArtObjectUi {
     val id: String
     val name: String
-    val author: AuthorUi
+    val authors: List<AuthorUi>
     val description: String
     val thumbPicUrl: String
     val picsUrls: List<String>
     val lat: Double
     val lng: Double
 
-    constructor(aId: String,
-                aName: String,
-                aAuthor: AuthorUi,
-                aDescription: String,
-                aThumbPicUrl: String,
-                aPicsUrls: List<String>,
-                aLat: Double,
-                aLng: Double) {
-        id = aId
-        name = aName
-        author = aAuthor
-        description = aDescription
-        thumbPicUrl = aThumbPicUrl
-        picsUrls = aPicsUrls
-        lat = aLat
-        lng = aLng
-    }
-
     constructor(realmArtObject: RealmArtObject) {
-        val realmAuthor = realmArtObject.author
-
         val picUrls = ArrayList<String>()
         for (realmString in realmArtObject.picsUrls) {
             picUrls.add(realmString.value)
@@ -44,12 +24,23 @@ class ArtObjectUi {
 
         id = realmArtObject.id
         name = realmArtObject.name
-        author = AuthorUi(realmAuthor)
+        authors = realmArtObject.authors.map {
+            return@map AuthorUi(
+                    it.id,
+                    it.name,
+                    it.photo
+            )
+        }
         description = realmArtObject.description
-        thumbPicUrl = realmArtObject.thumbPicUrl
+        thumbPicUrl = realmArtObject.thumbPicUrl ?: ""
         picsUrls = picUrls
-        lat = realmArtObject.lat
-        lng = realmArtObject.lng
+
+        lat = realmArtObject.location.lat
+        lng = realmArtObject.location.lng
+    }
+
+    fun authorsNames() : String {
+        return authors.map{ return@map it.name }.reduce { s1, s2 -> s1 + ", " + s2 }
     }
 
     fun matches(query: String) : Boolean {
@@ -61,7 +52,7 @@ class ArtObjectUi {
             return true
         }
 
-        if (author.name.toLowerCase().contains(query.toLowerCase())) {
+        if (authorsNames().toLowerCase().contains(query.toLowerCase())) {
             return true
         }
 

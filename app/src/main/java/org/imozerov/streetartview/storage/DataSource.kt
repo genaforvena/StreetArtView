@@ -6,12 +6,8 @@ import android.util.Log
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmObject
-import org.imozerov.streetartview.network.FetchService
 import org.imozerov.streetartview.network.model.Artwork
-import org.imozerov.streetartview.storage.model.RealmArtObject
-import org.imozerov.streetartview.storage.model.RealmAuthor
-import org.imozerov.streetartview.storage.model.RealmString
-import org.imozerov.streetartview.storage.model.copyDataFromJson
+import org.imozerov.streetartview.storage.model.*
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.Observable
 import java.util.*
@@ -73,19 +69,28 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
         with (realmAuthor) {
             id = SystemClock.currentThreadTimeMillis().toString()
             name = "${randomFrom(names)} ${randomFrom(lastNames)}"
-            description = "The best artist in the world"
+            photo = "The best artist in the world"
+        }
+
+        val realmAuthors = RealmList<RealmAuthor>()
+        realmAuthors.add(realmAuthor)
+
+        val realmLocation = RealmLocation()
+        with(realmLocation) {
+            address = "Some address, 34"
+            lat = getRandomBetween(56.26, 56.33)
+            lng = getRandomBetween(43.86, 44.05)
         }
 
         val realmArtObject = RealmArtObject()
         with (realmArtObject) {
-            author = realmAuthor
+            authors = realmAuthors
             description = "The Moderniest Art Work Ever"
             name = "${randomFrom(firstArtPart)} ${randomFrom(lastArtPart)}"
             id = SystemClock.currentThreadTimeMillis().toString()
             thumbPicUrl = "Pic"
             picsUrls = RealmList<RealmString>()
-            lat = getRandomBetween(56.26, 56.33)
-            lng = getRandomBetween(43.86, 44.05)
+            location = realmLocation
         }
 
         handler.post { realm.insertOrUpdate(realmArtObject) }

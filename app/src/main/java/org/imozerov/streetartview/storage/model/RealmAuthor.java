@@ -10,7 +10,7 @@ public class RealmAuthor extends RealmObject {
     @PrimaryKey
     private String id;
     private String name;
-    private String description;
+    private String photo;
 
     public String getId() {
         return id;
@@ -28,11 +28,11 @@ public class RealmAuthor extends RealmObject {
         name = aName;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPhoto() {
+        return photo;
     }
 
-    public void setDescription(String aDescription) {
-        description = aDescription;
+    public void setPhoto(String aDescription) {
+        photo = aDescription;
     }
 }
