@@ -45,7 +45,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
 
         val artObjectUi = dataSource.getArtObject(artObjectId)
         art_object_detail_name.text = artObjectUi.name
-        art_object_detail_author.text = artObjectUi.author.name
+        art_object_detail_author.text = artObjectUi.authorsNames()
         art_object_detail_description.text = artObjectUi.description
 
         art_object_detail_image_pager.adapter = GalleryPagerAdapter(this, artObjectUi.picsUrls)

@@ -8,17 +8,17 @@ import org.imozerov.streetartview.storage.model.RealmAuthor
 class AuthorUi {
     val id: String
     val name: String
-    val description: String
+    val photoUrl: String
 
-    constructor(aId: String, aName: String, aDescription: String) {
+    constructor(aId: String, aName: String, aPhoto: String) {
         id = aId
         name = aName
-        description = aDescription
+        photoUrl = aPhoto
     }
 
     constructor(realmAuthor: RealmAuthor) {
         id = realmAuthor.id
         name = realmAuthor.name
-        description = realmAuthor.description
+        photoUrl = realmAuthor.photo
     }
 }

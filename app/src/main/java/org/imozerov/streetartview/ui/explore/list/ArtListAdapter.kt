@@ -22,7 +22,7 @@ class ArtListAdapter(private val context: Context, private var data: List<ArtObj
         val artObject = data!![position]
         // TODO Ask picasso to fill the holder.thumb
         holder.artObjectName.text = artObject.name
-        holder.author.text = artObject.author.name
+        holder.author.text = artObject.authorsNames()
         holder.artObjectId = artObject.id
         holder.description.text = artObject.description
     }
