@@ -69,7 +69,7 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
         with (realmAuthor) {
             id = SystemClock.currentThreadTimeMillis().toString()
             name = "${randomFrom(names)} ${randomFrom(lastNames)}"
-            photo = "The best artist in the world"
+            photo = "http://photos.state.gov/libraries/media/788/images/500x500-sample.jpg"
         }
 
         val realmAuthors = RealmList<RealmAuthor>()
