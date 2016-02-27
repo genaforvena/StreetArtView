@@ -3,9 +3,8 @@ package org.imozerov.streetartview.ui.explore.list
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-
+import com.squareup.picasso.Picasso
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
@@ -20,11 +19,10 @@ class ArtListAdapter(private val context: Context, private var data: List<ArtObj
 
     override fun onBindViewHolder(holder: ArtListViewHolder, position: Int) {
         val artObject = data!![position]
-        // TODO Ask picasso to fill the holder.thumb
-        holder.artObjectName.text = artObject.name
-        holder.author.text = artObject.authorsNames()
         holder.artObjectId = artObject.id
-        holder.description.text = artObject.description
+        if (artObject.thumbPicUrl.isNotBlank()) {
+            Picasso.with(context).load(artObject.thumbPicUrl).into(holder.thumb)
+        }
     }
 
     override fun getItemCount(): Int {

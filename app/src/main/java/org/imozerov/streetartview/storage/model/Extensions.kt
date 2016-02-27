@@ -24,7 +24,7 @@ fun RealmArtObject.copyDataFromJson(artwork: Artwork) {
 
     picsUrls = RealmList()
     if (artwork.photos != null && artwork.photos.size > 0) {
-        thumbPicUrl = artwork.photos[0].thmb
+        thumbPicUrl = artwork.photos[0].big
         artwork.photos.map {
             val url = RealmString()
             url.value = it.big

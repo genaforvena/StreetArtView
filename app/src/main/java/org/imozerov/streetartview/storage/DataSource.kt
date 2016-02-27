@@ -16,21 +16,23 @@ import java.util.*
  */
 class DataSource() {
     val TAG = "DataSource"
-    val realm = Realm.getDefaultInstance()
+    // This realm instance should be used only to read data
+    val readOnlyRealm = Realm.getDefaultInstance()
 
     fun insert(artworks: MutableList<Artwork>) {
-        Log.d(TAG, "inserting $artworks")
-        val realmObjects = artworks.map {
-            val realmArtObject = RealmArtObject()
-            realmArtObject.copyDataFromJson(it)
-            return@map realmArtObject
+        executeAsyncRealmOperation {
+            Log.d(TAG, "inserting $artworks")
+            val realmObjects = artworks.map {
+                val realmArtObject = RealmArtObject()
+                realmArtObject.copyDataFromJson(it)
+                return@map realmArtObject
+            }
+            it.batchInsertOrUpdate(realmObjects)
         }
-
-        realm.batchInsertOrUpdate(realmObjects)
     }
 
     fun listArtObjects(): Observable<List<ArtObjectUi>> {
-        return realm
+        return readOnlyRealm
                 .allObjects(RealmArtObject::class.java)
                 .asObservable()
                 .cache()
@@ -47,7 +49,7 @@ class DataSource() {
     }
 
     fun getArtObject(id: String): ArtObjectUi {
-        return ArtObjectUi(realm
+        return ArtObjectUi(readOnlyRealm
                 .where(RealmArtObject::class.java)
                 .equalTo("id", id)
                 .findFirst())
@@ -65,36 +67,50 @@ class DataSource() {
         val lastArtPart = arrayOf("Supper", "Night", "Memory", "Gothic", "Adam",
                 "Painting", "Athens", "a Man", "the Innocents", "Images")
 
-        val realmAuthor = RealmAuthor()
-        with (realmAuthor) {
-            id = SystemClock.currentThreadTimeMillis().toString()
-            name = "${randomFrom(names)} ${randomFrom(lastNames)}"
-            photo = "http://photos.state.gov/libraries/media/788/images/500x500-sample.jpg"
+        executeAsyncRealmOperation {
+            val realmAuthor = RealmAuthor()
+            with (realmAuthor) {
+                id = Math.random().toString()
+                Log.d(TAG, "id is $id")
+                name = "${randomFrom(names)} ${randomFrom(lastNames)}"
+                photo = "http://photos.state.gov/libraries/media/788/images/500x500-sample.jpg"
+            }
+
+            val realmAuthors = RealmList<RealmAuthor>()
+            realmAuthors.add(realmAuthor)
+
+            val realmLocation = RealmLocation()
+            with(realmLocation) {
+                address = "Some address, 34"
+                lat = getRandomBetween(56.26, 56.33)
+                lng = getRandomBetween(43.86, 44.05)
+            }
+
+            val realmArtObject = RealmArtObject()
+            with (realmArtObject) {
+                authors = realmAuthors
+                description = "The Moderniest Art Work Ever"
+                name = "${randomFrom(firstArtPart)} ${randomFrom(lastArtPart)}"
+                id = Math.random().toString()
+                thumbPicUrl = "Pic"
+                picsUrls = RealmList<RealmString>()
+                location = realmLocation
+            }
+
+            it.insertOrUpdate(realmArtObject)
         }
-
-        val realmAuthors = RealmList<RealmAuthor>()
-        realmAuthors.add(realmAuthor)
-
-        val realmLocation = RealmLocation()
-        with(realmLocation) {
-            address = "Some address, 34"
-            lat = getRandomBetween(56.26, 56.33)
-            lng = getRandomBetween(43.86, 44.05)
-        }
-
-        val realmArtObject = RealmArtObject()
-        with (realmArtObject) {
-            authors = realmAuthors
-            description = "The Moderniest Art Work Ever"
-            name = "${randomFrom(firstArtPart)} ${randomFrom(lastArtPart)}"
-            id = SystemClock.currentThreadTimeMillis().toString()
-            thumbPicUrl = "Pic"
-            picsUrls = RealmList<RealmString>()
-            location = realmLocation
-        }
-
-        realm.insertOrUpdate(realmArtObject)
     }
+}
+
+private fun executeAsyncRealmOperation(operation: ((realm: Realm) -> (Unit))) {
+    Thread() {
+        val realm = Realm.getDefaultInstance();
+        try {
+            operation(realm)
+        } finally {
+            realm.close()
+        }
+    }.start()
 }
 
 private fun getRandomBetween(from: Double, to: Double): Double{

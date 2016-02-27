@@ -2,11 +2,10 @@ package org.imozerov.streetartview.ui.explore.list
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.squareup.leakcanary.RefWatcher
 import kotlinx.android.synthetic.main.fragment_art_list.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
@@ -29,7 +28,9 @@ class ArtListFragment : Fragment(), Filterable, ArtView {
 
         adapter = ArtListAdapter(context, java.util.ArrayList<ArtObjectUi>())
         rootView.art_objects_recycler_view.setHasFixedSize(true)
-        rootView.art_objects_recycler_view.layoutManager = LinearLayoutManager(context)
+
+        val layoutManager = GridLayoutManager(context, 3)
+        rootView.art_objects_recycler_view.layoutManager = layoutManager
         rootView.art_objects_recycler_view.adapter = adapter
 
         return rootView

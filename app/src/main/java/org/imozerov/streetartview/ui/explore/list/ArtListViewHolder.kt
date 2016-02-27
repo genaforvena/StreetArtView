@@ -12,10 +12,7 @@ import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
  * Created by sergei on 09.02.16.
  */
 class ArtListViewHolder(context: Context, itemView: View) : RecyclerView.ViewHolder(itemView) {
-    internal var author: TextView
-    internal var artObjectName: TextView
     internal var thumb: ImageView
-    internal var description: TextView
 
     internal var artObjectId: String? = null
 
@@ -27,12 +24,7 @@ class ArtListViewHolder(context: Context, itemView: View) : RecyclerView.ViewHol
             throw RuntimeException("ExploreArtActivity must implement ArtObjectDetailOpener interface")
         }
 
-        author = itemView.art_object_view_in_list_author
-        artObjectName = itemView.art_object_view_in_list_name
         thumb = itemView.art_object_in_list_image
-        description = itemView.art_object_view_in_list_description
-
-
         itemView.setOnClickListener { v -> detailOpener.openArtObjectDetails(artObjectId) }
     }
 }
