@@ -70,7 +70,8 @@ class DataSource() {
         executeAsyncRealmOperation {
             val realmAuthor = RealmAuthor()
             with (realmAuthor) {
-                id = SystemClock.currentThreadTimeMillis().toString()
+                id = Math.random().toString()
+                Log.d(TAG, "id is $id")
                 name = "${randomFrom(names)} ${randomFrom(lastNames)}"
                 photo = "http://photos.state.gov/libraries/media/788/images/500x500-sample.jpg"
             }
@@ -90,7 +91,7 @@ class DataSource() {
                 authors = realmAuthors
                 description = "The Moderniest Art Work Ever"
                 name = "${randomFrom(firstArtPart)} ${randomFrom(lastArtPart)}"
-                id = SystemClock.currentThreadTimeMillis().toString()
+                id = Math.random().toString()
                 thumbPicUrl = "Pic"
                 picsUrls = RealmList<RealmString>()
                 location = realmLocation
@@ -109,7 +110,7 @@ private fun executeAsyncRealmOperation(operation: ((realm: Realm) -> (Unit))) {
         } finally {
             realm.close()
         }
-    }.run()
+    }.start()
 }
 
 private fun getRandomBetween(from: Double, to: Double): Double{
