@@ -124,6 +124,7 @@ class AddArtObjectActivity : AppCompatActivity(), GoogleApiClient.ConnectionCall
 
                 val sequence = "lat: " + location.latitude + "; lng: " + location.longitude
                 Toast.makeText(applicationContext, sequence, Toast.LENGTH_LONG)
+                    .show()
             }
 
             override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
