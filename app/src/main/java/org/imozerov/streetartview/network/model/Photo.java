@@ -10,10 +10,10 @@ public class Photo {
     @SerializedName("title")
     @Expose
     private String title;
-    @SerializedName("thmb")
+    @SerializedName("thumbnail")
     @Expose
     private String thmb;
-    @SerializedName("big")
+    @SerializedName("fullres")
     @Expose
     private String big;
 
