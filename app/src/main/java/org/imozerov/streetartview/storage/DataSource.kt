@@ -1,6 +1,5 @@
 package org.imozerov.streetartview.storage
 
-import android.os.Handler
 import android.os.SystemClock
 import android.util.Log
 import io.realm.Realm
@@ -15,8 +14,9 @@ import java.util.*
 /**
  * Created by imozerov on 05.02.16.
  */
-class DataSource(private val realm: Realm, private val handler: Handler) {
+class DataSource() {
     val TAG = "DataSource"
+    val realm = Realm.getDefaultInstance()
 
     fun insert(artworks: MutableList<Artwork>) {
         Log.d(TAG, "inserting $artworks")
@@ -26,7 +26,7 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
             return@map realmArtObject
         }
 
-        handler.post { realm.batchInsertOrUpdate(realmObjects) }
+        realm.batchInsertOrUpdate(realmObjects)
     }
 
     fun listArtObjects(): Observable<List<ArtObjectUi>> {
@@ -93,7 +93,7 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
             location = realmLocation
         }
 
-        handler.post { realm.insertOrUpdate(realmArtObject) }
+        realm.insertOrUpdate(realmArtObject)
     }
 }
 
