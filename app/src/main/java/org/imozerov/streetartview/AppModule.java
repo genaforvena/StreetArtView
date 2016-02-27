@@ -30,13 +30,7 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public Realm provideRealm() {
-        return Realm.getDefaultInstance();
-    }
-
-    @Provides
-    @Singleton
-    public DataSource provideDataSource(Realm realm) {
-        return new DataSource(realm, new Handler());
+    public DataSource provideDataSource() {
+        return new DataSource();
     }
 }
