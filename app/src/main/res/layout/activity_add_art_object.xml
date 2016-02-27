@@ -62,12 +62,12 @@
             android:layout_below="@+id/add_art_object_name"
             android:hint="@string/art_object_description"/>
 
-        <FrameLayout
+        <fragment
             android:id="@+id/add_art_object_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_below="@+id/add_art_object_description">
-        </FrameLayout>
+            android:layout_below="@+id/add_art_object_description"/>
 
         <Button
             android:id="@+id/add_art_object_save_button"

@@ -55,36 +55,9 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
                 .findFirst())
     }
 
-    fun addArtObject(newName: String, newAuthor: String, newImageUrl: Uri?, location: Location?) {
-        val realmAuthor = RealmAuthor()
-        with (realmAuthor) {
-            id = SystemClock.currentThreadTimeMillis().toString()
-            name = newAuthor
-            photo = "http://photos.state.gov/libraries/media/788/images/500x500-sample.jpg"
-        }
-
-        val realmAuthors = RealmList<RealmAuthor>()
-        realmAuthors.add(realmAuthor)
-
-        val realmLocation = RealmLocation()
-        with(realmLocation) {
-            address = "Some address, 34"
-            lat = location!!.latitude
-            lng = location.longitude
-        }
-
-        val realmArtObject = RealmArtObject()
-        with (realmArtObject) {
-            authors = realmAuthors
-            description = "The Moderniest Art Work Ever"
-            name = newName
-            id = SystemClock.currentThreadTimeMillis().toString()
-            thumbPicUrl = newImageUrl.toString()
-            picsUrls = RealmList<RealmString>()
-            setLocation(realmLocation)
-        }
-
-        handler.post { realm.insertOrUpdate(realmArtObject) }
+    fun addArtObject(newArtObject: RealmArtObject/*, location: Location?*/) {
+        handler.post { realm.insertOrUpdate(newArtObject) }
+    }
 
     fun addArtObjectStub() {
         val names = arrayOf("Vasya", "Nikita", "Dima", "Alexander", "Sergey",
@@ -123,7 +96,7 @@ class DataSource(private val realm: Realm, private val handler: Handler) {
             id = SystemClock.currentThreadTimeMillis().toString()
             thumbPicUrl = "Pic"
             picsUrls = RealmList<RealmString>()
-            setLocation(realmLocation)
+            location = realmLocation
         }
 
         handler.post { realm.insertOrUpdate(realmArtObject) }
