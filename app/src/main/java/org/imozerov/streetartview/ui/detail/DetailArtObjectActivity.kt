@@ -1,25 +1,24 @@
 package org.imozerov.streetartview.ui.detail
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.PagerAdapter
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.LinearLayout
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.art_object_gallery_item.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.DataSource
 import org.imozerov.streetartview.ui.extensions.addArtObject
+import org.imozerov.streetartview.ui.extensions.loadImage
 import javax.inject.Inject
 
 /**
@@ -75,24 +74,13 @@ class DetailArtObjectActivity : AppCompatActivity() {
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val itemView = inflater.inflate(R.layout.art_object_gallery_item, container, false)
-            container.addView(itemView)
-
-            val thumbnailSize = (art_object_detail_image_pager.layoutParams as FrameLayout.LayoutParams).bottomMargin
-
-            val params = LinearLayout.LayoutParams(thumbnailSize, thumbnailSize)
-            params.setMargins(0, 0, 0, 0);
-
-            val thumbView = ImageView(context)
-            thumbView.scaleType = ImageView.ScaleType.CENTER_CROP
-            thumbView.layoutParams = params
-            thumbView.setOnClickListener {
-                art_object_detail_image_pager.currentItem = position
+            itemView.image_preview.loadImage(images[position])
+            itemView.setOnClickListener {
+                val intent = Intent(this@DetailArtObjectActivity, ImageViewActivity::class.java)
+                intent.putExtra(ImageViewActivity.INTENT_EXTRA_IMAGE_URL, images[position])
+                startActivity(intent)
             }
-            art_object_detail_image_picker.addView(thumbView)
-
-            Picasso.with(context).load(images[position]).into(itemView.image_preview)
-            Picasso.with(context).load(images[position]).into(thumbView)
-
+            container.addView(itemView)
             return itemView
         }
 
