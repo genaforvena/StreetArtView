@@ -3,6 +3,7 @@ package org.imozerov.streetartview.network
 import android.app.IntentService
 import android.content.Context
 import android.content.Intent
+import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.network.internal.RestClient
@@ -19,6 +20,7 @@ class FetchService : IntentService("FetchService") {
     lateinit var dataSource: DataSource
 
     override fun onHandleIntent(intent: Intent?) {
+        Log.d(TAG, "onHandleIntent($intent)")
         if (intent != null) {
             (application as StreetArtViewApp).netComponent.inject(this)
 
@@ -44,9 +46,11 @@ class FetchService : IntentService("FetchService") {
         } catch (exception: java.io.IOException) {
             Log.w(TAG, "Unable to sync art objects with server", exception)
         }
+        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(EVENT_FETCH_FINISHED))
     }
 
     companion object {
+        val EVENT_FETCH_FINISHED = "org.imozerov.streetartview.network.action.FETCH_FINISHED"
         private val ACTION_FETCH_ART_OBJECTS = "org.imozerov.streetartview.network.action.FETCH_ART_OBJECTS"
 
         fun startFetch(context: Context) {
