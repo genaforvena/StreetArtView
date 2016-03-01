@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import org.imozerov.streetartview.R
+import org.imozerov.streetartview.ui.extensions.loadImage
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
 /**
@@ -20,9 +21,7 @@ class ArtListAdapter(private val context: Context, private var data: List<ArtObj
     override fun onBindViewHolder(holder: ArtListViewHolder, position: Int) {
         val artObject = data!![position]
         holder.artObjectId = artObject.id
-        if (artObject.thumbPicUrl.isNotBlank()) {
-            Picasso.with(context).load(artObject.thumbPicUrl).into(holder.thumb)
-        }
+        holder.thumb.loadImage(artObject.thumbPicUrl)
     }
 
     override fun getItemCount(): Int {

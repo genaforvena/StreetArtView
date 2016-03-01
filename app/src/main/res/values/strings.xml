@@ -2,4 +2,6 @@
     <string name="app_name">StreetArtView</string>
     <string name="map_fragment_pager_label">Map</string>
     <string name="list_fragment_pager_label">Gallery</string>
+
+    <string name="title_activity_image_view">ImageViewActivity</string>
 </resources>
