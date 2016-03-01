@@ -1,19 +1,12 @@
 package org.imozerov.streetartview.ui.detail
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.view.PagerAdapter
 import android.support.v7.app.AppCompatActivity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.art_object_gallery_item.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.DataSource
@@ -31,6 +24,10 @@ class DetailArtObjectActivity : AppCompatActivity() {
 
     val TAG = "DetailArtObjectActivity"
 
+    val PICK_IMAGE_REQUEST = 1
+
+    private var artObjectId: String? = null
+
     @Inject
     lateinit var dataSource: DataSource
 
@@ -40,14 +37,26 @@ class DetailArtObjectActivity : AppCompatActivity() {
 
         (application as StreetArtViewApp).appComponent.inject(this)
 
-        val artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
+        artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
 
-        val artObjectUi = dataSource.getArtObject(artObjectId)
+        val artObjectUi = dataSource.getArtObject(artObjectId!!)
         art_object_detail_name.text = artObjectUi.name
         art_object_detail_author.text = artObjectUi.authorsNames()
         art_object_detail_description.text = artObjectUi.description
 
-        art_object_detail_image_pager.adapter = GalleryPagerAdapter(this, artObjectUi.picsUrls)
+        art_object_detail_image.loadImage(artObjectUi.picsUrls[0])
+        val photosNumber = artObjectUi.picsUrls.size
+        if (photosNumber > 1) {
+            art_object_images_number.text = photosNumber.toString() + " photos"
+        } else {
+            art_object_images_number.text = photosNumber.toString() + " photo"
+        }
+
+        art_object_detail_image.setOnClickListener {
+            val intent = Intent(this@DetailArtObjectActivity, ImageViewActivity::class.java)
+            intent.putExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID, artObjectId)
+            startActivityForResult(intent, PICK_IMAGE_REQUEST)
+        }
 
         val mapFragment = SupportMapFragment.newInstance()
         supportFragmentManager.beginTransaction().replace(art_object_detail_map.id, mapFragment).commit()
@@ -57,35 +66,15 @@ class DetailArtObjectActivity : AppCompatActivity() {
         }
     }
 
-    internal inner class GalleryPagerAdapter(val context: Context, val images: List<String>) : PagerAdapter() {
-        var inflater: LayoutInflater
-
-        init {
-            inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        }
-
-        override fun getCount(): Int {
-            return images.size
-        }
-
-        override fun isViewFromObject(view: View, anyObject: Any): Boolean {
-            return view === anyObject as LinearLayout
-        }
-
-        override fun instantiateItem(container: ViewGroup, position: Int): Any {
-            val itemView = inflater.inflate(R.layout.art_object_gallery_item, container, false)
-            itemView.image_preview.loadImage(images[position])
-            itemView.setOnClickListener {
-                val intent = Intent(this@DetailArtObjectActivity, ImageViewActivity::class.java)
-                intent.putExtra(ImageViewActivity.INTENT_EXTRA_IMAGE_URL, images[position])
-                startActivity(intent)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == PICK_IMAGE_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                val artObjectUi = dataSource.getArtObject(artObjectId!!)
+                val position = data?.getIntExtra(ImageViewActivity.Companion.EXTRA_CHOSEN_IMAGE, -1)
+                art_object_detail_image.loadImage(
+                        artObjectUi.picsUrls[position!!]
+                )
             }
-            container.addView(itemView)
-            return itemView
-        }
-
-        override fun destroyItem(container: ViewGroup, position: Int, anyObject: Any) {
-            container.removeView(anyObject as LinearLayout)
         }
     }
 
