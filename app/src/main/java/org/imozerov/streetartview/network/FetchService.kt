@@ -19,11 +19,14 @@ class FetchService : IntentService("FetchService") {
     @Inject
     lateinit var dataSource: DataSource
 
+    override fun onCreate() {
+        super.onCreate()
+        (application as StreetArtViewApp).netComponent.inject(this)
+    }
+
     override fun onHandleIntent(intent: Intent?) {
         Log.d(TAG, "onHandleIntent($intent)")
         if (intent != null) {
-            (application as StreetArtViewApp).netComponent.inject(this)
-
             val action = intent.action
             if (ACTION_FETCH_ART_OBJECTS == action) {
                 handleStartFetchAction()

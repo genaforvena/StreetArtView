@@ -7,7 +7,6 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -43,8 +42,8 @@ class ArtListFragment : Fragment(), Filterable, ArtView {
         rootView.art_objects_recycler_view.adapter = adapter
         rootView.swipe_to_refresh_layout.setOnRefreshListener { FetchService.startFetch(context) }
 
-        fetchFinishedBroadcastReceiver = object: BroadcastReceiver() {
-            override fun onReceive(p0: Context?, p1: Intent?) {
+        fetchFinishedBroadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
                 rootView.swipe_to_refresh_layout.isRefreshing = false
             }
         }
