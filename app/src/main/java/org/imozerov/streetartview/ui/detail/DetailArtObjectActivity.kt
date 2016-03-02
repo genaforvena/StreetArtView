@@ -20,6 +20,7 @@ import javax.inject.Inject
 class DetailArtObjectActivity : AppCompatActivity() {
     companion object {
         val EXTRA_KEY_ART_OBJECT_DETAIL_ID = "EXTRA_KEY_ART_OBJECT_DETAIL_ID"
+        val EXTRA_IMAGE_CHOSEN_IN_DETAILS = "EXTRA_IMAGE_CHOSEN_IN_DETAILS"
     }
 
     val TAG = "DetailArtObjectActivity"
@@ -27,6 +28,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
     val PICK_IMAGE_REQUEST = 1
 
     private var artObjectId: String? = null
+    private var imageChosen: Int? = null
 
     @Inject
     lateinit var dataSource: DataSource
@@ -44,17 +46,15 @@ class DetailArtObjectActivity : AppCompatActivity() {
         art_object_detail_author.text = artObjectUi.authorsNames()
         art_object_detail_description.text = artObjectUi.description
 
-        art_object_detail_image.loadImage(artObjectUi.picsUrls[0])
-        val photosNumber = artObjectUi.picsUrls.size
-        if (photosNumber > 1) {
-            art_object_images_number.text = photosNumber.toString() + " photos"
-        } else {
-            art_object_images_number.text = photosNumber.toString() + " photo"
-        }
+        val picsNumber = artObjectUi.picsUrls.size
+        art_object_images_number.text = resources
+                .getQuantityString(R.plurals.photos, picsNumber, picsNumber)
 
+        art_object_detail_image.loadImage(artObjectUi.picsUrls[0])
         art_object_detail_image.setOnClickListener {
             val intent = Intent(this@DetailArtObjectActivity, ImageViewActivity::class.java)
             intent.putExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID, artObjectId)
+            intent.putExtra(EXTRA_IMAGE_CHOSEN_IN_DETAILS, imageChosen)
             startActivityForResult(intent, PICK_IMAGE_REQUEST)
         }
 
@@ -70,9 +70,9 @@ class DetailArtObjectActivity : AppCompatActivity() {
         if (requestCode == PICK_IMAGE_REQUEST) {
             if (resultCode == RESULT_OK) {
                 val artObjectUi = dataSource.getArtObject(artObjectId!!)
-                val position = data?.getIntExtra(ImageViewActivity.Companion.EXTRA_CHOSEN_IMAGE, -1)
+                imageChosen = data?.getIntExtra(ImageViewActivity.EXTRA_IMAGE_CHOSEN_IN_VIEWPAGER, 0)
                 art_object_detail_image.loadImage(
-                        artObjectUi.picsUrls[position!!]
+                        artObjectUi.picsUrls[imageChosen!!]
                 )
             }
         }
