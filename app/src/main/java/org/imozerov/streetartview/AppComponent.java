@@ -1,6 +1,7 @@
 package org.imozerov.streetartview;
 
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity;
+import org.imozerov.streetartview.ui.detail.ImageViewActivity;
 import org.imozerov.streetartview.ui.explore.ArtListPresenter;
 import org.imozerov.streetartview.ui.explore.ExploreArtActivity;
 
@@ -16,5 +17,6 @@ import dagger.Component;
 public interface AppComponent {
     void inject(ExploreArtActivity exploreArtActivity);
     void inject(ArtListPresenter artListPresenter);
-    void inject(DetailArtObjectActivity activity);
+    void inject(DetailArtObjectActivity detailArtObjectActivity);
+    void inject(ImageViewActivity imageViewActivity);
 }
