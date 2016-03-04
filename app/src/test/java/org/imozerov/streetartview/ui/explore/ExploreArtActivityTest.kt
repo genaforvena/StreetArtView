@@ -49,6 +49,11 @@ class ExploreArtActivityTest {
     }
 
     @Test
+    fun isAbleToRecreateActivity() {
+        activityController!!.create().start().resume().restart()
+    }
+
+    @Test
     fun subscriptionsRemoved_onStop() {
         activityController!!.create().start().resume().pause().stop()
 

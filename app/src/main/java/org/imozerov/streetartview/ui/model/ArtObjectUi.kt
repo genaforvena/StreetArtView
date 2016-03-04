@@ -1,5 +1,6 @@
 package org.imozerov.streetartview.ui.model
 
+import android.support.annotation.VisibleForTesting
 import org.imozerov.streetartview.storage.model.RealmArtObject
 import java.util.*
 
@@ -37,6 +38,18 @@ class ArtObjectUi {
 
         lat = realmArtObject.location.lat
         lng = realmArtObject.location.lng
+    }
+
+    @VisibleForTesting
+    constructor(id: String, name: String, authors: List<AuthorUi>, description: String, thumbPicUrl: String, picsUrls: List<String>, lat: Double, lng: Double) {
+        this.id = id
+        this.name = name
+        this.authors = authors
+        this.description = description
+        this.thumbPicUrl = thumbPicUrl
+        this.picsUrls = picsUrls
+        this.lat = lat
+        this.lng = lng
     }
 
     fun authorsNames() : String {

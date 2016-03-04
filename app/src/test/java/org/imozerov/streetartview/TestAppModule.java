@@ -16,6 +16,8 @@ import javax.inject.Singleton;
  */
 @Module
 public class TestAppModule extends AppModule {
+    public static final IDataSource dataSourceMock = Mockito.mock(IDataSource.class, Mockito.RETURNS_MOCKS);
+
     public TestAppModule(Application application) {
         super(application);
     }
@@ -31,6 +33,6 @@ public class TestAppModule extends AppModule {
     @Singleton
     @Override
     public IDataSource provideDataSource() {
-        return Mockito.mock(IDataSource.class, Mockito.RETURNS_MOCKS);
+        return dataSourceMock;
     }
 }
