@@ -7,7 +7,7 @@ import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.network.internal.RestClient
-import org.imozerov.streetartview.storage.DataSource
+import org.imozerov.streetartview.storage.IDataSource
 import javax.inject.Inject
 
 class FetchService : IntentService("FetchService") {
@@ -17,7 +17,7 @@ class FetchService : IntentService("FetchService") {
     lateinit var restClient: RestClient
 
     @Inject
-    lateinit var dataSource: DataSource
+    lateinit var dataSource: IDataSource
 
     override fun onCreate() {
         super.onCreate()

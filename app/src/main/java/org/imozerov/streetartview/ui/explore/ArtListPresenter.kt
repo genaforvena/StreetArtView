@@ -2,7 +2,7 @@ package org.imozerov.streetartview.ui.explore
 
 import android.util.Log
 import org.imozerov.streetartview.StreetArtViewApp
-import org.imozerov.streetartview.storage.DataSource
+import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -18,7 +18,7 @@ class ArtListPresenter(private val view: ArtView) {
     private var filterQuery: String = ""
 
     @Inject
-    lateinit var dataSource: DataSource
+    lateinit var dataSource: IDataSource
 
     fun onStart(application: StreetArtViewApp) {
         application.appComponent.inject(this)
