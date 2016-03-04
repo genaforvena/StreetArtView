@@ -24,9 +24,7 @@ class ArtListAdapter(private val context: Context, private var data: List<ArtObj
         holder.thumb.loadImage(artObject.thumbPicUrl)
     }
 
-    override fun getItemCount(): Int {
-        return data!!.size
-    }
+    override fun getItemCount() = data!!.size
 
     fun setData(artObjectUis: List<ArtObjectUi>) {
         data = artObjectUis

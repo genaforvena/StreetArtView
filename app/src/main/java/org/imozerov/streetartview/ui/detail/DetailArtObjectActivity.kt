@@ -23,8 +23,6 @@ class DetailArtObjectActivity : AppCompatActivity() {
         val EXTRA_IMAGE_CHOSEN_IN_DETAILS = "EXTRA_IMAGE_CHOSEN_IN_DETAILS"
     }
 
-    val TAG = "DetailArtObjectActivity"
-
     val PICK_IMAGE_REQUEST = 1
 
     private var artObjectId: String? = null
