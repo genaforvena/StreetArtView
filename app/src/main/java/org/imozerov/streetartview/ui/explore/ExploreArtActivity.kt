@@ -12,7 +12,7 @@ import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.activity_explore_art.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
-import org.imozerov.streetartview.storage.DataSource
+import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
@@ -26,10 +26,10 @@ import javax.inject.Inject
 class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     val TAG = "ExploreArtActivity"
 
-    private var compositeSubscription: CompositeSubscription? = null
+    var compositeSubscription: CompositeSubscription? = null
 
     @Inject
-    lateinit var dataSource: DataSource
+    lateinit var dataSource: IDataSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")

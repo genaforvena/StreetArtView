@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_image_view.*
 import kotlinx.android.synthetic.main.art_object_gallery_item.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
-import org.imozerov.streetartview.storage.DataSource
+import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.extensions.loadImage
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ class ImageViewActivity : AppCompatActivity() {
     }
 
     @Inject
-    lateinit var dataSource: DataSource
+    lateinit var dataSource: IDataSource
 
     private var pagerPosition: Int? = null
 

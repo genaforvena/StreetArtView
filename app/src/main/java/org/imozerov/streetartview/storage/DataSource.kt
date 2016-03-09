@@ -1,6 +1,5 @@
 package org.imozerov.streetartview.storage
 
-import android.os.SystemClock
 import android.util.Log
 import io.realm.Realm
 import io.realm.RealmList
@@ -14,12 +13,12 @@ import java.util.*
 /**
  * Created by imozerov on 05.02.16.
  */
-class DataSource() {
+class DataSource() : IDataSource {
     val TAG = "DataSource"
     // This realm instance should be used only to read data
     val readOnlyRealm = Realm.getDefaultInstance()
 
-    fun insert(artworks: MutableList<Artwork>) {
+    override fun insert(artworks: MutableList<Artwork>) {
         executeAsyncRealmOperation {
             Log.d(TAG, "inserting $artworks")
             val realmObjects = artworks.map {
@@ -31,7 +30,7 @@ class DataSource() {
         }
     }
 
-    fun listArtObjects(): Observable<List<ArtObjectUi>> {
+    override fun listArtObjects(): Observable<List<ArtObjectUi>> {
         return readOnlyRealm
                 .allObjects(RealmArtObject::class.java)
                 .asObservable()
@@ -48,14 +47,14 @@ class DataSource() {
                 }
     }
 
-    fun getArtObject(id: String): ArtObjectUi {
+    override fun getArtObject(id: String): ArtObjectUi {
         return ArtObjectUi(readOnlyRealm
                 .where(RealmArtObject::class.java)
                 .equalTo("id", id)
                 .findFirst())
     }
 
-    fun addArtObjectStub() {
+    override fun addArtObjectStub() {
         val names = arrayOf("Vasya", "Nikita", "Dima", "Alexander", "Sergey",
                 "Vlad", "Andrey", "Artem", "Ivan", "Anton", "Maxim")
         val lastNames = arrayOf("Smirnov", "Ivanov", "Kuznetsov","Popov", "Sokolov",

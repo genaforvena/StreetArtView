@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_detail.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
-import org.imozerov.streetartview.storage.DataSource
+import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.extensions.addArtObject
 import org.imozerov.streetartview.ui.extensions.loadImage
 import javax.inject.Inject
@@ -29,7 +29,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
     private var imageChosen: Int? = null
 
     @Inject
-    lateinit var dataSource: DataSource
+    lateinit var dataSource: IDataSource
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
