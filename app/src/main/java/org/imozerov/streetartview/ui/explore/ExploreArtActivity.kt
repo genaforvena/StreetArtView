@@ -49,13 +49,13 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         tabs.setupWithViewPager(viewpager)
 
         search_view.findViewById(R.id.search_close_btn).setOnClickListener {
-            search_view.animateToGone()
             explore_floating_action_button.show()
+            search_view.animateToGone()
         }
 
         explore_floating_action_button.setOnClickListener {
-            search_view.animateToVisible()
             explore_floating_action_button.hide()
+            search_view.animateToVisible()
         }
     }
 
@@ -111,7 +111,6 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
 }
 
 fun SearchView.animateToGone() {
-    setQuery("", true)
     animate().translationY(height.toFloat())
             .alpha(0.0f)
             .setDuration(300)
@@ -119,6 +118,7 @@ fun SearchView.animateToGone() {
                 override fun onAnimationEnd(animation: Animator?) {
                     super.onAnimationEnd(animation)
                     visibility = View.GONE
+                    setQuery("", true)
                 }
             });
 }
@@ -131,8 +131,8 @@ fun SearchView.animateToVisible() {
                 override fun onAnimationEnd(animation: Animator?) {
                     super.onAnimationEnd(animation)
                     visibility = View.VISIBLE
+                    isIconified = false
+                    requestFocus()
                 }
             });
-    isIconified = false
-    requestFocus()
 }
