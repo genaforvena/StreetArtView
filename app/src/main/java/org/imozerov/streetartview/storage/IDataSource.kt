@@ -11,5 +11,4 @@ interface IDataSource {
     fun insert(artworks: MutableList<Artwork>)
     fun listArtObjects(): Observable<List<ArtObjectUi>>
     fun getArtObject(id: String): ArtObjectUi
-    fun addArtObjectStub()
 }

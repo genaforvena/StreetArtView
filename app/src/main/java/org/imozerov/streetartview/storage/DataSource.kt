@@ -53,52 +53,6 @@ class DataSource() : IDataSource {
                 .equalTo("id", id)
                 .findFirst())
     }
-
-    override fun addArtObjectStub() {
-        val names = arrayOf("Vasya", "Nikita", "Dima", "Alexander", "Sergey",
-                "Vlad", "Andrey", "Artem", "Ivan", "Anton", "Maxim")
-        val lastNames = arrayOf("Smirnov", "Ivanov", "Kuznetsov","Popov", "Sokolov",
-                "Lebedev", "Kozlov", "Novikov", "Morozov", "Petrov")
-
-        val firstArtPart = arrayOf("The Last", "The Starry", "The Persistence of",
-                "American", "The Creation of", "The Art of", "The School of", "Portrait of",
-                "Massacre of", "The Treachery")
-        val lastArtPart = arrayOf("Supper", "Night", "Memory", "Gothic", "Adam",
-                "Painting", "Athens", "a Man", "the Innocents", "Images")
-
-        executeAsyncRealmOperation {
-            val realmAuthor = RealmAuthor()
-            with (realmAuthor) {
-                id = Math.random().toString()
-                Log.d(TAG, "id is $id")
-                name = "${randomFrom(names)} ${randomFrom(lastNames)}"
-                photo = "http://photos.state.gov/libraries/media/788/images/500x500-sample.jpg"
-            }
-
-            val realmAuthors = RealmList<RealmAuthor>()
-            realmAuthors.add(realmAuthor)
-
-            val realmLocation = RealmLocation()
-            with(realmLocation) {
-                address = "Some address, 34"
-                lat = getRandomBetween(56.26, 56.33)
-                lng = getRandomBetween(43.86, 44.05)
-            }
-
-            val realmArtObject = RealmArtObject()
-            with (realmArtObject) {
-                authors = realmAuthors
-                description = "The Moderniest Art Work Ever"
-                name = "${randomFrom(firstArtPart)} ${randomFrom(lastArtPart)}"
-                id = Math.random().toString()
-                thumbPicUrl = "Pic"
-                picsUrls = RealmList<RealmString>()
-                location = realmLocation
-            }
-
-            it.insertOrUpdate(realmArtObject)
-        }
-    }
 }
 
 private fun executeAsyncRealmOperation(operation: ((realm: Realm) -> (Unit))) {
@@ -110,21 +64,6 @@ private fun executeAsyncRealmOperation(operation: ((realm: Realm) -> (Unit))) {
             realm.close()
         }
     }.start()
-}
-
-private fun getRandomBetween(from: Double, to: Double): Double{
-    return from + (Math.random() * (to - from))
-}
-
-private fun randomFrom(list: Array<String>): String{
-    val position: Int = (Math.random() * list.size).toInt()
-    return list.elementAt(position)
-}
-
-private fun Realm.insertOrUpdate(realmObject: RealmObject) {
-    beginTransaction()
-    copyToRealmOrUpdate(realmObject)
-    commitTransaction()
 }
 
 private fun Realm.batchInsertOrUpdate(realmObjects: List<RealmObject>) {

@@ -1,14 +1,18 @@
 package org.imozerov.streetartview.ui.explore
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
 import android.util.Log
+import android.view.View
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
-import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.activity_explore_art.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
@@ -43,10 +47,21 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         adapter.addFragment(ArtListFragment.newInstance(), getString(R.string.list_fragment_pager_label))
         viewpager.adapter = adapter
         tabs.setupWithViewPager(viewpager)
+
+        search_view.findViewById(R.id.search_close_btn).setOnClickListener {
+            search_view.animateToGone()
+            explore_floating_action_button.show()
+        }
+
+        explore_floating_action_button.setOnClickListener {
+            search_view.animateToVisible()
+            explore_floating_action_button.hide()
+        }
     }
 
     override fun onStart() {
         super.onStart()
+        compositeSubscription = CompositeSubscription();
 
         val searchSubscription = RxSearchView
                 .queryTextChanges(search_view)
@@ -57,16 +72,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
                             .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewpager.currentItem)
                     (fragment as? Filterable)?.applyFilter(it.toString())
                 }
-
-        val addArtObjectSubscription = RxView.clicks(add_art_object_button)
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    dataSource.addArtObjectStub()
-                }
-
-        compositeSubscription = CompositeSubscription();
         compositeSubscription!!.add(searchSubscription)
-        compositeSubscription!!.add(addArtObjectSubscription)
     }
 
     override fun onStop() {
@@ -102,5 +108,31 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
             return mFragmentTitles[position]
         }
     }
+}
 
+fun SearchView.animateToGone() {
+    setQuery("", true)
+    animate().translationY(height.toFloat())
+            .alpha(0.0f)
+            .setDuration(300)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    visibility = View.GONE
+                }
+            });
+}
+
+fun SearchView.animateToVisible() {
+    animate().translationY(0f)
+            .alpha(1f)
+            .setDuration(300)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    visibility = View.VISIBLE
+                }
+            });
+    isIconified = false
+    requestFocus()
 }
