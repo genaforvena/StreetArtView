@@ -38,15 +38,17 @@ class DetailArtObjectActivity : AppCompatActivity() {
         art_object_detail_description.text = artObjectUi.description
 
         val picsNumber = artObjectUi.picsUrls.size
-        art_object_images_number.text = resources
-                .getQuantityString(R.plurals.photos, picsNumber, picsNumber)
 
-        art_object_detail_image.adapter = GalleryPagerAdapter(this, artObjectUi.picsUrls, { position ->
-            val intent = Intent(this@DetailArtObjectActivity, ImageViewActivity::class.java)
-            intent.putExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID, artObjectId)
-            intent.putExtra(EXTRA_IMAGE_CHOSEN_IN_DETAILS, position)
-            startActivityForResult(intent, PICK_IMAGE_REQUEST)
-        })
+        if (picsNumber > 0) {
+            art_object_images_number.text = resources
+                    .getQuantityString(R.plurals.photos, picsNumber, picsNumber)
+            art_object_detail_pager.adapter = GalleryPagerAdapter(this, artObjectUi.picsUrls, { position ->
+                val intent = Intent(this@DetailArtObjectActivity, ImageViewActivity::class.java)
+                intent.putExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID, artObjectId)
+                intent.putExtra(EXTRA_IMAGE_CHOSEN_IN_DETAILS, position)
+                startActivityForResult(intent, PICK_IMAGE_REQUEST)
+            })
+        }
 
         val mapFragment = SupportMapFragment.newInstance()
         supportFragmentManager.beginTransaction().replace(art_object_detail_map.id, mapFragment).commit()
@@ -61,7 +63,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
         if (requestCode == PICK_IMAGE_REQUEST) {
             if (resultCode == RESULT_OK) {
                 val position = data?.getIntExtra(ImageViewActivity.EXTRA_IMAGE_CHOSEN_IN_VIEWPAGER, 0)
-                art_object_detail_image.currentItem = position!!
+                art_object_detail_pager.currentItem = position!!
             }
         }
     }

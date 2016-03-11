@@ -8,8 +8,7 @@
         android:id="@+id/art_object_in_list_image"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:scaleType="centerCrop"
         android:layout_margin="1dp"
-        android:src="@drawable/einstein"/>
+        android:scaleType="centerCrop"/>
 
 </LinearLayout>
