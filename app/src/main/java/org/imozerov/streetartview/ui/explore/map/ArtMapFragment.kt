@@ -8,12 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_art_map.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
+import org.imozerov.streetartview.location.addUserLocationMarker
+import org.imozerov.streetartview.location.getCurrentLocation
 import org.imozerov.streetartview.ui.explore.ArtListPresenter
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
@@ -25,12 +24,6 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
     private var presenter: ArtListPresenter? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        presenter = ArtListPresenter(this)
-        return inflater!!.inflate(R.layout.fragment_art_map, container, false)
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val mapFragment: SupportMapFragment = SupportMapFragment.newInstance()
@@ -40,8 +33,16 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
                 .commit()
 
         mapFragment.getMapAsync {
-            it.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(56.3298063, 44.0095144), 14f))
+            val userLocation = getCurrentLocation(context)
+            it.addUserLocationMarker(userLocation)
+            it.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 14f))
         }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        presenter = ArtListPresenter(this)
+        return inflater!!.inflate(R.layout.fragment_art_map, container, false)
     }
 
     override fun onStart() {

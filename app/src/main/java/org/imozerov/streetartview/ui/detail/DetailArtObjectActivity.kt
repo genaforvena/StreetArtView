@@ -9,6 +9,8 @@ import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_detail.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
+import org.imozerov.streetartview.location.addUserLocationMarker
+import org.imozerov.streetartview.location.getCurrentLocation
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.extensions.addArtObject
 import javax.inject.Inject
@@ -49,6 +51,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
         val mapFragment = SupportMapFragment.newInstance()
         supportFragmentManager.beginTransaction().replace(art_object_detail_map.id, mapFragment).commit()
         mapFragment.getMapAsync {
+            it.addUserLocationMarker(getCurrentLocation(this))
             it.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(artObjectUi.lat, artObjectUi.lng), 14f))
             it.addArtObject(artObjectUi)
         }
