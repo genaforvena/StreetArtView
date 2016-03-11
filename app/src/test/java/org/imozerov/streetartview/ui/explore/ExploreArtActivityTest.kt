@@ -28,13 +28,6 @@ class ExploreArtActivityTest {
     }
 
     @Test
-    fun dataSourceIsInjected_onCreate() {
-        activityController!!.create()
-
-        assertNotNull(activityController!!.get().dataSource)
-    }
-
-    @Test
     fun subscriptionsCreated_onStart() {
         activityController!!.create().start()
 
@@ -45,7 +38,7 @@ class ExploreArtActivityTest {
     }
 
     @Test
-    fun searchViewIsGoneByDeafult() {
+    fun searchViewIsGoneByDefault() {
         activityController!!.create().start()
 
         val activity = activityController!!.get()

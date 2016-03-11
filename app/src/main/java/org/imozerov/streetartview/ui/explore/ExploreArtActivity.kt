@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.util.Log
@@ -17,8 +16,6 @@ import android.view.inputmethod.InputMethodManager
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
 import kotlinx.android.synthetic.main.activity_explore_art.*
 import org.imozerov.streetartview.R
-import org.imozerov.streetartview.StreetArtViewApp
-import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
@@ -27,22 +24,16 @@ import org.imozerov.streetartview.ui.explore.map.ArtMapFragment
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 import java.util.*
-import javax.inject.Inject
 
 class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     val TAG = "ExploreArtActivity"
 
     var compositeSubscription: CompositeSubscription? = null
 
-    @Inject
-    lateinit var dataSource: IDataSource
-
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_explore_art)
-
-        (application as StreetArtViewApp).appComponent.inject(this);
 
         val adapter = Adapter(supportFragmentManager)
         adapter.addFragment(ArtMapFragment.newInstance(), getString(R.string.map_fragment_pager_label))
