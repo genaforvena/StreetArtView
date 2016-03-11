@@ -22,13 +22,9 @@ class GalleryPagerAdapter(val context: Context, val images: List<String>, listen
         this.listenerAction = listenerAction
     }
 
-    override fun getCount(): Int {
-        return images.size
-    }
+    override fun getCount() = images.size
 
-    override fun isViewFromObject(view: View, anyObject: Any): Boolean {
-        return view === anyObject as LinearLayout
-    }
+    override fun isViewFromObject(view: View, anyObject: Any) = view === anyObject as LinearLayout
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val itemView = inflater.inflate(R.layout.art_object_gallery_item, container, false)
