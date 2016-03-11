@@ -1,18 +1,21 @@
 package org.imozerov.streetartview.ui.explore
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
 import android.util.Log
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
-import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.activity_explore_art.*
 import org.imozerov.streetartview.R
-import org.imozerov.streetartview.StreetArtViewApp
-import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
@@ -21,32 +24,36 @@ import org.imozerov.streetartview.ui.explore.map.ArtMapFragment
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 import java.util.*
-import javax.inject.Inject
 
 class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     val TAG = "ExploreArtActivity"
 
     var compositeSubscription: CompositeSubscription? = null
 
-    @Inject
-    lateinit var dataSource: IDataSource
-
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_explore_art)
-
-        (application as StreetArtViewApp).appComponent.inject(this);
 
         val adapter = Adapter(supportFragmentManager)
         adapter.addFragment(ArtMapFragment.newInstance(), getString(R.string.map_fragment_pager_label))
         adapter.addFragment(ArtListFragment.newInstance(), getString(R.string.list_fragment_pager_label))
         viewpager.adapter = adapter
         tabs.setupWithViewPager(viewpager)
+
+        search_view.findViewById(R.id.search_close_btn).setOnClickListener {
+            closeSearchView()
+        }
+
+        explore_floating_action_button.setOnClickListener {
+            explore_floating_action_button.hide()
+            search_view.animateToVisible()
+        }
     }
 
     override fun onStart() {
         super.onStart()
+        compositeSubscription = CompositeSubscription();
 
         val searchSubscription = RxSearchView
                 .queryTextChanges(search_view)
@@ -57,21 +64,20 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
                             .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewpager.currentItem)
                     (fragment as? Filterable)?.applyFilter(it.toString())
                 }
-
-        val addArtObjectSubscription = RxView.clicks(add_art_object_button)
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    dataSource.addArtObjectStub()
-                }
-
-        compositeSubscription = CompositeSubscription();
         compositeSubscription!!.add(searchSubscription)
-        compositeSubscription!!.add(addArtObjectSubscription)
     }
 
     override fun onStop() {
         super.onStop()
         compositeSubscription!!.clear()
+    }
+
+    override fun onBackPressed() {
+        if (search_view.visibility == View.VISIBLE) {
+            closeSearchView()
+            return
+        }
+        super.onBackPressed()
     }
 
     override fun openArtObjectDetails(id: String?) {
@@ -81,7 +87,20 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         startActivity(intent)
     }
 
-    internal class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    private fun closeSearchView() {
+        hideKeyboard()
+        explore_floating_action_button.show()
+        search_view.animateToGone()
+    }
+
+    private fun hideKeyboard() {
+        if (currentFocus != null) {
+            val inputMgr = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMgr.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+        }
+    }
+
+    private class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         private val mFragments = ArrayList<Fragment>()
         private val mFragmentTitles = ArrayList<String>()
 
@@ -102,5 +121,31 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
             return mFragmentTitles[position]
         }
     }
+}
 
+fun SearchView.animateToGone() {
+    animate().translationY(height.toFloat())
+            .alpha(0.0f)
+            .setDuration(300)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    visibility = View.GONE
+                    setQuery("", true)
+                }
+            });
+}
+
+fun SearchView.animateToVisible() {
+    animate().translationY(0f)
+            .alpha(1f)
+            .setDuration(300)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    visibility = View.VISIBLE
+                    isIconified = false
+                    requestFocus()
+                }
+            });
 }

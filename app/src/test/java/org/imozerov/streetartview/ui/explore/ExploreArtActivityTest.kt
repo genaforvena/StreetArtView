@@ -1,7 +1,9 @@
 package org.imozerov.streetartview.ui.explore
 
+import android.view.View
 import kotlinx.android.synthetic.main.activity_explore_art.*
 import org.imozerov.streetartview.BuildConfig
+import org.imozerov.streetartview.R
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -9,6 +11,7 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricGradleTestRunner
 import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowAnimationUtils
 import org.robolectric.util.ActivityController
 
 /**
@@ -25,13 +28,6 @@ class ExploreArtActivityTest {
     }
 
     @Test
-    fun dataSourceIsInjected_onCreate() {
-        activityController!!.create()
-
-        assertNotNull(activityController!!.get().dataSource)
-    }
-
-    @Test
     fun subscriptionsCreated_onStart() {
         activityController!!.create().start()
 
@@ -39,6 +35,15 @@ class ExploreArtActivityTest {
 
         assertNotNull(activity.compositeSubscription)
         assertTrue(activity.compositeSubscription!!.hasSubscriptions())
+    }
+
+    @Test
+    fun searchViewIsGoneByDefault() {
+        activityController!!.create().start()
+
+        val activity = activityController!!.get()
+
+        assertTrue(activity.search_view.visibility == View.GONE)
     }
 
     @Test

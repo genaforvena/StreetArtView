@@ -13,16 +13,17 @@
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <android.support.v7.widget.SearchView
             android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layout_scrollFlags="scroll|enterAlways|snap"/>
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -33,13 +34,16 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_art_object_button"
+        android:id="@+id/explore_floating_action_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
+        android:src="@android:drawable/ic_menu_search"
         app:fabSize="mini"
         app:elevation="4dp"
         app:layout_anchorGravity="bottom|right|end" />
+
+
 
 </android.support.design.widget.CoordinatorLayout>
