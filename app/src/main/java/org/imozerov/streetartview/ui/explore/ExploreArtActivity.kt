@@ -97,13 +97,16 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     private fun closeSearchView() {
+        hideKeyboard()
+        explore_floating_action_button.show()
+        search_view.animateToGone()
+    }
+
+    private fun hideKeyboard() {
         if (currentFocus != null) {
             val inputMgr = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMgr.hideSoftInputFromWindow(currentFocus.windowToken, 0)
         }
-
-        explore_floating_action_button.show()
-        search_view.animateToGone()
     }
 
     private class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
