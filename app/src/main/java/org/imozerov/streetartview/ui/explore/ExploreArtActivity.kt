@@ -2,6 +2,7 @@ package org.imozerov.streetartview.ui.explore
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
 import kotlinx.android.synthetic.main.activity_explore_art.*
 import org.imozerov.streetartview.R
@@ -49,8 +51,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         tabs.setupWithViewPager(viewpager)
 
         search_view.findViewById(R.id.search_close_btn).setOnClickListener {
-            explore_floating_action_button.show()
-            search_view.animateToGone()
+            closeSearchView()
         }
 
         explore_floating_action_button.setOnClickListener {
@@ -80,6 +81,14 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         compositeSubscription!!.clear()
     }
 
+    override fun onBackPressed() {
+        if (search_view.visibility == View.VISIBLE) {
+            closeSearchView()
+            return
+        }
+        super.onBackPressed()
+    }
+
     override fun openArtObjectDetails(id: String?) {
         Log.d(TAG, "openArtObjectDetails($id)")
         val intent = Intent(this, DetailArtObjectActivity::class.java)
@@ -87,7 +96,17 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         startActivity(intent)
     }
 
-    internal class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    private fun closeSearchView() {
+        if (currentFocus != null) {
+            val inputMgr = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMgr.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+        }
+
+        explore_floating_action_button.show()
+        search_view.animateToGone()
+    }
+
+    private class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         private val mFragments = ArrayList<Fragment>()
         private val mFragmentTitles = ArrayList<String>()
 
