@@ -27,12 +27,12 @@
                 android:fitsSystemWindows="true"
                 app:layout_collapseMode="parallax">
 
-                <org.imozerov.streetartview.ui.detail.SquareImageView
+                <android.support.v4.view.ViewPager
                     android:id="@+id/art_object_detail_image"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop">
-                </org.imozerov.streetartview.ui.detail.SquareImageView>
+                    android:layout_height="270dp"
+                    android:layout_gravity="center_vertical">
+                </android.support.v4.view.ViewPager>
 
                 <TextView
                     android:id="@+id/art_object_images_number"

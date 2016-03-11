@@ -11,22 +11,13 @@ import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.extensions.addArtObject
-import org.imozerov.streetartview.ui.extensions.loadImage
 import javax.inject.Inject
 
 /**
  * Created by sergei on 08.02.16.
  */
 class DetailArtObjectActivity : AppCompatActivity() {
-    companion object {
-        val EXTRA_KEY_ART_OBJECT_DETAIL_ID = "EXTRA_KEY_ART_OBJECT_DETAIL_ID"
-        val EXTRA_IMAGE_CHOSEN_IN_DETAILS = "EXTRA_IMAGE_CHOSEN_IN_DETAILS"
-    }
-
     val PICK_IMAGE_REQUEST = 1
-
-    private var artObjectId: String? = null
-    private var imageChosen: Int? = null
 
     @Inject
     lateinit var dataSource: IDataSource
@@ -37,9 +28,9 @@ class DetailArtObjectActivity : AppCompatActivity() {
 
         (application as StreetArtViewApp).appComponent.inject(this)
 
-        artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
+        val artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
 
-        val artObjectUi = dataSource.getArtObject(artObjectId!!)
+        val artObjectUi = dataSource.getArtObject(artObjectId)
         art_object_detail_name.text = artObjectUi.name
         art_object_detail_author.text = artObjectUi.authorsNames()
         art_object_detail_description.text = artObjectUi.description
@@ -48,13 +39,12 @@ class DetailArtObjectActivity : AppCompatActivity() {
         art_object_images_number.text = resources
                 .getQuantityString(R.plurals.photos, picsNumber, picsNumber)
 
-        art_object_detail_image.loadImage(artObjectUi.picsUrls[0])
-        art_object_detail_image.setOnClickListener {
+        art_object_detail_image.adapter = GalleryPagerAdapter(this, artObjectUi.picsUrls, { position ->
             val intent = Intent(this@DetailArtObjectActivity, ImageViewActivity::class.java)
             intent.putExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID, artObjectId)
-            intent.putExtra(EXTRA_IMAGE_CHOSEN_IN_DETAILS, imageChosen)
+            intent.putExtra(EXTRA_IMAGE_CHOSEN_IN_DETAILS, position)
             startActivityForResult(intent, PICK_IMAGE_REQUEST)
-        }
+        })
 
         val mapFragment = SupportMapFragment.newInstance()
         supportFragmentManager.beginTransaction().replace(art_object_detail_map.id, mapFragment).commit()
@@ -67,13 +57,14 @@ class DetailArtObjectActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PICK_IMAGE_REQUEST) {
             if (resultCode == RESULT_OK) {
-                val artObjectUi = dataSource.getArtObject(artObjectId!!)
-                imageChosen = data?.getIntExtra(ImageViewActivity.EXTRA_IMAGE_CHOSEN_IN_VIEWPAGER, 0)
-                art_object_detail_image.loadImage(
-                        artObjectUi.picsUrls[imageChosen!!]
-                )
+                val position = data?.getIntExtra(ImageViewActivity.EXTRA_IMAGE_CHOSEN_IN_VIEWPAGER, 0)
+                art_object_detail_image.currentItem = position!!
             }
         }
     }
 
+    companion object {
+        val EXTRA_KEY_ART_OBJECT_DETAIL_ID = "EXTRA_KEY_ART_OBJECT_DETAIL_ID"
+        val EXTRA_IMAGE_CHOSEN_IN_DETAILS = "EXTRA_IMAGE_CHOSEN_IN_DETAILS"
+    }
 }
