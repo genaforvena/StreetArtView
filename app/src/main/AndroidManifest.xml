@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.imozerov.streetartview"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.imozerov.streetartview">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".StreetArtViewApp"
@@ -13,29 +13,31 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
+            android:value="@string/google_maps_key" />
 
-        <activity android:name=".ui.explore.ExploreArtActivity">
+        <activity
+            android:name=".ui.explore.ExploreArtActivity"
+            android:screenOrientation="userPortrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.detail.DetailArtObjectActivity">
-        </activity>
 
-        <service
-            android:name=".network.FetchService"
-            android:exported="false">
-        </service>
+        <activity
+            android:name=".ui.detail.DetailArtObjectActivity"
+            android:screenOrientation="userPortrait" />
 
         <activity
             android:name=".ui.detail.ImageViewActivity"
-            android:label="@string/title_activity_image_view">
-        </activity>
+            android:label="@string/title_activity_image_view" />
+
+        <service
+            android:name=".network.FetchService"
+            android:exported="false" />
     </application>
 
 </manifest>
