@@ -18,7 +18,7 @@ class DataSource() : IDataSource {
     // This realm instance should be used only to read data
     val readOnlyRealm = Realm.getDefaultInstance()
 
-    override fun insert(artworks: MutableList<Artwork>) {
+    override fun insert(artworks: List<Artwork>) {
         executeAsyncRealmOperation {
             Log.d(TAG, "inserting $artworks")
             val realmObjects = artworks.map {

@@ -9,10 +9,10 @@ import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_detail.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
-import org.imozerov.streetartview.location.addUserLocationMarker
-import org.imozerov.streetartview.location.getCurrentLocation
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.extensions.addArtObject
+import org.imozerov.streetartview.ui.extensions.addUserLocationMarker
+import org.imozerov.streetartview.ui.extensions.getCurrentLocation
 import javax.inject.Inject
 
 /**

@@ -1,6 +1,5 @@
 package org.imozerov.streetartview.ui.explore.map
 
-
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -11,12 +10,12 @@ import com.google.android.gms.maps.SupportMapFragment
 import kotlinx.android.synthetic.main.fragment_art_map.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
-import org.imozerov.streetartview.location.addUserLocationMarker
-import org.imozerov.streetartview.location.getCurrentLocation
 import org.imozerov.streetartview.ui.explore.ArtListPresenter
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
 import org.imozerov.streetartview.ui.extensions.addArtObject
+import org.imozerov.streetartview.ui.extensions.addUserLocationMarker
+import org.imozerov.streetartview.ui.extensions.getCurrentLocation
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
 class ArtMapFragment : Fragment(), Filterable, ArtView {
@@ -35,7 +34,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         mapFragment.getMapAsync {
             val userLocation = getCurrentLocation(context)
             it.addUserLocationMarker(userLocation)
-            it.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 14f))
+            it.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11f))
         }
     }
 
@@ -69,7 +68,8 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
         (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment).getMapAsync { googleMap ->
             googleMap.clear()
-            artObjectUis.map {
+            googleMap.addUserLocationMarker(getCurrentLocation(context))
+            artObjectUis.forEach {
                 googleMap.addArtObject(it)
             }
         }

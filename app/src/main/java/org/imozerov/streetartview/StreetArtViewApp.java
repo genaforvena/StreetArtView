@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
 
 import org.imozerov.streetartview.network.DaggerNetComponent;
 import org.imozerov.streetartview.network.FetchService;
@@ -39,6 +41,8 @@ public class StreetArtViewApp extends Application {
                 .build();
         Realm.setDefaultConfiguration(config);
 
+        initPicassoWithCache();
+
         appComponent = DaggerAppComponent
                 .builder()
                 .appModule(new AppModule(this))
@@ -53,6 +57,15 @@ public class StreetArtViewApp extends Application {
         refWatcher = LeakCanary.install(this);
 
         FetchService.Companion.startFetch(this);
+    }
+
+    protected void initPicassoWithCache() {
+        Picasso.Builder builder = new Picasso.Builder(this);
+        builder.downloader(new OkHttpDownloader(this, Integer.MAX_VALUE));
+        Picasso built = builder.build();
+        built.setIndicatorsEnabled(true);
+        built.setLoggingEnabled(true);
+        Picasso.setSingletonInstance(built);
     }
 
     public NetComponent getNetComponent() {
