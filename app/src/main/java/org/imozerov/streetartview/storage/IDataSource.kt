@@ -8,7 +8,7 @@ import rx.Observable
  * Created by imozerov on 04.03.16.
  */
 interface IDataSource {
-    fun insert(artworks: MutableList<Artwork>)
+    fun insert(artworks: List<Artwork>)
     fun listArtObjects(): Observable<List<ArtObjectUi>>
     fun getArtObject(id: String): ArtObjectUi
 }
