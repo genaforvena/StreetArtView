@@ -1,13 +1,9 @@
 package org.imozerov.streetartview;
 
-import org.robolectric.TestLifecycleApplication;
-
-import java.lang.reflect.Method;
-
 /**
  * Created by imozerov on 04.03.16.
  */
-public class TestStreetArtViewApp extends StreetArtViewApp implements TestLifecycleApplication {
+public class TestStreetArtViewApp extends StreetArtViewApp {
     private AppComponent appComponent;
 
     @Override
@@ -20,22 +16,13 @@ public class TestStreetArtViewApp extends StreetArtViewApp implements TestLifecy
     }
 
     @Override
+    protected void initPicassoWithCache() {
+        // Test app has to have no Picasso singleton as tests are failed
+        // java.lang.IllegalStateException: Singleton instance already exists.
+    }
+
+    @Override
     public AppComponent getAppComponent() {
         return appComponent;
-    }
-
-    @Override
-    public void beforeTest(Method method) {
-
-    }
-
-    @Override
-    public void prepareTest(Object test) {
-
-    }
-
-    @Override
-    public void afterTest(Method method) {
-
     }
 }

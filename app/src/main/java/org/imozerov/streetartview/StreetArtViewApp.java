@@ -41,12 +41,7 @@ public class StreetArtViewApp extends Application {
                 .build();
         Realm.setDefaultConfiguration(config);
 
-        Picasso.Builder builder = new Picasso.Builder(this);
-        builder.downloader(new OkHttpDownloader(this, Integer.MAX_VALUE));
-        Picasso built = builder.build();
-        built.setIndicatorsEnabled(true);
-        built.setLoggingEnabled(true);
-        Picasso.setSingletonInstance(built);
+        initPicassoWithCache();
 
         appComponent = DaggerAppComponent
                 .builder()
@@ -62,6 +57,15 @@ public class StreetArtViewApp extends Application {
         refWatcher = LeakCanary.install(this);
 
         FetchService.Companion.startFetch(this);
+    }
+
+    protected void initPicassoWithCache() {
+        Picasso.Builder builder = new Picasso.Builder(this);
+        builder.downloader(new OkHttpDownloader(this, Integer.MAX_VALUE));
+        Picasso built = builder.build();
+        built.setIndicatorsEnabled(true);
+        built.setLoggingEnabled(true);
+        Picasso.setSingletonInstance(built);
     }
 
     public NetComponent getNetComponent() {
