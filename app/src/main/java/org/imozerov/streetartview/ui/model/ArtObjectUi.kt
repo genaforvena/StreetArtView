@@ -16,6 +16,7 @@ class ArtObjectUi {
     val picsUrls: List<String>
     val lat: Double
     val lng: Double
+    val address: String
 
     constructor(realmArtObject: RealmArtObject) {
         val picUrls = ArrayList<String>()
@@ -38,10 +39,11 @@ class ArtObjectUi {
 
         lat = realmArtObject.location.lat
         lng = realmArtObject.location.lng
+        address = realmArtObject.location.address
     }
 
     @VisibleForTesting
-    constructor(id: String, name: String, authors: List<AuthorUi>, description: String, thumbPicUrl: String, picsUrls: List<String>, lat: Double, lng: Double) {
+    constructor(id: String, name: String, authors: List<AuthorUi>, description: String, thumbPicUrl: String, picsUrls: List<String>, lat: Double, lng: Double, address: String) {
         this.id = id
         this.name = name
         this.authors = authors
@@ -50,6 +52,7 @@ class ArtObjectUi {
         this.picsUrls = picsUrls
         this.lat = lat
         this.lng = lng
+        this.address = address
     }
 
     fun authorsNames() : String {

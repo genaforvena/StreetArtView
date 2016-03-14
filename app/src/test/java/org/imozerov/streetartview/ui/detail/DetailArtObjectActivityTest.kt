@@ -36,7 +36,8 @@ class DetailArtObjectActivityTest {
                 lat = 34.34, lng = 34.34,
                 thumbPicUrl = "pic",
                 authors = authors,
-                picsUrls = listOf("art"))
+                picsUrls = listOf("art"),
+                address = "Some street, 34")
 
         Mockito.`when`(TestAppModule.dataSourceMock.getArtObject(Mockito.anyString())).thenReturn(
                 artObjectUi
@@ -62,5 +63,6 @@ class DetailArtObjectActivityTest {
         assertTrue(activity.art_object_detail_author.text == artObjectUi!!.name)
         assertTrue(activity.art_object_images_number.text.contains(artObjectUi!!.picsUrls.size.toString()))
         assertTrue(activity.art_object_detail_description.text == artObjectUi!!.description)
+        assertTrue(activity.art_object_detail_address.text == artObjectUi!!.address)
     }
 }
