@@ -93,6 +93,13 @@
                     android:layout_margin="@dimen/spacing_small"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
+                <TextView
+                    android:id="@+id/art_object_detail_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_small"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
             </LinearLayout>
 
             <FrameLayout

@@ -36,6 +36,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
         art_object_detail_name.text = artObjectUi.name
         art_object_detail_author.text = artObjectUi.authorsNames()
         art_object_detail_description.text = artObjectUi.description
+        art_object_detail_address.text = artObjectUi.address
 
         val picsNumber = artObjectUi.picsUrls.size
         art_object_images_number.text = resources
