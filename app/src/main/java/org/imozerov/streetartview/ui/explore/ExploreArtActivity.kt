@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.util.Log
@@ -28,7 +29,7 @@ import java.util.*
 class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     val TAG = "ExploreArtActivity"
 
-    var compositeSubscription: CompositeSubscription? = null
+    val compositeSubscription = CompositeSubscription()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
@@ -39,37 +40,36 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         adapter.addFragment(ArtMapFragment.newInstance(), getString(R.string.map_fragment_pager_label))
         adapter.addFragment(ArtListFragment.newInstance(), getString(R.string.list_fragment_pager_label))
         viewpager.adapter = adapter
+        viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(p0: Int) {
+                // We're clearing every subscription but
+                // we need to clear only search subscription.
+                // This solution is not error-prone
+                compositeSubscription.clear()
+                createSearchSubscription()
+            }
+
+            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
+            }
+
+            override fun onPageSelected(p0: Int) {
+            }
+
+        })
         tabs.setupWithViewPager(viewpager)
 
-        search_view.findViewById(R.id.search_close_btn).setOnClickListener {
-            closeSearchView()
-        }
-
-        explore_floating_action_button.setOnClickListener {
-            explore_floating_action_button.hide()
-            search_view.animateToVisible()
-        }
+        explore_floating_action_button.setOnClickListener { openSearchView() }
+        search_view.findViewById(R.id.search_close_btn).setOnClickListener { closeSearchView() }
     }
 
     override fun onStart() {
         super.onStart()
-        compositeSubscription = CompositeSubscription();
-
-        val searchSubscription = RxSearchView
-                .queryTextChanges(search_view)
-                .doOnNext { Log.v(TAG, "Filtering $it") }
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    val fragment = supportFragmentManager
-                            .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewpager.currentItem)
-                    (fragment as? Filterable)?.applyFilter(it.toString())
-                }
-        compositeSubscription!!.add(searchSubscription)
+        createSearchSubscription()
     }
 
     override fun onStop() {
         super.onStop()
-        compositeSubscription!!.clear()
+        compositeSubscription.clear()
     }
 
     override fun onBackPressed() {
@@ -85,6 +85,24 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         val intent = Intent(this, DetailArtObjectActivity::class.java)
         intent.putExtra(DetailArtObjectActivity.EXTRA_KEY_ART_OBJECT_DETAIL_ID, id)
         startActivity(intent)
+    }
+
+    private fun createSearchSubscription() {
+        val searchSubscription = RxSearchView
+                .queryTextChanges(search_view)
+                .doOnNext { Log.v(TAG, "Filtering $it") }
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    val fragment = supportFragmentManager
+                            .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewpager.currentItem)
+                    (fragment as? Filterable)?.applyFilter(it.toString())
+                }
+        compositeSubscription.add(searchSubscription)
+    }
+
+    private fun openSearchView() {
+        explore_floating_action_button.hide()
+        search_view.animateToVisible()
     }
 
     private fun closeSearchView() {
