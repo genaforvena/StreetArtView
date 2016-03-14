@@ -68,6 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:layout_marginBottom="@dimen/spacing_small"
                 android:orientation="vertical">
 
                 <TextView
@@ -75,10 +76,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/spacing_small"
+                    android:capitalize="characters"
                     android:text="Name"
                     android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                    android:capitalize="characters" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
                 <TextView
                     android:id="@+id/art_object_detail_author"
@@ -102,10 +103,22 @@
                     android:id="@+id/art_object_detail_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_small"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_small"
                     android:text="Address, 34"
                     android:textAlignment="textEnd"
                     android:textAppearance="?android:attr/textAppearance" />
+
+                <TextView
+                    android:id="@+id/art_object_detail_distance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:textAlignment="textEnd"
+                    android:textAppearance="?android:attr/textAppearance"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
