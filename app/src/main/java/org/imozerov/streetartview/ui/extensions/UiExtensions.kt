@@ -5,6 +5,7 @@ import android.widget.ImageView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
+import org.imozerov.streetartview.R
 
 /**
  * Created by imozerov on 29.02.16.
@@ -12,6 +13,9 @@ import com.squareup.picasso.Picasso
 val TAG = "UiExtensions"
 
 fun ImageView.loadImage(imagePath: String) {
+    if (drawable != null) {
+        return
+    }
     if (imagePath.isNotBlank()) {
         Picasso.with(context)
                 .load(imagePath)
@@ -26,7 +30,8 @@ fun ImageView.loadImage(imagePath: String) {
                         Picasso.with(context)
                                 .load(imagePath)
                                 .into(this@loadImage, object : Callback {
-                                    override fun onSuccess() {}
+                                    override fun onSuccess() {
+                                    }
 
                                     override fun onError() {
                                         Log.w(TAG, "Could not fetch image")
@@ -34,5 +39,7 @@ fun ImageView.loadImage(imagePath: String) {
                                 })
                     }
                 })
+    } else {
+        Picasso.with(context).load(R.drawable.einstein).into(this)
     }
 }
