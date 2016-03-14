@@ -3,6 +3,7 @@ package org.imozerov.streetartview.ui.detail
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -10,9 +11,7 @@ import kotlinx.android.synthetic.main.activity_detail.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.IDataSource
-import org.imozerov.streetartview.ui.extensions.addArtObject
-import org.imozerov.streetartview.ui.extensions.addUserLocationMarker
-import org.imozerov.streetartview.ui.extensions.getCurrentLocation
+import org.imozerov.streetartview.ui.extensions.*
 import javax.inject.Inject
 
 /**
@@ -52,8 +51,16 @@ class DetailArtObjectActivity : AppCompatActivity() {
         val mapFragment = SupportMapFragment.newInstance()
         supportFragmentManager.beginTransaction().replace(art_object_detail_map.id, mapFragment).commit()
         mapFragment.getMapAsync {
-            it.addUserLocationMarker(getCurrentLocation(this))
-            it.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(artObjectUi.lat, artObjectUi.lng), 14f))
+            val artObjectLocation = LatLng(artObjectUi.lat, artObjectUi.lng)
+
+            val userLocation = getCurrentLocation(this)
+            if (userLocation != DEFAULT_USER_LOCATION) {
+                art_object_detail_distance.text = "${userLocation.printableDistanceTo(artObjectLocation)} km"
+                art_object_detail_distance.visibility = View.VISIBLE
+            }
+
+            it.addUserLocationMarker(userLocation)
+            it.moveCamera(CameraUpdateFactory.newLatLngZoom(artObjectLocation, 14f))
             it.addArtObject(artObjectUi)
         }
     }
