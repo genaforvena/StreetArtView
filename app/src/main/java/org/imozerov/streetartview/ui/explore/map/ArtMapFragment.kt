@@ -32,6 +32,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
                 .commit()
 
         mapFragment.getMapAsync {
+            it.uiSettings.isMapToolbarEnabled = false
             val userLocation = getCurrentLocation(context)
             it.addUserLocationMarker(userLocation)
             it.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11f))
