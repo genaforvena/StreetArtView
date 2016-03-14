@@ -34,7 +34,7 @@ class ExploreArtActivityTest {
         val activity = activityController!!.get()
 
         assertNotNull(activity.compositeSubscription)
-        assertTrue(activity.compositeSubscription!!.hasSubscriptions())
+        assertTrue(activity.compositeSubscription.hasSubscriptions())
     }
 
     @Test
@@ -64,6 +64,6 @@ class ExploreArtActivityTest {
 
         val activity = activityController!!.get()
 
-        assertFalse(activity.compositeSubscription!!.hasSubscriptions())
+        assertFalse(activity.compositeSubscription.hasSubscriptions())
     }
 }
