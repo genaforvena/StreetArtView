@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:visibility="invisible"
+    android:visibility="gone"
     app:behavior_hideable="true"
     app:behavior_peekHeight="100dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
@@ -27,19 +27,19 @@
                 android:id="@+id/bottom_detail_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_medium"
-                android:layout_marginRight="@dimen/spacing_medium"
-                android:layout_marginTop="@dimen/spacing_medium"
+                android:layout_marginLeft="@dimen/spacing_small"
+                android:layout_marginRight="@dimen/spacing_small"
+                android:layout_marginTop="@dimen/spacing_small"
                 android:text="Object Name"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+                android:textAppearance="?android:attr/textAppearance" />
 
             <TextView
                 android:id="@+id/bottom_detail_author"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_medium"
+                android:layout_margin="@dimen/spacing_small"
                 android:text="Object Author"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearance" />
 
             <ImageView
                 android:id="@+id/bottom_detail_image"
