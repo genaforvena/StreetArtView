@@ -1,44 +1,68 @@
 package org.imozerov.streetartview.ui.explore
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.Transformation
+import android.view.animation.TranslateAnimation
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.LinearLayout
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
 import kotlinx.android.synthetic.main.activity_explore_art.*
+import kotlinx.android.synthetic.main.bottom_details.*
 import org.imozerov.streetartview.R
+import org.imozerov.streetartview.StreetArtViewApp
+import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
+import org.imozerov.streetartview.ui.explore.interfaces.InfoView
 import org.imozerov.streetartview.ui.explore.list.ArtListFragment
 import org.imozerov.streetartview.ui.explore.map.ArtMapFragment
+import org.imozerov.streetartview.ui.extensions.loadImage
+import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 import java.util.*
+import javax.inject.Inject
 
-class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
+class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener, InfoView {
+
     val TAG = "ExploreArtActivity"
 
     val compositeSubscription = CompositeSubscription()
+    var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>? = null
+
+    @Inject
+    lateinit var dataSource: IDataSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_explore_art)
+        (application as StreetArtViewApp).appComponent.inject(this)
 
         val adapter = Adapter(supportFragmentManager)
         adapter.addFragment(ArtMapFragment.newInstance(), getString(R.string.map_fragment_pager_label))
         adapter.addFragment(ArtListFragment.newInstance(), getString(R.string.list_fragment_pager_label))
+        bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet)
         viewpager.adapter = adapter
         viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(p0: Int) {
@@ -60,11 +84,23 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
 
         explore_floating_action_button.setOnClickListener { openSearchView() }
         search_view.findViewById(R.id.search_close_btn).setOnClickListener { closeSearchView() }
+        viewpager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener(){
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                hideDetails()
+            }
+        })
     }
 
     override fun onStart() {
         super.onStart()
         createSearchSubscription()
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        }
     }
 
     override fun onStop() {
@@ -116,6 +152,25 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
             val inputMgr = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMgr.hideSoftInputFromWindow(currentFocus.windowToken, 0)
         }
+    }
+
+    override fun showDetails(id: String) {
+        var artObject: ArtObjectUi = dataSource.getArtObject(id)
+        bottom_detail_author.text = artObject.authorsNames()
+        bottom_detail_name.text = artObject.name
+        if(artObject.picsUrls.isEmpty()){
+            bottom_detail_image.setImageDrawable(null)
+        }else {
+            bottom_detail_image.loadImage(artObject.picsUrls[0])
+        }
+        bottom_sheet.visibility = View.VISIBLE
+        bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottom_info_linear.setOnClickListener { openArtObjectDetails(artObject.id) }
+    }
+
+    override fun hideDetails() {
+        bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
+        bottom_sheet.visibility = View.INVISIBLE
     }
 
     private class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {

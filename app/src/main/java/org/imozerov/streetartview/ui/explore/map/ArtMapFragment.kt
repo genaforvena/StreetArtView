@@ -13,6 +13,7 @@ import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.ui.explore.ArtListPresenter
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
+import org.imozerov.streetartview.ui.explore.interfaces.InfoView
 import org.imozerov.streetartview.ui.extensions.addArtObject
 import org.imozerov.streetartview.ui.extensions.addUserLocationMarker
 import org.imozerov.streetartview.ui.extensions.getCurrentLocation
@@ -32,10 +33,23 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
                 .commit()
 
         mapFragment.getMapAsync {
+            val infoView : InfoView
+            try{
+                infoView = (activity as InfoView)
+            } catch (cce: ClassCastException) {
+                throw RuntimeException("ExploreArtActivity must implement InfoView interface")
+            }
             it.uiSettings.isMapToolbarEnabled = false
             val userLocation = getCurrentLocation(context)
             it.addUserLocationMarker(userLocation)
             it.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11f))
+            it.setOnMarkerClickListener { marker ->
+                infoView.showDetails(marker.title)
+                true
+            }
+            it.setOnMapClickListener {
+                infoView.hideDetails()
+            }
         }
     }
 
