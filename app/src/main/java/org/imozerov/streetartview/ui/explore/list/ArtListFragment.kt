@@ -35,6 +35,7 @@ class ArtListFragment : Fragment(), Filterable, ArtView {
         presenter = ArtListPresenter(this)
 
         adapter = ArtListAdapter(context, java.util.ArrayList<ArtObjectUi>())
+        adapter!!.setHasStableIds(true)
         rootView.art_objects_recycler_view.setHasFixedSize(true)
 
         val layoutManager = GridLayoutManager(context, 3)

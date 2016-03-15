@@ -20,11 +20,15 @@ class ArtListAdapter(private val context: Context, private var data: List<ArtObj
 
     override fun onBindViewHolder(holder: ArtListViewHolder, position: Int) {
         val artObject = data!![position]
+        if (holder.artObjectId != artObject.id) {
+            holder.thumb.loadImage(artObject.thumbPicUrl)
+        }
         holder.artObjectId = artObject.id
-        holder.thumb.loadImage(artObject.thumbPicUrl)
     }
 
     override fun getItemCount() = data!!.size
+
+    override fun getItemId(position: Int) = data!![position].id.hashCode().toLong()
 
     fun setData(artObjectUis: List<ArtObjectUi>) {
         data = artObjectUis

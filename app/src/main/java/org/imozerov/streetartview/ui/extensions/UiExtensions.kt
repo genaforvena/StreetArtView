@@ -13,9 +13,6 @@ import org.imozerov.streetartview.R
 val TAG = "UiExtensions"
 
 fun ImageView.loadImage(imagePath: String) {
-    if (drawable != null) {
-        return
-    }
     if (imagePath.isNotBlank()) {
         Picasso.with(context)
                 .load(imagePath)
