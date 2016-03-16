@@ -51,7 +51,9 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
             it.addUserLocationMarker(userLocation)
             it.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11f))
             it.setOnMarkerClickListener { marker ->
-                artObjectDigestOpener!!.showArtObjectDigest(markersMap[marker]!!)
+                if (marker in markersMap) {
+                    artObjectDigestOpener!!.showArtObjectDigest(markersMap[marker]!!)
+                }
                 true
             }
             it.setOnMapClickListener {

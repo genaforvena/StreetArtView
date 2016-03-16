@@ -57,7 +57,6 @@ fun GoogleMap.addUserLocationMarker(userLocation: LatLng) {
 
 fun GoogleMap.addArtObject(artObject: ArtObjectUi) : Marker? {
     val markerOptions = MarkerOptions().position(LatLng(artObject.lat, artObject.lng))
-            .icon(BitmapDescriptorFactory.defaultMarker(
-                    BitmapDescriptorFactory.HUE_AZURE))
+            .icon(BitmapDescriptorFactory.defaultMarker(135f))
     return addMarker(markerOptions)
 }
