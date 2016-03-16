@@ -18,4 +18,5 @@ public interface AppComponent {
     void inject(ArtListPresenter artListPresenter);
     void inject(DetailArtObjectActivity detailArtObjectActivity);
     void inject(ImageViewActivity imageViewActivity);
+    void inject(ExploreArtActivity exploreArtActivity);
 }

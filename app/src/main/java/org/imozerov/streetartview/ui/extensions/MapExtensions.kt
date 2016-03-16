@@ -8,6 +8,7 @@ import android.util.Log
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
@@ -54,11 +55,8 @@ fun GoogleMap.addUserLocationMarker(userLocation: LatLng) {
     }
 }
 
-fun GoogleMap.addArtObject(artObject: ArtObjectUi) {
+fun GoogleMap.addArtObject(artObject: ArtObjectUi) : Marker? {
     val markerOptions = MarkerOptions().position(LatLng(artObject.lat, artObject.lng))
-            .title(artObject.authorsNames())
-            .snippet(artObject.name)
-            .icon(BitmapDescriptorFactory.defaultMarker(
-                    BitmapDescriptorFactory.HUE_AZURE))
-    addMarker(markerOptions)
+            .icon(BitmapDescriptorFactory.defaultMarker(135f))
+    return addMarker(markerOptions)
 }

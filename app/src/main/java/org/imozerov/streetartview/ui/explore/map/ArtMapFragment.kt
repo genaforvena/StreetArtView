@@ -1,5 +1,6 @@
 package org.imozerov.streetartview.ui.explore.map
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -7,10 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.Marker
 import kotlinx.android.synthetic.main.fragment_art_map.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.ui.explore.ArtListPresenter
+import org.imozerov.streetartview.ui.explore.interfaces.ArtObjectDigestOpener
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
 import org.imozerov.streetartview.ui.extensions.addArtObject
@@ -22,6 +25,17 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     val FRAGMENT_TAG = "MapFragment"
 
     private var presenter: ArtListPresenter? = null
+    private var artObjectDigestOpener: ArtObjectDigestOpener? = null
+    private val markersMap: MutableMap<Marker, String> = mutableMapOf()
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        try{
+            artObjectDigestOpener = (activity as ArtObjectDigestOpener)
+        } catch (cce: ClassCastException) {
+            throw RuntimeException("$context must implement InfoView interface")
+        }
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -36,6 +50,15 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
             val userLocation = getCurrentLocation(context)
             it.addUserLocationMarker(userLocation)
             it.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11f))
+            it.setOnMarkerClickListener { marker ->
+                if (marker in markersMap) {
+                    artObjectDigestOpener!!.showArtObjectDigest(markersMap[marker]!!)
+                }
+                true
+            }
+            it.setOnMapClickListener {
+                artObjectDigestOpener!!.hideArtObjectDigest()
+            }
         }
     }
 
@@ -66,12 +89,22 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         refWatcher.watch(this);
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        artObjectDigestOpener = null
+        markersMap.clear()
+    }
+
     override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
         (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment).getMapAsync { googleMap ->
+            markersMap.clear()
             googleMap.clear()
             googleMap.addUserLocationMarker(getCurrentLocation(context))
             artObjectUis.forEach {
-                googleMap.addArtObject(it)
+                val marker = googleMap.addArtObject(it)
+                if (marker != null) {
+                    markersMap[marker] = it.id
+                }
             }
         }
     }
