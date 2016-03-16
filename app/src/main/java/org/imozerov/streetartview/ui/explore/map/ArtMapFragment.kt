@@ -92,10 +92,12 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     override fun onDetach() {
         super.onDetach()
         artObjectDigestOpener = null
+        markersMap.clear()
     }
 
     override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
         (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment).getMapAsync { googleMap ->
+            markersMap.clear()
             googleMap.clear()
             googleMap.addUserLocationMarker(getCurrentLocation(context))
             artObjectUis.forEach {
