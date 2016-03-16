@@ -94,6 +94,10 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener, ArtObject
     }
 
     override fun onBackPressed() {
+        if (bottomSheetBehavior!!.state == BottomSheetBehavior.STATE_EXPANDED) {
+            hideArtObjectDigest()
+            return
+        }
         if (search_view.visibility == View.VISIBLE) {
             closeSearchView()
             return
@@ -152,7 +156,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener, ArtObject
         }
 
         bottom_sheet.visibility = View.VISIBLE
-        bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_EXPANDED
         bottom_info_linear.setOnClickListener { openArtObjectDetails(artObject.id) }
     }
 

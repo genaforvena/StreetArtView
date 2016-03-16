@@ -21,7 +21,7 @@ class ArtListViewHolder(context: Context, itemView: View) : RecyclerView.ViewHol
         try {
             detailOpener = context as ArtObjectDetailOpener
         } catch (cce: ClassCastException) {
-            throw RuntimeException("ExploreArtActivity must implement ArtObjectDetailOpener interface")
+            throw RuntimeException("$context must implement ArtObjectDetailOpener interface")
         }
 
         thumb = itemView.art_object_in_list_image
