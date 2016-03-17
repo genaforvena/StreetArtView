@@ -16,12 +16,6 @@ public class TestStreetArtViewApp extends StreetArtViewApp {
     }
 
     @Override
-    protected void initPicassoWithCache() {
-        // Test app has to have no Picasso singleton as tests are failed
-        // java.lang.IllegalStateException: Singleton instance already exists.
-    }
-
-    @Override
     public AppComponent getAppComponent() {
         return appComponent;
     }

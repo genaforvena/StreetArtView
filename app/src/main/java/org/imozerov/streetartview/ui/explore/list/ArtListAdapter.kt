@@ -4,7 +4,6 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.squareup.picasso.Picasso
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.ui.extensions.loadImage
 import org.imozerov.streetartview.ui.model.ArtObjectUi
