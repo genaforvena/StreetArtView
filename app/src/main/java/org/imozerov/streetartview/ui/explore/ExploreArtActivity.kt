@@ -105,6 +105,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     private fun openSearchView() {
+        getMapFragmentIfCurrentOrNull()?.hideArtObjectDigest()
         explore_floating_action_button.hide()
         search_view.animateToVisible()
     }

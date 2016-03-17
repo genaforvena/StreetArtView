@@ -107,7 +107,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     }
 
     fun onBackPressed() : Boolean {
-        if (bottomSheetBehavior!!.state == BottomSheetBehavior.STATE_EXPANDED) {
+        if (bottomSheetBehavior!!.state != BottomSheetBehavior.STATE_HIDDEN) {
             hideArtObjectDigest()
             return true
         }
