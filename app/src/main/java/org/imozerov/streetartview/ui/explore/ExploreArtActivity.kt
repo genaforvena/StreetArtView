@@ -73,7 +73,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     override fun onBackPressed() {
-        if (getMapFragmentIfCurrentOrNull()?.onBackPressed()!!) {
+        if (getMapFragmentIfCurrentOrNull()?.onBackPressed() == true) {
             return
         }
 
