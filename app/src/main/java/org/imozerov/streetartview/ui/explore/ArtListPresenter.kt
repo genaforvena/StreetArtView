@@ -4,6 +4,7 @@ import android.util.Log
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
+import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
@@ -34,6 +35,10 @@ class ArtListPresenter(private val view: ArtView) {
         filterQuery = query
         fetchSubscription?.unsubscribe()
         fetchSubscription = startFetchingArtObjectsFromDataSource()
+    }
+
+    fun getArtObject(id: String): ArtObjectUi {
+        return dataSource.getArtObject(id)
     }
 
     private fun startFetchingArtObjectsFromDataSource(): Subscription {

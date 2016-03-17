@@ -2,43 +2,52 @@ package org.imozerov.streetartview.ui.explore.map
 
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.Marker
+import kotlinx.android.synthetic.main.bottom_details.*
+import kotlinx.android.synthetic.main.bottom_details.view.*
 import kotlinx.android.synthetic.main.fragment_art_map.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
+import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.ArtListPresenter
-import org.imozerov.streetartview.ui.explore.interfaces.ArtObjectDigestOpener
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
 import org.imozerov.streetartview.ui.extensions.addArtObject
 import org.imozerov.streetartview.ui.extensions.addUserLocationMarker
 import org.imozerov.streetartview.ui.extensions.getCurrentLocation
+import org.imozerov.streetartview.ui.extensions.loadImage
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
 class ArtMapFragment : Fragment(), Filterable, ArtView {
+    val TAG = "ArtMapFragment"
     val FRAGMENT_TAG = "MapFragment"
 
     private var presenter: ArtListPresenter? = null
-    private var artObjectDigestOpener: ArtObjectDigestOpener? = null
+    private var artObjectDetailOpener: ArtObjectDetailOpener? = null
+    private var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>? = null
     private val markersMap: MutableMap<Marker, String> = mutableMapOf()
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        try{
-            artObjectDigestOpener = (activity as ArtObjectDigestOpener)
-        } catch (cce: ClassCastException) {
-            throw RuntimeException("$context must implement InfoView interface")
+        try {
+            artObjectDetailOpener = context as ArtObjectDetailOpener
+        } catch (e: ClassCastException) {
+            throw RuntimeException("$context must implement ArtObjectDetailOpener interface")
         }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         val mapFragment: SupportMapFragment = SupportMapFragment.newInstance()
         childFragmentManager
                 .beginTransaction()
@@ -52,12 +61,12 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
             it.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11f))
             it.setOnMarkerClickListener { marker ->
                 if (marker in markersMap) {
-                    artObjectDigestOpener!!.showArtObjectDigest(markersMap[marker]!!)
+                    showArtObjectDigest(markersMap[marker]!!)
                 }
                 true
             }
             it.setOnMapClickListener {
-                artObjectDigestOpener!!.hideArtObjectDigest()
+                hideArtObjectDigest()
             }
         }
     }
@@ -65,7 +74,9 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         presenter = ArtListPresenter(this)
-        return inflater!!.inflate(R.layout.fragment_art_map, container, false)
+        val layout = inflater!!.inflate(R.layout.fragment_art_map, container, false)
+        bottomSheetBehavior = BottomSheetBehavior.from(layout.bottom_sheet)
+        return layout
     }
 
     override fun onStart() {
@@ -91,8 +102,32 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
     override fun onDetach() {
         super.onDetach()
-        artObjectDigestOpener = null
+        artObjectDetailOpener = null
         markersMap.clear()
+    }
+
+    fun onBackPressed() : Boolean {
+        if (bottomSheetBehavior!!.state == BottomSheetBehavior.STATE_EXPANDED) {
+            hideArtObjectDigest()
+            return true
+        }
+        return false
+    }
+
+    private fun showArtObjectDigest(id: String) {
+        Log.v(TAG, "showArtObjectDigest($id)")
+        var artObject: ArtObjectUi = presenter!!.getArtObject(id)
+        bottom_detail_author.text = artObject.authorsNames()
+        bottom_detail_name.text = artObject.name
+        bottom_detail_image.loadImage(artObject.picsUrls[0])
+
+        bottom_sheet.visibility = View.VISIBLE
+        bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_EXPANDED
+        bottom_info_linear.setOnClickListener { artObjectDetailOpener!!.openArtObjectDetails(artObject.id) }
+    }
+
+    fun hideArtObjectDigest() {
+        bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
