@@ -17,8 +17,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
-import com.google.maps.android.ui.IconGenerator
-import kotlinx.android.synthetic.main.art_object_cluster_item.view.*
 import kotlinx.android.synthetic.main.bottom_details.*
 import kotlinx.android.synthetic.main.bottom_details.view.*
 import kotlinx.android.synthetic.main.fragment_art_map.view.*

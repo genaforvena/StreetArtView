@@ -15,7 +15,6 @@ import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
 import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.activity_explore_art.*
 import org.imozerov.streetartview.R
-import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
@@ -26,16 +25,12 @@ import org.imozerov.streetartview.ui.extensions.animateToGone
 import org.imozerov.streetartview.ui.extensions.animateToVisible
 import rx.subscriptions.CompositeSubscription
 import java.util.*
-import javax.inject.Inject
 
 class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
 
     val TAG = "ExploreArtActivity"
 
     val compositeSubscription = CompositeSubscription()
-
-    @Inject
-    lateinit var dataSource: IDataSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
@@ -111,6 +106,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     private fun closeSearchView() {
+        getMapFragmentIfCurrentOrNull()?.hideArtObjectDigest()
         hideKeyboard()
         explore_floating_action_button.show()
         search_view.animateToGone()
