@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.Marker
 import kotlinx.android.synthetic.main.bottom_details.*
 import kotlinx.android.synthetic.main.bottom_details.view.*
 import kotlinx.android.synthetic.main.fragment_art_map.*
+import kotlinx.android.synthetic.main.fragment_art_map.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
@@ -45,14 +46,14 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        presenter = ArtListPresenter(this)
+        val layout = inflater!!.inflate(R.layout.fragment_art_map, container, false)
+        bottomSheetBehavior = BottomSheetBehavior.from(layout.bottom_sheet)
 
         val mapFragment: SupportMapFragment = SupportMapFragment.newInstance()
-        childFragmentManager
-                .beginTransaction()
-                .replace(map.id, mapFragment, FRAGMENT_TAG)
-                .commit()
+        childFragmentManager.beginTransaction().replace(layout.map.id, mapFragment, FRAGMENT_TAG).commit()
 
         mapFragment.getMapAsync {
             it.uiSettings.isMapToolbarEnabled = false
@@ -69,13 +70,6 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
                 hideArtObjectDigest()
             }
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        presenter = ArtListPresenter(this)
-        val layout = inflater!!.inflate(R.layout.fragment_art_map, container, false)
-        bottomSheetBehavior = BottomSheetBehavior.from(layout.bottom_sheet)
         return layout
     }
 
@@ -123,7 +117,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
         bottom_sheet.visibility = View.VISIBLE
         bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_EXPANDED
-        bottom_info_linear.setOnClickListener { artObjectDetailOpener!!.openArtObjectDetails(artObject.id) }
+        bottom_info_go_to_detail_button.setOnClickListener { artObjectDetailOpener!!.openArtObjectDetails(artObject.id) }
     }
 
     fun hideArtObjectDigest() {

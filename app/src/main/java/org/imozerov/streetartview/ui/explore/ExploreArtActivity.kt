@@ -1,7 +1,5 @@
 package org.imozerov.streetartview.ui.explore
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,11 +8,11 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
+import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.activity_explore_art.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.storage.IDataSource
@@ -23,7 +21,9 @@ import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
 import org.imozerov.streetartview.ui.explore.list.ArtListFragment
 import org.imozerov.streetartview.ui.explore.map.ArtMapFragment
-import rx.android.schedulers.AndroidSchedulers
+import org.imozerov.streetartview.ui.extensions.addAll
+import org.imozerov.streetartview.ui.extensions.animateToGone
+import org.imozerov.streetartview.ui.extensions.animateToVisible
 import rx.subscriptions.CompositeSubscription
 import java.util.*
 import javax.inject.Inject
@@ -48,23 +48,30 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         viewpager.adapter = adapter
         viewpager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageScrollStateChanged(p0: Int) {
-                // We're clearing every subscription but
-                // we need to clear only search subscription.
-                // This solution is not error-prone
                 compositeSubscription.clear()
-                createSearchSubscription()
+                rxInit()
                 getMapFragmentIfCurrentOrNull()?.hideArtObjectDigest()
             }
         })
         tabs.setupWithViewPager(viewpager)
-
-        explore_floating_action_button.setOnClickListener { openSearchView() }
-        search_view.findViewById(R.id.search_close_btn).setOnClickListener { closeSearchView() }
     }
 
     override fun onStart() {
         super.onStart()
-        createSearchSubscription()
+        rxInit()
+    }
+
+    private fun rxInit() {
+        compositeSubscription.addAll(
+                RxView.clicks(explore_floating_action_button)
+                        .subscribe { openSearchView() },
+
+                RxView.clicks(search_view.findViewById(R.id.search_close_btn))
+                        .subscribe { closeSearchView() },
+
+                RxSearchView.queryTextChanges(search_view)
+                        .subscribe { applyFilter(it) }
+        )
     }
 
     override fun onStop() {
@@ -91,17 +98,10 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         startActivity(intent)
     }
 
-    private fun createSearchSubscription() {
-        val searchSubscription = RxSearchView
-                .queryTextChanges(search_view)
-                .doOnNext { Log.v(TAG, "Filtering $it") }
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    val fragment = supportFragmentManager
-                            .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewpager.currentItem)
-                    (fragment as? Filterable)?.applyFilter(it.toString())
-                }
-        compositeSubscription.add(searchSubscription)
+    private fun applyFilter(query: CharSequence) {
+        val fragment = supportFragmentManager
+                .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewpager.currentItem)
+        (fragment as? Filterable)?.applyFilter(query.toString())
     }
 
     private fun openSearchView() {
@@ -131,53 +131,26 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
 
         return null
     }
+}
 
-    private class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
-        private val mFragments = ArrayList<Fragment>()
-        private val mFragmentTitles = ArrayList<String>()
+private class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    private val mFragments = ArrayList<Fragment>()
+    private val mFragmentTitles = ArrayList<String>()
 
-        fun addFragment(fragment: Fragment, title: String) {
-            mFragments.add(fragment)
-            mFragmentTitles.add(title)
-        }
-
-        override fun getItem(position: Int): Fragment {
-            return mFragments[position]
-        }
-
-        override fun getCount(): Int {
-            return mFragments.size
-        }
-
-        override fun getPageTitle(position: Int): CharSequence {
-            return mFragmentTitles[position]
-        }
+    fun addFragment(fragment: Fragment, title: String) {
+        mFragments.add(fragment)
+        mFragmentTitles.add(title)
     }
-}
 
-fun SearchView.animateToGone() {
-    animate().translationY(height.toFloat())
-            .alpha(0.0f)
-            .setDuration(300)
-            .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator?) {
-                    super.onAnimationEnd(animation)
-                    visibility = View.GONE
-                    setQuery("", true)
-                }
-            });
-}
+    override fun getItem(position: Int): Fragment {
+        return mFragments[position]
+    }
 
-fun SearchView.animateToVisible() {
-    animate().translationY(0f)
-            .alpha(1f)
-            .setDuration(300)
-            .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator?) {
-                    super.onAnimationEnd(animation)
-                    visibility = View.VISIBLE
-                    isIconified = false
-                    requestFocus()
-                }
-            });
+    override fun getCount(): Int {
+        return mFragments.size
+    }
+
+    override fun getPageTitle(position: Int): CharSequence {
+        return mFragmentTitles[position]
+    }
 }
