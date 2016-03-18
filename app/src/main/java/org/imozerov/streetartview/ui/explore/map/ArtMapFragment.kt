@@ -10,11 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.maps.android.clustering.Cluster
+import com.google.maps.android.clustering.ClusterManager
+import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import kotlinx.android.synthetic.main.bottom_details.*
 import kotlinx.android.synthetic.main.bottom_details.view.*
-import kotlinx.android.synthetic.main.fragment_art_map.*
 import kotlinx.android.synthetic.main.fragment_art_map.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
@@ -22,7 +26,6 @@ import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.ArtListPresenter
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
-import org.imozerov.streetartview.ui.extensions.addArtObject
 import org.imozerov.streetartview.ui.extensions.addUserLocationMarker
 import org.imozerov.streetartview.ui.extensions.getCurrentLocation
 import org.imozerov.streetartview.ui.extensions.loadImage
@@ -35,7 +38,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     private var presenter: ArtListPresenter? = null
     private var artObjectDetailOpener: ArtObjectDetailOpener? = null
     private var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>? = null
-    private val markersMap: MutableMap<Marker, String> = mutableMapOf()
+    private var clusterManager: ClusterManager<ArtObjectClusterItem>? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -56,18 +59,23 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         childFragmentManager.beginTransaction().replace(layout.map.id, mapFragment, FRAGMENT_TAG).commit()
 
         mapFragment.getMapAsync {
-            it.uiSettings.isMapToolbarEnabled = false
-            val userLocation = getCurrentLocation(context)
-            it.addUserLocationMarker(userLocation)
-            it.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11f))
-            it.setOnMarkerClickListener { marker ->
-                if (marker in markersMap) {
-                    showArtObjectDigest(markersMap[marker]!!)
+            clusterManager = ClusterManager(context, it)
+            with (clusterManager!!) {
+                setOnClusterItemClickListener {
+                    showArtObjectDigest(it.artObjectUi.id)
+                    true
                 }
-                true
+                setRenderer(ArtObjectRenderer(context, it, clusterManager))
             }
-            it.setOnMapClickListener {
-                hideArtObjectDigest()
+            with (it) {
+                setOnCameraChangeListener(clusterManager);
+                setOnMarkerClickListener(clusterManager);
+
+                uiSettings.isMapToolbarEnabled = false
+                val userLocation = getCurrentLocation(context)
+                addUserLocationMarker(userLocation)
+                moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11f))
+                setOnMapClickListener { hideArtObjectDigest() }
             }
         }
         return layout
@@ -97,10 +105,9 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     override fun onDetach() {
         super.onDetach()
         artObjectDetailOpener = null
-        markersMap.clear()
     }
 
-    fun onBackPressed() : Boolean {
+    fun onBackPressed(): Boolean {
         if (bottomSheetBehavior!!.state != BottomSheetBehavior.STATE_HIDDEN) {
             hideArtObjectDigest()
             return true
@@ -126,14 +133,10 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
     override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
         (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment).getMapAsync { googleMap ->
-            markersMap.clear()
-            googleMap.clear()
-            googleMap.addUserLocationMarker(getCurrentLocation(context))
-            artObjectUis.forEach {
-                val marker = googleMap.addArtObject(it)
-                if (marker != null) {
-                    markersMap[marker] = it.id
-                }
+            with (clusterManager!!) {
+                clearItems()
+                addItems(artObjectUis.map { ArtObjectClusterItem(it) })
+                cluster()
             }
         }
     }
@@ -148,5 +151,18 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
             return fragment
         }
     }
-
 }
+
+class ArtObjectRenderer : DefaultClusterRenderer<ArtObjectClusterItem> {
+
+    // TODO load images into icon
+    constructor(context: Context?, map: GoogleMap?, clusterManager: ClusterManager<ArtObjectClusterItem>?) : super(context, map, clusterManager)
+
+    override fun onBeforeClusterItemRendered(item: ArtObjectClusterItem?, markerOptions: MarkerOptions?) {
+        markerOptions!!.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
+    }
+
+    override fun shouldRenderAsCluster(cluster: Cluster<ArtObjectClusterItem>?): Boolean = cluster!!.size > 1
+}
+
+

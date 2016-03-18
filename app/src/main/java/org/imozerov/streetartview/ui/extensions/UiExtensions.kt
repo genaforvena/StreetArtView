@@ -2,10 +2,13 @@ package org.imozerov.streetartview.ui.extensions
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.Context
 import android.support.v7.widget.SearchView
+import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.imozerov.streetartview.R
 
 /**
@@ -15,7 +18,7 @@ val TAG = "UiExtensions"
 
 fun ImageView.loadImage(imagePath: String) {
     if (imagePath.isNotBlank()) {
-        Glide.with(context).load(imagePath).into(this)
+        Glide.with(context).load(imagePath).diskCacheStrategy(DiskCacheStrategy.ALL).into(this)
     } else {
         Glide.with(context).load(R.drawable.einstein).into(this)
     }

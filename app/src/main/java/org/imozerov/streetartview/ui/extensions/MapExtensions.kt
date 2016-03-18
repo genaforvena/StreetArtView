@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import org.imozerov.streetartview.R
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
 /**
@@ -47,16 +48,15 @@ fun GoogleMap.addUserLocationMarker(userLocation: LatLng) {
     if (userLocation != DEFAULT_USER_LOCATION) {
         Log.v(TAG, "Location: Setting user marker in $userLocation")
         val markerOptions = MarkerOptions().position(userLocation)
-                .icon(BitmapDescriptorFactory.defaultMarker(
-                        BitmapDescriptorFactory.HUE_RED))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_black_36dp))
         addMarker(markerOptions)
     } else {
         Log.e(TAG, "Location of the user is unknown!")
     }
 }
 
-fun GoogleMap.addArtObject(artObject: ArtObjectUi) : Marker? {
+fun GoogleMap.addArtObjectSimpleMarker(artObject: ArtObjectUi) : Marker {
     val markerOptions = MarkerOptions().position(LatLng(artObject.lat, artObject.lng))
-            .icon(BitmapDescriptorFactory.defaultMarker(135f))
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
     return addMarker(markerOptions)
 }

@@ -7,6 +7,7 @@ import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -44,6 +45,7 @@ class ArtListPresenter(private val view: ArtView) {
     private fun startFetchingArtObjectsFromDataSource(): Subscription {
         return dataSource
                 .listArtObjects()
+                .debounce(200, TimeUnit.MILLISECONDS)
                 .map { it.filter { it.matches(filterQuery) } }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { view.showArtObjects(it) }

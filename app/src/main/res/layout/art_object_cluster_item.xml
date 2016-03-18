@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="60dp"
+    android:layout_height="45dp"
+    android:padding="1dp">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="@dimen/cluster_item_width"
+        android:layout_height="@dimen/cluster_item_height"
+        android:src="@drawable/einstein" />
+
+    <TextView
+        android:id="@id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Bubble.TextAppearance.Light"
+        android:background="@android:color/black"
+        android:layout_gravity="center"
+        android:text="SDSdf"
+        android:alpha=".8"/>
+
+</FrameLayout>
