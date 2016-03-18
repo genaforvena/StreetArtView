@@ -62,19 +62,23 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
         mapFragment.getMapAsync {
             clusterManager = ClusterManager(context, it)
-            clusterManager!!.setOnClusterItemClickListener {
-                showArtObjectDigest(it.artObjectUi.id)
-                true
+            with (clusterManager!!) {
+                setOnClusterItemClickListener {
+                    showArtObjectDigest(it.artObjectUi.id)
+                    true
+                }
+                setRenderer(ArtObjectRenderer(context, it, clusterManager))
             }
-            clusterManager!!.setRenderer(ArtObjectRenderer(context, it, clusterManager))
-            it.setOnCameraChangeListener(clusterManager);
-            it.setOnMarkerClickListener(clusterManager);
+            with (it) {
+                setOnCameraChangeListener(clusterManager);
+                setOnMarkerClickListener(clusterManager);
 
-            it.uiSettings.isMapToolbarEnabled = false
-            val userLocation = getCurrentLocation(context)
-            it.addUserLocationMarker(userLocation)
-            it.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11f))
-            it.setOnMapClickListener { hideArtObjectDigest() }
+                uiSettings.isMapToolbarEnabled = false
+                val userLocation = getCurrentLocation(context)
+                addUserLocationMarker(userLocation)
+                moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11f))
+                setOnMapClickListener { hideArtObjectDigest() }
+            }
         }
         return layout
     }
@@ -131,9 +135,11 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
     override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
         (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment).getMapAsync { googleMap ->
-            clusterManager!!.clearItems()
-            clusterManager!!.addItems(artObjectUis.map { ArtObjectClusterItem(it) })
-            clusterManager!!.cluster()
+            with (clusterManager!!) {
+                clearItems()
+                addItems(artObjectUis.map { ArtObjectClusterItem(it) })
+                cluster()
+            }
         }
     }
 
@@ -150,28 +156,13 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 }
 
 class ArtObjectRenderer : DefaultClusterRenderer<ArtObjectClusterItem> {
-    private val itemView: View
-    private val iconGenerator: IconGenerator
 
-    constructor(context: Context?, map: GoogleMap?, clusterManager: ClusterManager<ArtObjectClusterItem>?) : super(context, map, clusterManager) {
-        iconGenerator = IconGenerator(context!!.applicationContext);
-        itemView = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.art_object_cluster_item, null);
-        iconGenerator.setContentView(itemView)
-    }
+    // TODO load images into icon
+    constructor(context: Context?, map: GoogleMap?, clusterManager: ClusterManager<ArtObjectClusterItem>?) : super(context, map, clusterManager)
 
     override fun onBeforeClusterItemRendered(item: ArtObjectClusterItem?, markerOptions: MarkerOptions?) {
-//        itemView.image.loadImage(item!!.artObjectUi.thumbPicUrl)
-//        itemView.text.visibility = View.GONE
-//        val icon = iconGenerator.makeIcon()
         markerOptions!!.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
     }
-
-//    override fun onBeforeClusterRendered(cluster: Cluster<ArtObjectClusterItem>?, markerOptions: MarkerOptions?) {
-//        itemView.image.loadImage(cluster!!.items.first().artObjectUi.thumbPicUrl)
-//        itemView.text.visibility = View.VISIBLE
-//        val icon = iconGenerator.makeIcon(cluster.size.toString())
-//        markerOptions!!.icon(BitmapDescriptorFactory.fromBitmap(icon))
-//    }
 
     override fun shouldRenderAsCluster(cluster: Cluster<ArtObjectClusterItem>?): Boolean = cluster!!.size > 1
 }
