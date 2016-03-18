@@ -106,7 +106,6 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     private fun closeSearchView() {
-        getMapFragmentIfCurrentOrNull()?.hideArtObjectDigest()
         hideKeyboard()
         explore_floating_action_button.show()
         search_view.animateToGone()
