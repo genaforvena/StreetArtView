@@ -1,14 +1,10 @@
 package org.imozerov.streetartview.ui.extensions
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.location.Criteria
 import android.location.Location
 import android.location.LocationManager
 import android.util.Log
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.animation.GlideAnimation
-import com.bumptech.glide.request.target.SimpleTarget
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -63,22 +59,4 @@ fun GoogleMap.addArtObjectSimpleMarker(artObject: ArtObjectUi) : Marker {
     val markerOptions = MarkerOptions().position(LatLng(artObject.lat, artObject.lng))
             .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
     return addMarker(markerOptions)
-}
-
-fun GoogleMap.addArtObjectPreview(context: Context, artObject: ArtObjectUi) : Marker? {
-    val markerOptions = MarkerOptions().position(LatLng(artObject.lat, artObject.lng))
-    val marker = addMarker(markerOptions)
-    marker.isVisible = false
-    Glide.with(context)
-            .load(artObject.thumbPicUrl)
-            .asBitmap()
-            .fitCenter()
-            .override(dpToPx(context, 60), dpToPx(context, 40))
-            .into(object: SimpleTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap?, glideAnimation: GlideAnimation<in Bitmap>?) {
-                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(resource));
-                    marker.isVisible = true
-                }
-            })
-    return marker
 }

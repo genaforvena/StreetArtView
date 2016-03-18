@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="2dp"
+    android:layout_width="60dp"
+    android:layout_height="40dp">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/einstein"/>
+
+    <TextView
+        android:id="@id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Bubble.TextAppearance.Light"
+        android:background="@android:color/black"
+        android:layout_gravity="center"
+        android:text="SDSdf"
+        android:alpha=".8"/>
+
+</RelativeLayout>
