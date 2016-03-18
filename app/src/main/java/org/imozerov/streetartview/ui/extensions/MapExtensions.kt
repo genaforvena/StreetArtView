@@ -1,15 +1,20 @@
 package org.imozerov.streetartview.ui.extensions
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.location.Criteria
 import android.location.Location
 import android.location.LocationManager
 import android.util.Log
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.animation.GlideAnimation
+import com.bumptech.glide.request.target.SimpleTarget
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import org.imozerov.streetartview.R
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
 /**
@@ -47,16 +52,33 @@ fun GoogleMap.addUserLocationMarker(userLocation: LatLng) {
     if (userLocation != DEFAULT_USER_LOCATION) {
         Log.v(TAG, "Location: Setting user marker in $userLocation")
         val markerOptions = MarkerOptions().position(userLocation)
-                .icon(BitmapDescriptorFactory.defaultMarker(
-                        BitmapDescriptorFactory.HUE_RED))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_black_36dp))
         addMarker(markerOptions)
     } else {
         Log.e(TAG, "Location of the user is unknown!")
     }
 }
 
-fun GoogleMap.addArtObject(artObject: ArtObjectUi) : Marker? {
+fun GoogleMap.addArtObjectSimpleMarker(artObject: ArtObjectUi) : Marker {
     val markerOptions = MarkerOptions().position(LatLng(artObject.lat, artObject.lng))
-            .icon(BitmapDescriptorFactory.defaultMarker(135f))
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
     return addMarker(markerOptions)
+}
+
+fun GoogleMap.addArtObjectPreview(context: Context, artObject: ArtObjectUi) : Marker? {
+    val markerOptions = MarkerOptions().position(LatLng(artObject.lat, artObject.lng))
+    val marker = addMarker(markerOptions)
+    marker.isVisible = false
+    Glide.with(context)
+            .load(artObject.thumbPicUrl)
+            .asBitmap()
+            .fitCenter()
+            .override(dpToPx(context, 60), dpToPx(context, 40))
+            .into(object: SimpleTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap?, glideAnimation: GlideAnimation<in Bitmap>?) {
+                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(resource));
+                    marker.isVisible = true
+                }
+            })
+    return marker
 }

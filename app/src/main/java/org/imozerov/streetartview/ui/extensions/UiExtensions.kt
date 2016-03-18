@@ -2,7 +2,9 @@ package org.imozerov.streetartview.ui.extensions
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.Context
 import android.support.v7.widget.SearchView
+import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -12,6 +14,10 @@ import org.imozerov.streetartview.R
  * Created by imozerov on 29.02.16.
  */
 val TAG = "UiExtensions"
+
+fun dpToPx(context: Context, dp: Int): Int {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), context.resources.displayMetrics).toInt()
+}
 
 fun ImageView.loadImage(imagePath: String) {
     if (imagePath.isNotBlank()) {

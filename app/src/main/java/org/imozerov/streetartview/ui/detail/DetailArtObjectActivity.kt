@@ -60,8 +60,8 @@ class DetailArtObjectActivity : AppCompatActivity() {
             }
 
             it.addUserLocationMarker(userLocation)
+            it.addArtObjectSimpleMarker(artObjectUi)
             it.moveCamera(CameraUpdateFactory.newLatLngZoom(artObjectLocation, 14f))
-            it.addArtObject(artObjectUi)
         }
     }
 

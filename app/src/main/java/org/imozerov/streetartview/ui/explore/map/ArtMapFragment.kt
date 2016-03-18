@@ -14,7 +14,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.Marker
 import kotlinx.android.synthetic.main.bottom_details.*
 import kotlinx.android.synthetic.main.bottom_details.view.*
-import kotlinx.android.synthetic.main.fragment_art_map.*
 import kotlinx.android.synthetic.main.fragment_art_map.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
@@ -22,7 +21,7 @@ import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.ArtListPresenter
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
-import org.imozerov.streetartview.ui.extensions.addArtObject
+import org.imozerov.streetartview.ui.extensions.addArtObjectPreview
 import org.imozerov.streetartview.ui.extensions.addUserLocationMarker
 import org.imozerov.streetartview.ui.extensions.getCurrentLocation
 import org.imozerov.streetartview.ui.extensions.loadImage
@@ -130,7 +129,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
             googleMap.clear()
             googleMap.addUserLocationMarker(getCurrentLocation(context))
             artObjectUis.forEach {
-                val marker = googleMap.addArtObject(it)
+                val marker = googleMap.addArtObjectPreview(context, it)
                 if (marker != null) {
                     markersMap[marker] = it.id
                 }
@@ -148,5 +147,6 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
             return fragment
         }
     }
-
 }
+
+
