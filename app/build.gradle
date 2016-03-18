@@ -31,7 +31,7 @@ android {
     defaultConfig {
         applicationId "org.imozerov.streetartview"
         minSdkVersion 17
-        targetSdkVersion 23
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
