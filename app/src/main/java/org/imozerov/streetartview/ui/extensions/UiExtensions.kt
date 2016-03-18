@@ -8,6 +8,7 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.imozerov.streetartview.R
 
 /**
@@ -15,13 +16,9 @@ import org.imozerov.streetartview.R
  */
 val TAG = "UiExtensions"
 
-fun dpToPx(context: Context, dp: Int): Int {
-    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), context.resources.displayMetrics).toInt()
-}
-
 fun ImageView.loadImage(imagePath: String) {
     if (imagePath.isNotBlank()) {
-        Glide.with(context).load(imagePath).into(this)
+        Glide.with(context).load(imagePath).diskCacheStrategy(DiskCacheStrategy.ALL).into(this)
     } else {
         Glide.with(context).load(R.drawable.einstein).into(this)
     }

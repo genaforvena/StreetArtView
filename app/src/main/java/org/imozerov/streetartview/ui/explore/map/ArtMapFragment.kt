@@ -105,7 +105,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         artObjectDetailOpener = null
     }
 
-    fun onBackPressed() : Boolean {
+    fun onBackPressed(): Boolean {
         if (bottomSheetBehavior!!.state != BottomSheetBehavior.STATE_HIDDEN) {
             hideArtObjectDigest()
             return true
@@ -132,7 +132,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
         (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment).getMapAsync { googleMap ->
             clusterManager!!.clearItems()
-            clusterManager!!.addItems(artObjectUis.map { ArtObjectClusterItem(it) } )
+            clusterManager!!.addItems(artObjectUis.map { ArtObjectClusterItem(it) })
             clusterManager!!.cluster()
         }
     }
@@ -156,23 +156,22 @@ class ArtObjectRenderer : DefaultClusterRenderer<ArtObjectClusterItem> {
     constructor(context: Context?, map: GoogleMap?, clusterManager: ClusterManager<ArtObjectClusterItem>?) : super(context, map, clusterManager) {
         iconGenerator = IconGenerator(context!!.applicationContext);
         itemView = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.art_object_cluster_item, null);
-
         iconGenerator.setContentView(itemView)
     }
 
     override fun onBeforeClusterItemRendered(item: ArtObjectClusterItem?, markerOptions: MarkerOptions?) {
-        itemView.image.loadImage(item!!.artObjectUi.thumbPicUrl)
-        itemView.text.visibility = View.GONE
-        val icon = iconGenerator.makeIcon()
-        markerOptions!!.icon(BitmapDescriptorFactory.fromBitmap(icon))
+//        itemView.image.loadImage(item!!.artObjectUi.thumbPicUrl)
+//        itemView.text.visibility = View.GONE
+//        val icon = iconGenerator.makeIcon()
+        markerOptions!!.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
     }
 
-    override fun onBeforeClusterRendered(cluster: Cluster<ArtObjectClusterItem>?, markerOptions: MarkerOptions?) {
-        itemView.image.loadImage(cluster!!.items.first().artObjectUi.thumbPicUrl)
-        itemView.text.visibility = View.VISIBLE
-        val icon = iconGenerator.makeIcon(cluster.size.toString())
-        markerOptions!!.icon(BitmapDescriptorFactory.fromBitmap(icon))
-    }
+//    override fun onBeforeClusterRendered(cluster: Cluster<ArtObjectClusterItem>?, markerOptions: MarkerOptions?) {
+//        itemView.image.loadImage(cluster!!.items.first().artObjectUi.thumbPicUrl)
+//        itemView.text.visibility = View.VISIBLE
+//        val icon = iconGenerator.makeIcon(cluster.size.toString())
+//        markerOptions!!.icon(BitmapDescriptorFactory.fromBitmap(icon))
+//    }
 
     override fun shouldRenderAsCluster(cluster: Cluster<ArtObjectClusterItem>?): Boolean = cluster!!.size > 1
 }
