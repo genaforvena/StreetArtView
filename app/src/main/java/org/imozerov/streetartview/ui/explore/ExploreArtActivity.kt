@@ -1,7 +1,5 @@
 package org.imozerov.streetartview.ui.explore
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +8,6 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -25,6 +22,8 @@ import org.imozerov.streetartview.ui.explore.interfaces.Filterable
 import org.imozerov.streetartview.ui.explore.list.ArtListFragment
 import org.imozerov.streetartview.ui.explore.map.ArtMapFragment
 import org.imozerov.streetartview.ui.extensions.addAll
+import org.imozerov.streetartview.ui.extensions.animateToGone
+import org.imozerov.streetartview.ui.extensions.animateToVisible
 import rx.subscriptions.CompositeSubscription
 import java.util.*
 import javax.inject.Inject
@@ -49,9 +48,6 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         viewpager.adapter = adapter
         viewpager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageScrollStateChanged(p0: Int) {
-                // We're clearing every subscription but
-                // we need to clear only search subscription.
-                // This solution is not error-prone
                 compositeSubscription.clear()
                 rxInit()
                 getMapFragmentIfCurrentOrNull()?.hideArtObjectDigest()
@@ -74,11 +70,8 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
                         .subscribe { closeSearchView() },
 
                 RxSearchView.queryTextChanges(search_view)
-                        .subscribe {
-                            val fragment = supportFragmentManager
-                                    .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewpager.currentItem)
-                            (fragment as? Filterable)?.applyFilter(it.toString())
-                        })
+                        .subscribe { applyFilter(it) }
+        )
     }
 
     override fun onStop() {
@@ -103,6 +96,12 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         val intent = Intent(this, DetailArtObjectActivity::class.java)
         intent.putExtra(DetailArtObjectActivity.EXTRA_KEY_ART_OBJECT_DETAIL_ID, id)
         startActivity(intent)
+    }
+
+    private fun applyFilter(query: CharSequence) {
+        val fragment = supportFragmentManager
+                .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewpager.currentItem)
+        (fragment as? Filterable)?.applyFilter(query.toString())
     }
 
     private fun openSearchView() {
@@ -132,53 +131,26 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
 
         return null
     }
+}
 
-    private class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
-        private val mFragments = ArrayList<Fragment>()
-        private val mFragmentTitles = ArrayList<String>()
+private class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    private val mFragments = ArrayList<Fragment>()
+    private val mFragmentTitles = ArrayList<String>()
 
-        fun addFragment(fragment: Fragment, title: String) {
-            mFragments.add(fragment)
-            mFragmentTitles.add(title)
-        }
-
-        override fun getItem(position: Int): Fragment {
-            return mFragments[position]
-        }
-
-        override fun getCount(): Int {
-            return mFragments.size
-        }
-
-        override fun getPageTitle(position: Int): CharSequence {
-            return mFragmentTitles[position]
-        }
+    fun addFragment(fragment: Fragment, title: String) {
+        mFragments.add(fragment)
+        mFragmentTitles.add(title)
     }
-}
 
-fun SearchView.animateToGone() {
-    animate().translationY(height.toFloat())
-            .alpha(0.0f)
-            .setDuration(300)
-            .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator?) {
-                    super.onAnimationEnd(animation)
-                    visibility = View.GONE
-                    setQuery("", true)
-                }
-            });
-}
+    override fun getItem(position: Int): Fragment {
+        return mFragments[position]
+    }
 
-fun SearchView.animateToVisible() {
-    animate().translationY(0f)
-            .alpha(1f)
-            .setDuration(300)
-            .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator?) {
-                    super.onAnimationEnd(animation)
-                    visibility = View.VISIBLE
-                    isIconified = false
-                    requestFocus()
-                }
-            });
+    override fun getCount(): Int {
+        return mFragments.size
+    }
+
+    override fun getPageTitle(position: Int): CharSequence {
+        return mFragmentTitles[position]
+    }
 }
