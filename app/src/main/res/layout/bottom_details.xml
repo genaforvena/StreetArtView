@@ -16,20 +16,33 @@
         app:cardElevation="2dp"
         app:cardUseCompatPadding="true">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/bottom_info_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/cardview_light_background"
             android:orientation="vertical">
 
+            <ImageView
+                android:id="@+id/bottom_info_go_to_detail_button"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="@dimen/spacing_small"
+                android:layout_marginRight="@dimen/spacing_small"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:src="@drawable/ic_info_black_24dp" />
+
             <TextView
                 android:id="@+id/bottom_detail_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/bottom_info_go_to_detail_button"
                 android:layout_marginLeft="@dimen/spacing_small"
                 android:layout_marginRight="@dimen/spacing_small"
                 android:layout_marginTop="@dimen/spacing_small"
+                android:layout_toStartOf="@+id/bottom_info_go_to_detail_button"
                 android:text="Object Name"
                 android:textAppearance="?android:attr/textAppearance" />
 
@@ -37,7 +50,10 @@
                 android:id="@+id/bottom_detail_author"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/bottom_detail_name"
                 android:layout_margin="@dimen/spacing_small"
+                android:layout_marginLeft="@dimen/spacing_small"
+                android:layout_marginRight="@dimen/spacing_small"
                 android:text="Object Author"
                 android:textAppearance="?android:attr/textAppearance" />
 
@@ -45,9 +61,11 @@
                 android:id="@+id/bottom_detail_image"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/bottom_detail_author"
                 android:scaleType="centerCrop"
                 android:src="@drawable/einstein"
                 android:visibility="visible" />
-        </LinearLayout>
+        </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

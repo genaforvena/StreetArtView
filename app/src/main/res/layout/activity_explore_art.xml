@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@android:drawable/ic_menu_search"
+        android:src="@drawable/ic_search_black_24dp"
         app:fabSize="mini"
         app:elevation="4dp"
         app:layout_anchorGravity="bottom|right|end" />
