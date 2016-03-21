@@ -11,4 +11,6 @@ interface IDataSource {
     fun insert(artworks: List<Artwork>)
     fun listArtObjects(): Observable<List<ArtObjectUi>>
     fun getArtObject(id: String): ArtObjectUi
+    fun listFavourites(): Observable<List<ArtObjectUi>>
+    fun changeFavouriteStatus(artObjectId: String) : Boolean
 }

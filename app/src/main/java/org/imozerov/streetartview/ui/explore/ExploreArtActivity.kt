@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_explore_art.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
+import org.imozerov.streetartview.ui.explore.favourites.FavouritesListFragment
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
 import org.imozerov.streetartview.ui.explore.list.ArtListFragment
 import org.imozerov.streetartview.ui.explore.map.ArtMapFragment
@@ -40,15 +41,18 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         val adapter = Adapter(supportFragmentManager)
         adapter.addFragment(ArtMapFragment.newInstance(), getString(R.string.map_fragment_pager_label))
         adapter.addFragment(ArtListFragment.newInstance(), getString(R.string.list_fragment_pager_label))
+        adapter.addFragment(FavouritesListFragment.newInstance(), getString(R.string.favourites_fragment_pager_label))
         viewpager.adapter = adapter
         viewpager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageScrollStateChanged(p0: Int) {
                 compositeSubscription.clear()
                 rxInit()
-                getMapFragmentIfCurrentOrNull()?.hideArtObjectDigest()
             }
         })
         tabs.setupWithViewPager(viewpager)
+        tabs.getTabAt(0)?.icon = getDrawable(R.drawable.ic_explore_black_36dp)
+        tabs.getTabAt(1)?.icon = getDrawable(R.drawable.ic_visibility_black_36dp)
+        tabs.getTabAt(2)?.icon = getDrawable(R.drawable.ic_favorite_black_36dp)
     }
 
     override fun onStart() {
@@ -146,6 +150,6 @@ private class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        return mFragmentTitles[position]
+        return ""
     }
 }

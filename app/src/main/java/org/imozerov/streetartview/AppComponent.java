@@ -4,8 +4,7 @@ import dagger.Component;
 
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity;
 import org.imozerov.streetartview.ui.detail.ImageViewActivity;
-import org.imozerov.streetartview.ui.explore.ArtListPresenter;
-import org.imozerov.streetartview.ui.explore.ExploreArtActivity;
+import org.imozerov.streetartview.ui.explore.base.ArtListPresenter;
 
 import javax.inject.Singleton;
 
