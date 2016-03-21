@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_art_map.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
-import org.imozerov.streetartview.ui.explore.ArtListPresenter
+import org.imozerov.streetartview.ui.explore.base.ArtListPresenter
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
 import org.imozerov.streetartview.ui.extensions.addUserLocationMarker
@@ -128,7 +128,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     }
 
     fun hideArtObjectDigest() {
-        bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {

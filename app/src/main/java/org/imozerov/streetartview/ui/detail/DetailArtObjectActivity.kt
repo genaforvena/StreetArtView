@@ -7,11 +7,13 @@ import android.view.View
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.activity_detail.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.extensions.*
+import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
 /**
@@ -23,19 +25,24 @@ class DetailArtObjectActivity : AppCompatActivity() {
     @Inject
     lateinit var dataSource: IDataSource
 
+    private var artObjectId: String? = null
+
+    val compositeSubscription: CompositeSubscription = CompositeSubscription()
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
         (application as StreetArtViewApp).appComponent.inject(this)
 
-        val artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
+        artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
 
-        val artObjectUi = dataSource.getArtObject(artObjectId)
+        val artObjectUi = dataSource.getArtObject(artObjectId!!)
         art_object_detail_name.text = artObjectUi.name
         art_object_detail_author.text = artObjectUi.authorsNames()
         art_object_detail_description.text = artObjectUi.description
         art_object_detail_address.text = artObjectUi.address
+        setFavouriteIcon(artObjectUi.isFavourite)
 
         val picsNumber = artObjectUi.picsUrls.size
         art_object_images_number.text = resources
@@ -65,12 +72,34 @@ class DetailArtObjectActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        compositeSubscription.add(
+                RxView.clicks(detail_set_favourite_button).subscribe{
+                    setFavouriteIcon(dataSource.changeFavouriteStatus(artObjectId!!))
+                }
+        )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        compositeSubscription.clear()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PICK_IMAGE_REQUEST) {
             if (resultCode == RESULT_OK) {
                 val position = data?.getIntExtra(ImageViewActivity.EXTRA_IMAGE_CHOSEN_IN_VIEWPAGER, 0)
                 art_object_detail_image.currentItem = position!!
             }
+        }
+    }
+
+    private fun setFavouriteIcon(isFavourite: Boolean) {
+        if (isFavourite) {
+            detail_set_favourite_button.setImageDrawable(getDrawable(R.drawable.ic_favorite_black_24dp))
+        } else {
+            detail_set_favourite_button.setImageDrawable(getDrawable(R.drawable.ic_favorite_border_black_24dp))
         }
     }
 

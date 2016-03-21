@@ -17,6 +17,7 @@ class ArtObjectUi {
     val lat: Double
     val lng: Double
     val address: String
+    var isFavourite: Boolean
 
     constructor(realmArtObject: RealmArtObject) {
         val picUrls = ArrayList<String>()
@@ -40,6 +41,7 @@ class ArtObjectUi {
         lat = realmArtObject.location.lat
         lng = realmArtObject.location.lng
         address = realmArtObject.location.address
+        isFavourite = realmArtObject.isFavourite
     }
 
     @VisibleForTesting
@@ -53,6 +55,7 @@ class ArtObjectUi {
         this.lat = lat
         this.lng = lng
         this.address = address
+        this.isFavourite = false
     }
 
     fun authorsNames() : String {
