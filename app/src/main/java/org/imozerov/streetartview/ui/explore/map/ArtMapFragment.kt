@@ -13,6 +13,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
@@ -58,16 +59,17 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         val mapFragment: SupportMapFragment = SupportMapFragment.newInstance()
         childFragmentManager.beginTransaction().replace(layout.map.id, mapFragment, FRAGMENT_TAG).commit()
 
-        mapFragment.getMapAsync {
-            clusterManager = ClusterManager(context, it)
+        mapFragment.getMapAsync { gMap ->
+            clusterManager = ClusterManager(context, gMap)
             with (clusterManager!!) {
                 setOnClusterItemClickListener {
+                    gMap.animateCamera(CameraUpdateFactory.newLatLng(LatLng(it.artObjectUi.lat, it.artObjectUi.lng)))
                     showArtObjectDigest(it.artObjectUi.id)
                     true
                 }
-                setRenderer(ArtObjectRenderer(context, it, clusterManager))
+                setRenderer(ArtObjectRenderer(context, gMap, clusterManager))
             }
-            with (it) {
+            with (gMap) {
                 setOnCameraChangeListener(clusterManager);
                 setOnMarkerClickListener(clusterManager);
 
@@ -118,8 +120,6 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     private fun showArtObjectDigest(id: String) {
         Log.v(TAG, "showArtObjectDigest($id)")
         var artObject: ArtObjectUi = presenter!!.getArtObject(id)
-        bottom_detail_author.text = artObject.authorsNames()
-        bottom_detail_name.text = artObject.name
         bottom_detail_image.loadImage(artObject.picsUrls[0])
 
         bottom_sheet.visibility = View.VISIBLE
