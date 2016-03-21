@@ -50,6 +50,9 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
             }
         })
         tabs.setupWithViewPager(viewpager)
+        tabs.getTabAt(0)?.icon = getDrawable(R.drawable.ic_explore_black_36dp)
+        tabs.getTabAt(1)?.icon = getDrawable(R.drawable.ic_visibility_black_36dp)
+        tabs.getTabAt(2)?.icon = getDrawable(R.drawable.ic_favorite_black_36dp)
     }
 
     override fun onStart() {
@@ -147,6 +150,6 @@ private class Adapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        return mFragmentTitles[position]
+        return ""
     }
 }

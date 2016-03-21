@@ -25,7 +25,7 @@ import java.util.*
  * Created by imozerov on 21.03.16.
  */
 abstract class AbstractListFragment : Fragment(), Filterable, ArtView {
-    private val TAG = "ArtListFragment"
+    private val TAG = "AbstractListFragment"
 
     private var presenter: ArtListPresenter? = null
     private var adapter: ArtListAdapter? = null
