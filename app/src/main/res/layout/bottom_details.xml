@@ -11,6 +11,7 @@
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/bottom_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardElevation="2dp"
@@ -23,28 +24,25 @@
             android:background="@color/cardview_light_background"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/bottom_info_go_to_detail_button"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="@dimen/spacing_small"
-                android:layout_marginRight="@dimen/spacing_small"
-                android:layout_marginTop="@dimen/spacing_small"
-                android:src="@drawable/ic_info_black_24dp" />
-
             <TextView
                 android:id="@+id/bottom_detail_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/bottom_info_go_to_detail_button"
                 android:layout_marginLeft="@dimen/spacing_small"
                 android:layout_marginRight="@dimen/spacing_small"
                 android:layout_marginTop="@dimen/spacing_small"
-                android:layout_toStartOf="@+id/bottom_info_go_to_detail_button"
                 android:text="Object Name"
                 android:textAppearance="?android:attr/textAppearance" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/bottom_info_go_to_detail_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_info_black_24dp"
+                app:fabSize="mini" />
 
             <TextView
                 android:id="@+id/bottom_detail_author"
@@ -68,4 +66,5 @@
                 android:visibility="visible" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
+
 </LinearLayout>
