@@ -2,9 +2,11 @@ package org.imozerov.streetartview.ui.detail
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_image_view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
