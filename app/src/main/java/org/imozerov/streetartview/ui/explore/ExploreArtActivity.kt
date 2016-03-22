@@ -49,10 +49,12 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
                 rxInit()
             }
         })
+        viewpager.offscreenPageLimit = 3
+
         tabs.setupWithViewPager(viewpager)
-        tabs.getTabAt(0)?.icon = getDrawable(R.drawable.ic_explore_black_36dp)
-        tabs.getTabAt(1)?.icon = getDrawable(R.drawable.ic_visibility_black_36dp)
-        tabs.getTabAt(2)?.icon = getDrawable(R.drawable.ic_favorite_black_36dp)
+        tabs.getTabAt(0)?.icon = getDrawable(R.drawable.ic_explore_white_36dp)
+        tabs.getTabAt(1)?.icon = getDrawable(R.drawable.ic_visibility_white_36dp)
+        tabs.getTabAt(2)?.icon = getDrawable(R.drawable.ic_favorite_white_36dp)
     }
 
     override fun onStart() {
