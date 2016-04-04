@@ -135,7 +135,7 @@
             <FrameLayout
                 android:id="@+id/art_object_detail_map"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="500dp"
                 android:layout_alignParentBottom="true"
                 android:layout_below="@+id/art_object_textviews_layout" />
 

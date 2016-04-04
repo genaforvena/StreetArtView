@@ -35,7 +35,10 @@ class DataSource() : IDataSource {
 
     override fun listArtObjects(): Observable<List<ArtObjectUi>> {
         return readOnlyRealm
-                .allObjects(RealmArtObject::class.java)
+                .where(RealmArtObject::class.java)
+                // TODO We're selecting only alive objects for now!
+                .equalTo("status", 0)
+                .findAll()
                 .asObservable()
                 .cache()
                 // Do not try to use flatMap().toList() here
@@ -54,6 +57,8 @@ class DataSource() : IDataSource {
         return readOnlyRealm
                 .where(RealmArtObject::class.java)
                 .equalTo("isFavourite", true)
+                // TODO We're selecting only alive objects for now!
+                .equalTo("status", 0)
                 .findAll()
                 .asObservable()
                 .cache()
