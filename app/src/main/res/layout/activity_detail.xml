@@ -107,6 +107,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/spacing_small"
                     android:text="Description"
+                    android:autoLink="web"
+                    android:textColorLink="@color/colorPrimary"
                     android:textAppearance="?android:attr/textAppearance" />
 
                 <TextView

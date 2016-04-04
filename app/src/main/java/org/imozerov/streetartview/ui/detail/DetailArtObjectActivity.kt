@@ -3,6 +3,7 @@ package org.imozerov.streetartview.ui.detail
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.method.LinkMovementMethod
 import android.view.View
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
@@ -40,7 +41,11 @@ class DetailArtObjectActivity : AppCompatActivity() {
         val artObjectUi = dataSource.getArtObject(artObjectId!!)
         art_object_detail_name.text = artObjectUi.name
         art_object_detail_author.text = artObjectUi.authorsNames()
-        art_object_detail_description.text = artObjectUi.description
+        if (artObjectUi.description.isBlank()) {
+            art_object_detail_description.visibility = View.GONE
+        } else {
+            art_object_detail_description.text = artObjectUi.description
+        }
         art_object_detail_address.text = artObjectUi.address
         setFavouriteIcon(artObjectUi.isFavourite)
 
