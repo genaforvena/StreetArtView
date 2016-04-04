@@ -7,13 +7,10 @@ import com.google.gson.annotations.SerializedName;
  * Created by imozerov on 16.02.16.
  */
 public class Photo {
-    @SerializedName("title")
+    @SerializedName("name")
     @Expose
     private String title;
-    @SerializedName("thumbnail")
-    @Expose
-    private String thmb;
-    @SerializedName("fullres")
+    @SerializedName("image")
     @Expose
     private String big;
 
@@ -33,24 +30,6 @@ public class Photo {
      */
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    /**
-     *
-     * @return
-     * The thmb
-     */
-    public String getThmb() {
-        return thmb;
-    }
-
-    /**
-     *
-     * @param thmb
-     * The thmb
-     */
-    public void setThmb(String thmb) {
-        this.thmb = thmb;
     }
 
     /**

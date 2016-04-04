@@ -43,7 +43,7 @@ class FetchService : IntentService("FetchService") {
                 return
             }
 
-            val responseJson = response.body().artworks
+            val responseJson = response.body()
 
             dataSource.insert(responseJson)
         } catch (exception: java.io.IOException) {

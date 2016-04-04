@@ -31,7 +31,7 @@ class ArtObjectUi {
             return@map AuthorUi(
                     it.id,
                     it.name,
-                    it.photo
+                    it.photo ?: ""
             )
         }
         description = realmArtObject.description
