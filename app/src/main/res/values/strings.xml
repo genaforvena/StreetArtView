@@ -4,5 +4,7 @@
     <string name="list_fragment_pager_label">Gallery</string>
     <string name="favourites_fragment_pager_label">Favourites</string>
 
+    <string name="share">Share</string>
+
     <string name="title_activity_image_view">ImageViewActivity</string>
 </resources>
