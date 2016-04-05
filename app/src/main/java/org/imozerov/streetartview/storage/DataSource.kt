@@ -46,9 +46,8 @@ class DataSource() : IDataSource {
                 // No call to toList() will be performed.
                 .map {
                     val listOfArtObjects = ArrayList<ArtObjectUi>(it.size)
-                    for (model in it) {
-                        listOfArtObjects.add(ArtObjectUi(model))
-                    }
+                    it.filter { it.picsUrls.isNotEmpty() }
+                            .forEach { listOfArtObjects.add(ArtObjectUi(it)) }
                     listOfArtObjects
                 }
     }
@@ -67,9 +66,8 @@ class DataSource() : IDataSource {
                 // No call to toList() will be performed.
                 .map {
                     val listOfArtObjects = ArrayList<ArtObjectUi>(it.size)
-                    for (model in it) {
-                        listOfArtObjects.add(ArtObjectUi(model))
-                    }
+                    it.filter { it.picsUrls.isNotEmpty() }
+                            .forEach { listOfArtObjects.add(ArtObjectUi(it)) }
                     listOfArtObjects
                 }
     }
@@ -81,7 +79,7 @@ class DataSource() : IDataSource {
                 .findFirst())
     }
 
-    override fun changeFavouriteStatus(artObjectId: String) : Boolean {
+    override fun changeFavouriteStatus(artObjectId: String): Boolean {
         with (readOnlyRealm) {
             val artObjectInRealm = where(RealmArtObject::class.java)
                     .equalTo("id", artObjectId)
