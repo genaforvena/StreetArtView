@@ -16,7 +16,6 @@ import org.jetbrains.anko.onClick
  * Created by imozerov on 11.03.16.
  */
 class GalleryPagerAdapter(val context: Context, val images: List<String>, private val listenerAction: ((position: Int) -> (Unit))) : PagerAdapter() {
-
     override fun getCount() = images.size
 
     override fun isViewFromObject(view: View, anyObject: Any) = view === anyObject as LinearLayout
@@ -24,6 +23,7 @@ class GalleryPagerAdapter(val context: Context, val images: List<String>, privat
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         return container.linearLayout {
             imageView {
+                loadImage(images[position])
                 onClick {
                     listenerAction(position)
                 }
@@ -32,11 +32,16 @@ class GalleryPagerAdapter(val context: Context, val images: List<String>, privat
                     height = matchParent
                 }
                 scaleType = ImageView.ScaleType.CENTER_CROP
-            }.loadImage(images[position])
+                tag = TAG_CURRENT_DETAIL_IMAGE
+            }
         }
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, anyObject: Any) {
         container.removeView(anyObject as LinearLayout)
+    }
+
+    companion object {
+        val TAG_CURRENT_DETAIL_IMAGE = "TAG_CURRENT_DETAIL_IMAGE"
     }
 }

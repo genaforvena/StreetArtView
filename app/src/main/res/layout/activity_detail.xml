@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -30,7 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:background="#ffffff" />
+                    android:background="#ffffff"/>
 
                 <TextView
                     android:id="@+id/art_object_images_number"
@@ -44,14 +44,14 @@
                     android:paddingEnd="12dp"
                     android:paddingStart="12dp"
                     android:paddingTop="6dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
             </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="50dp"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -89,7 +89,7 @@
                         android:capitalize="characters"
                         android:text="Name"
                         android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
 
                     <TextView
                         android:id="@+id/art_object_detail_author"
@@ -99,7 +99,7 @@
                         android:layout_marginRight="@dimen/spacing_small"
                         android:text="Author"
                         android:textAlignment="textStart"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                     <TextView
                         android:id="@+id/art_object_detail_description"
@@ -109,7 +109,7 @@
                         android:autoLink="web"
                         android:text="Description"
                         android:textAppearance="?android:attr/textAppearance"
-                        android:textColorLink="@color/colorPrimary" />
+                        android:textColorLink="@color/colorPrimary"/>
 
                     <TextView
                         android:id="@+id/art_object_detail_address"
@@ -122,7 +122,7 @@
                         android:drawableRight="@drawable/ic_directions_black_18dp"
                         android:text="Address, 34"
                         android:textAlignment="textEnd"
-                        android:textAppearance="?android:attr/textAppearance" />
+                        android:textAppearance="?android:attr/textAppearance"/>
 
                     <TextView
                         android:id="@+id/art_object_detail_distance"
@@ -132,7 +132,7 @@
                         android:layout_marginRight="@dimen/spacing_small"
                         android:textAlignment="textEnd"
                         android:textAppearance="?android:attr/textAppearance"
-                        android:visibility="gone" />
+                        android:visibility="gone"/>
 
                 </LinearLayout>
 
@@ -142,20 +142,31 @@
                 android:id="@+id/art_object_detail_map"
                 android:layout_width="match_parent"
                 android:layout_height="500dp"
-                android:layout_alignParentBottom="true" />
+                android:layout_alignParentBottom="true"/>
 
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/detail_share_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="55dp"
+        android:clickable="true"
+        app:fabSize="mini"
+        android:src="@drawable/ic_share_black_24dp"
+        app:layout_anchor="@id/collapsing_toolbar"
+        app:layout_anchorGravity="bottom|right|end"/>
+
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/detail_set_favourite_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_marginRight="5dp"
         android:clickable="true"
         app:fabSize="mini"
         app:layout_anchor="@id/collapsing_toolbar"
-        app:layout_anchorGravity="bottom|right|end" />
+        app:layout_anchorGravity="bottom|right|end"/>
 
 </android.support.design.widget.CoordinatorLayout>

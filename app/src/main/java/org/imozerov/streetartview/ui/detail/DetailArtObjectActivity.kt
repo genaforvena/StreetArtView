@@ -3,9 +3,11 @@ package org.imozerov.streetartview.ui.detail
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import com.google.android.gms.analytics.HitBuilders
+import android.widget.ImageView
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable
 import com.google.android.gms.analytics.Tracker
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
@@ -17,12 +19,10 @@ import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.extensions.*
 import org.imozerov.streetartview.ui.model.ArtObjectUi
+import org.jetbrains.anko.imageURI
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
-/**
- * Created by sergei on 08.02.16.
- */
 class DetailArtObjectActivity : AppCompatActivity() {
     val PICK_IMAGE_REQUEST = 1
 
@@ -49,25 +49,20 @@ class DetailArtObjectActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
+        compositeSubscription.add(
+                RxView.clicks(detail_share_button).subscribe {
+                    shareArtObjectInfo()
+                }
+        )
         compositeSubscription.add(
                 RxView.clicks(detail_set_favourite_button).subscribe {
-                    artObjectUi.isFavourite = !artObjectUi.isFavourite
-                    dataSource.setFavourite(artObjectUi.id, artObjectUi.isFavourite)
-                    setFavouriteIcon(artObjectUi.isFavourite)
+                    changeFavouriteStatus()
                 }
         )
         compositeSubscription.add(
                 RxView.clicks(art_object_detail_address).subscribe {
-                    val latitude = artObjectUi.lat
-                    val longitude = artObjectUi.lng
-                    val label = artObjectUi.address
-                    val uriBegin = "geo: $latitude, $longitude"
-                    val query = "$latitude, $longitude ($label)"
-                    val encodedQuery = Uri.encode(query)
-                    val uriString = "$uriBegin?q=$encodedQuery&z=16";
-                    val uri = Uri.parse(uriString);
-                    val intent = Intent(android.content.Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
+                    startNavigation()
                 }
         )
     }
@@ -132,6 +127,36 @@ class DetailArtObjectActivity : AppCompatActivity() {
                 moveCamera(CameraUpdateFactory.newLatLngZoom(artObjectLocation, 14f))
             }
         }
+    }
+
+    private fun shareArtObjectInfo() {
+        val curImage: ImageView = art_object_detail_image.findViewWithTag(GalleryPagerAdapter.TAG_CURRENT_DETAIL_IMAGE) as ImageView
+
+        val shareImageIntent = Intent()
+        shareImageIntent.action = Intent.ACTION_SEND
+        shareImageIntent.putExtra(Intent.EXTRA_STREAM, curImage.createUri(contentResolver))
+        shareImageIntent.putExtra(Intent.EXTRA_TEXT, "${artObjectUi.name} - ${artObjectUi.address}")
+        shareImageIntent.type = "image/*"
+        startActivity(Intent.createChooser(shareImageIntent, resources.getText(R.string.share)))
+    }
+
+    private fun startNavigation() {
+        val latitude = artObjectUi.lat
+        val longitude = artObjectUi.lng
+        val label = artObjectUi.address
+        val uriBegin = "geo: $latitude, $longitude"
+        val query = "$latitude, $longitude ($label)"
+        val encodedQuery = Uri.encode(query)
+        val uriString = "$uriBegin?q=$encodedQuery&z=16"
+        val uri = Uri.parse(uriString)
+        val intent = Intent(android.content.Intent.ACTION_VIEW, uri)
+        startActivity(intent)
+    }
+
+    private fun changeFavouriteStatus() {
+        artObjectUi.isFavourite = !artObjectUi.isFavourite
+        dataSource.setFavourite(artObjectUi.id, artObjectUi.isFavourite)
+        setFavouriteIcon(artObjectUi.isFavourite)
     }
 
     private fun setFavouriteIcon(isFavourite: Boolean) {
