@@ -3,6 +3,7 @@ package org.imozerov.streetartview.ui.extensions
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
+import android.graphics.drawable.AnimationDrawable
 import android.support.v7.widget.SearchView
 import android.util.TypedValue
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.imozerov.streetartview.R
+import pl.droidsonroids.gif.GifDrawable
 
 /**
  * Created by imozerov on 29.02.16.
@@ -18,7 +20,9 @@ val TAG = "UiExtensions"
 
 fun ImageView.loadImage(imagePath: String?) {
     if (imagePath?.isNotBlank() == true) {
-        Glide.with(context).load(imagePath).diskCacheStrategy(DiskCacheStrategy.ALL).into(this)
+        val gifFromResource = GifDrawable(resources, R.raw.image_loading_placeholder)
+        gifFromResource.start()
+        Glide.with(context).load(imagePath).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(gifFromResource).into(this)
     } else {
         Glide.with(context).load(R.drawable.einstein).into(this)
     }

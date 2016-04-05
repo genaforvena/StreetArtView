@@ -99,4 +99,5 @@ dependencies {
     compile 'com.google.dagger:dagger:2.0.1'
     compile 'javax.annotation:jsr250-api:1.0'
     compile 'com.commit451:PhotoView:1.2.5'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
 }
