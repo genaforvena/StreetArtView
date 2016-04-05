@@ -10,10 +10,8 @@ import kotlinx.android.synthetic.main.art_object_gallery_item.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.ui.extensions.loadImage
 
-/**
- * Created by imozerov on 11.03.16.
- */
 class GalleryPagerAdapter(val context: Context, val images: List<String>, listenerAction: ((position: Int) -> (Unit))) : PagerAdapter() {
+
     val inflater: LayoutInflater
     val listenerAction: ((Int) -> (Unit))
 
@@ -32,6 +30,7 @@ class GalleryPagerAdapter(val context: Context, val images: List<String>, listen
         itemView.image_preview.setOnClickListener {
             listenerAction(position)
         }
+        itemView.image_preview.tag = TAG_CURRENT_DETAIL_IMAGE
         container.addView(itemView)
         return itemView
     }
@@ -39,4 +38,9 @@ class GalleryPagerAdapter(val context: Context, val images: List<String>, listen
     override fun destroyItem(container: ViewGroup, position: Int, anyObject: Any) {
         container.removeView(anyObject as LinearLayout)
     }
+
+    companion object {
+        val TAG_CURRENT_DETAIL_IMAGE = "TAG_CURRENT_DETAIL_IMAGE"
+    }
+
 }

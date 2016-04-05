@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="map_fragment_pager_label">Карта</string>
+    <string name="list_fragment_pager_label">Галерея</string>
+    <string name="favourites_fragment_pager_label">Избранное</string>
+
+    <string name="share">Поделиться</string>
+    <string name="street_art_object">Стрит Арт объект</string>
+
+</resources>

@@ -3,9 +3,11 @@ package org.imozerov.streetartview.ui.detail
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import com.google.android.gms.analytics.HitBuilders
+import android.widget.ImageView
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable
 import com.google.android.gms.analytics.Tracker
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
@@ -20,10 +22,8 @@ import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
-/**
- * Created by sergei on 08.02.16.
- */
 class DetailArtObjectActivity : AppCompatActivity() {
+
     val PICK_IMAGE_REQUEST = 1
 
     @Inject
@@ -57,6 +57,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
         }
         art_object_detail_address.text = artObjectUi!!.address
         setFavouriteIcon(artObjectUi!!.isFavourite)
+        detail_share_button.setImageDrawable(getDrawable(R.drawable.ic_share_black_24dp))
 
         val picsNumber = artObjectUi!!.picsUrls.size
         art_object_images_number.text = resources.getQuantityString(R.plurals.photos, picsNumber, picsNumber)
@@ -89,6 +90,12 @@ class DetailArtObjectActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
+        compositeSubscription.add(
+                RxView.clicks(detail_share_button).subscribe {
+                    shareArtObjectInfo()
+                }
+        )
         compositeSubscription.add(
                 RxView.clicks(detail_set_favourite_button).subscribe {
                     artObjectUi!!.isFavourite = !artObjectUi!!.isFavourite
@@ -104,10 +111,10 @@ class DetailArtObjectActivity : AppCompatActivity() {
                     val uriBegin = "geo: $latitude, $longitude"
                     val query = "$latitude, $longitude ($label)"
                     val encodedQuery = Uri.encode(query)
-                    val uriString = "$uriBegin?q=$encodedQuery&z=16";
-                    val uri = Uri.parse(uriString);
-                    val intent = Intent(android.content.Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
+                    val uriString = "$uriBegin?q=$encodedQuery&z=16"
+                    val uri = Uri.parse(uriString)
+                    val intent = Intent(android.content.Intent.ACTION_VIEW, uri)
+                    startActivity(intent)
                 }
         )
     }
@@ -124,6 +131,28 @@ class DetailArtObjectActivity : AppCompatActivity() {
                 art_object_detail_image.currentItem = position!!
             }
         }
+    }
+
+    private fun shareArtObjectInfo() {
+
+        val curImage: ImageView = art_object_detail_image
+                .findViewWithTag(GalleryPagerAdapter.TAG_CURRENT_DETAIL_IMAGE) as ImageView
+        val drawable = curImage.drawable
+        val bitmap = (drawable as GlideBitmapDrawable).bitmap
+
+        val path = MediaStore.Images.Media.insertImage(contentResolver,
+                bitmap, "Street Art object temporary file", null)
+
+        val uri = Uri.parse(path)
+
+        val shareImageIntent = Intent()
+        shareImageIntent.action = Intent.ACTION_SEND
+        shareImageIntent.putExtra(Intent.EXTRA_STREAM, uri)
+        shareImageIntent.putExtra(Intent.EXTRA_TEXT,
+                "${resources.getString(R.string.street_art_object)}: ${artObjectUi!!.name} - ${artObjectUi!!.address}")
+        shareImageIntent.type = "image/*"
+        startActivity(Intent.createChooser(shareImageIntent, resources.getText(R.string.share)))
+
     }
 
     private fun setFavouriteIcon(isFavourite: Boolean) {
