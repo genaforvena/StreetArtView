@@ -18,8 +18,7 @@ import org.imozerov.streetartview.network.NetModule;
  * Created by imozerov on 05.02.16.
  */
 public class StreetArtViewApp extends Application {
-    public static final String TEST_API = "http://test.artspots.ru/api/";
-    public static final String PRODUCTION_API = "http://artspots.ru/api/";
+    public static final String PRODUCTION_API = "https://street-art-server.herokuapp.com";
 
     private AppComponent appComponent;
     private NetComponent netComponent;
@@ -47,7 +46,7 @@ public class StreetArtViewApp extends Application {
         netComponent = DaggerNetComponent
                 .builder()
                 .appModule(new AppModule(this))
-                .netModule(new NetModule(TEST_API))
+                .netModule(new NetModule(PRODUCTION_API))
                 .build();
 
         refWatcher = LeakCanary.install(this);

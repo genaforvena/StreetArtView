@@ -17,6 +17,7 @@ public class RealmArtObject extends RealmObject {
     private RealmLocation location;
     private RealmList<RealmString> picsUrls;
     private boolean isFavourite;
+    private int status;
 
     public String getId() {
         return id;
@@ -80,5 +81,13 @@ public class RealmArtObject extends RealmObject {
 
     public void setIsFavourite(boolean isFavourite) {
         this.isFavourite = isFavourite;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

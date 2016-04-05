@@ -14,9 +14,6 @@ public class Artist {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("photo")
-    @Expose
-    private String photo;
 
     /**
      *
@@ -52,24 +49,6 @@ public class Artist {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     *
-     * @return
-     * The photo
-     */
-    public String getPhoto() {
-        return photo;
-    }
-
-    /**
-     *
-     * @param photo
-     * The photo
-     */
-    public void setPhoto(String photo) {
-        this.photo = photo;
     }
 
 }

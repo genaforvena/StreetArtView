@@ -16,8 +16,8 @@ import org.imozerov.streetartview.R
  */
 val TAG = "UiExtensions"
 
-fun ImageView.loadImage(imagePath: String) {
-    if (imagePath.isNotBlank()) {
+fun ImageView.loadImage(imagePath: String?) {
+    if (imagePath?.isNotBlank() == true) {
         Glide.with(context).load(imagePath).diskCacheStrategy(DiskCacheStrategy.ALL).into(this)
     } else {
         Glide.with(context).load(R.drawable.einstein).into(this)

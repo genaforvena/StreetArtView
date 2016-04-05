@@ -35,25 +35,9 @@ class DataSource() : IDataSource {
 
     override fun listArtObjects(): Observable<List<ArtObjectUi>> {
         return readOnlyRealm
-                .allObjects(RealmArtObject::class.java)
-                .asObservable()
-                .cache()
-                // Do not try to use flatMap().toList() here
-                // as onComplete() will never be called so
-                // No call to toList() will be performed.
-                .map {
-                    val listOfArtObjects = ArrayList<ArtObjectUi>(it.size)
-                    for (model in it) {
-                        listOfArtObjects.add(ArtObjectUi(model))
-                    }
-                    listOfArtObjects
-                }
-    }
-
-    override fun listFavourites(): Observable<List<ArtObjectUi>> {
-        return readOnlyRealm
                 .where(RealmArtObject::class.java)
-                .equalTo("isFavourite", true)
+                // TODO We're selecting only alive objects for now!
+                .equalTo("status", 0)
                 .findAll()
                 .asObservable()
                 .cache()
@@ -62,9 +46,28 @@ class DataSource() : IDataSource {
                 // No call to toList() will be performed.
                 .map {
                     val listOfArtObjects = ArrayList<ArtObjectUi>(it.size)
-                    for (model in it) {
-                        listOfArtObjects.add(ArtObjectUi(model))
-                    }
+                    it.filter { it.picsUrls.isNotEmpty() }
+                            .forEach { listOfArtObjects.add(ArtObjectUi(it)) }
+                    listOfArtObjects
+                }
+    }
+
+    override fun listFavourites(): Observable<List<ArtObjectUi>> {
+        return readOnlyRealm
+                .where(RealmArtObject::class.java)
+                .equalTo("isFavourite", true)
+                // TODO We're selecting only alive objects for now!
+                .equalTo("status", 0)
+                .findAll()
+                .asObservable()
+                .cache()
+                // Do not try to use flatMap().toList() here
+                // as onComplete() will never be called so
+                // No call to toList() will be performed.
+                .map {
+                    val listOfArtObjects = ArrayList<ArtObjectUi>(it.size)
+                    it.filter { it.picsUrls.isNotEmpty() }
+                            .forEach { listOfArtObjects.add(ArtObjectUi(it)) }
                     listOfArtObjects
                 }
     }
@@ -76,7 +79,7 @@ class DataSource() : IDataSource {
                 .findFirst())
     }
 
-    override fun changeFavouriteStatus(artObjectId: String) : Boolean {
+    override fun changeFavouriteStatus(artObjectId: String): Boolean {
         with (readOnlyRealm) {
             val artObjectInRealm = where(RealmArtObject::class.java)
                     .equalTo("id", artObjectId)
