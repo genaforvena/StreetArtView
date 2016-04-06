@@ -30,7 +30,8 @@
                     android:id="@+id/art_object_detail_image"
                     android:layout_width="match_parent"
                     android:layout_height="270dp"
-                    android:layout_gravity="center_vertical"></android.support.v4.view.ViewPager>
+                    android:layout_gravity="center_vertical"
+                    android:background="#ffffff" />
 
                 <TextView
                     android:id="@+id/art_object_images_number"

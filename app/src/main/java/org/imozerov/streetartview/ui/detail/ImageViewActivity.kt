@@ -1,12 +1,7 @@
 package org.imozerov.streetartview.ui.detail
 
-import android.app.Activity
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_image_view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
@@ -27,20 +22,9 @@ class ImageViewActivity : AppCompatActivity() {
         val artObjectId = intent.getStringExtra(DetailArtObjectActivity.EXTRA_KEY_ART_OBJECT_DETAIL_ID)
         val artObjectUi = dataSource.getArtObject(artObjectId)
 
-        image_viewpager.adapter = GalleryPagerAdapter(this, artObjectUi.picsUrls, closePager)
+        image_viewpager.adapter = GalleryWithZoomPagerAdapter(this, artObjectUi.picsUrls)
         val imageChosen = intent.getIntExtra(DetailArtObjectActivity.EXTRA_IMAGE_CHOSEN_IN_DETAILS, 0)
         image_viewpager.currentItem = imageChosen
-    }
-
-    override fun onBackPressed() {
-        closePager(image_viewpager.currentItem)
-    }
-
-    val closePager = fun(position: Int) {
-        val returnIntent = Intent()
-        returnIntent.putExtra(EXTRA_IMAGE_CHOSEN_IN_VIEWPAGER, position)
-        setResult(Activity.RESULT_OK, returnIntent)
-        finish()
     }
 
     companion object {

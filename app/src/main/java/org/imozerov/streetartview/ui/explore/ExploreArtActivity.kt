@@ -24,6 +24,7 @@ import org.imozerov.streetartview.ui.explore.map.ArtMapFragment
 import org.imozerov.streetartview.ui.extensions.addAll
 import org.imozerov.streetartview.ui.extensions.animateToGone
 import org.imozerov.streetartview.ui.extensions.animateToVisible
+import org.imozerov.streetartview.ui.extensions.getDrawableSafely
 import rx.subscriptions.CompositeSubscription
 import java.util.*
 
@@ -52,9 +53,9 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         viewpager.offscreenPageLimit = 3
 
         tabs.setupWithViewPager(viewpager)
-        tabs.getTabAt(0)?.icon = getDrawable(R.drawable.ic_explore_white_36dp)
-        tabs.getTabAt(1)?.icon = getDrawable(R.drawable.ic_visibility_white_36dp)
-        tabs.getTabAt(2)?.icon = getDrawable(R.drawable.ic_favorite_white_36dp)
+        tabs.getTabAt(0)?.icon = getDrawableSafely(R.drawable.ic_explore_white_36dp)
+        tabs.getTabAt(1)?.icon = getDrawableSafely(R.drawable.ic_visibility_white_36dp)
+        tabs.getTabAt(2)?.icon = getDrawableSafely(R.drawable.ic_favorite_white_36dp)
     }
 
     override fun onStart() {
