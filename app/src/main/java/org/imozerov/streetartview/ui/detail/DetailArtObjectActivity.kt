@@ -42,7 +42,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
         artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
 
         artObjectUi = dataSource.getArtObject(artObjectId!!)
-        art_object_detail_name.text = artObjectUi!!.name
+        art_object_detail_name.text = "\"${artObjectUi!!.name}\""
         art_object_detail_author.text = artObjectUi!!.authorsNames()
         if (artObjectUi!!.description.isBlank()) {
             art_object_detail_description.visibility = View.GONE
@@ -119,9 +119,9 @@ class DetailArtObjectActivity : AppCompatActivity() {
 
     private fun setFavouriteIcon(isFavourite: Boolean) {
         if (isFavourite) {
-            detail_set_favourite_button.setImageDrawable(getDrawable(R.drawable.ic_favorite_black_24dp))
+            detail_set_favourite_button.setImageDrawable(getDrawableSafely(R.drawable.ic_favorite_black_24dp))
         } else {
-            detail_set_favourite_button.setImageDrawable(getDrawable(R.drawable.ic_favorite_border_black_24dp))
+            detail_set_favourite_button.setImageDrawable(getDrawableSafely(R.drawable.ic_favorite_border_black_24dp))
         }
     }
 
