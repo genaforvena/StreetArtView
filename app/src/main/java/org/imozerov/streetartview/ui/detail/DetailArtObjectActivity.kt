@@ -51,6 +51,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
         }
         art_object_detail_address.text = artObjectUi!!.address
         setFavouriteIcon(artObjectUi!!.isFavourite)
+        detail_share_button.setImageDrawable(getDrawable(R.drawable.ic_share_black_24dp))
 
         val picsNumber = artObjectUi!!.picsUrls.size
         art_object_images_number.text = resources
@@ -82,6 +83,12 @@ class DetailArtObjectActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
+        compositeSubscription.add(
+                RxView.clicks(detail_share_button).subscribe{
+                    shareArtObjectInfo()
+                }
+        )
         compositeSubscription.add(
                 RxView.clicks(detail_set_favourite_button).subscribe{
                     setFavouriteIcon(dataSource.changeFavouriteStatus(artObjectId!!))
@@ -95,10 +102,10 @@ class DetailArtObjectActivity : AppCompatActivity() {
                     val uriBegin = "geo: $latitude, $longitude"
                     val query = "$latitude, $longitude ($label)"
                     val encodedQuery = Uri.encode(query)
-                    val uriString = "$uriBegin?q=$encodedQuery&z=16";
-                    val uri = Uri.parse(uriString);
-                    val intent = Intent(android.content.Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
+                    val uriString = "$uriBegin?q=$encodedQuery&z=16"
+                    val uri = Uri.parse(uriString)
+                    val intent = Intent(android.content.Intent.ACTION_VIEW, uri)
+                    startActivity(intent)
                 }
         )
     }
@@ -115,6 +122,15 @@ class DetailArtObjectActivity : AppCompatActivity() {
                 art_object_detail_image.currentItem = position!!
             }
         }
+    }
+
+    private fun shareArtObjectInfo() {
+        val shareIntent = Intent()
+        shareIntent.action = Intent.ACTION_SEND
+        shareIntent.putExtra(Intent.EXTRA_TEXT,
+                "${artObjectUi!!.name}  - (${artObjectUi!!.lat}, ${artObjectUi!!.lng})")
+        shareIntent.type = "text/plain"
+        startActivity(Intent.createChooser(shareIntent, resources.getText(R.string.share)))
     }
 
     private fun setFavouriteIcon(isFavourite: Boolean) {
