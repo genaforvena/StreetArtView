@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.ui.extensions.loadImage
-import org.imozerov.streetartview.ui.model.ArtObjectUi
+import org.imozerov.streetartview.ui.model.ArtObject
 
 /**
  * Created by imozerov on 05.02.16.
  */
-class ArtListAdapter(private val context: Context, private var data: List<ArtObjectUi>?) : RecyclerView.Adapter<ArtListViewHolder>() {
+class ArtListAdapter(private val context: Context, private var data: List<ArtObject>?) : RecyclerView.Adapter<ArtListViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtListViewHolder {
         val rootView = LayoutInflater.from(parent.context).inflate(R.layout.art_object_in_list, parent, false)
         return ArtListViewHolder(this.context, rootView)
@@ -29,7 +29,7 @@ class ArtListAdapter(private val context: Context, private var data: List<ArtObj
 
     override fun getItemId(position: Int) = data!![position].id.hashCode().toLong()
 
-    fun setData(artObjectUis: List<ArtObjectUi>) {
+    fun setData(artObjectUis: List<ArtObject>) {
         data = artObjectUis
         notifyDataSetChanged()
     }

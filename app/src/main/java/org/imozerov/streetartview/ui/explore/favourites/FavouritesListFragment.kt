@@ -2,7 +2,7 @@ package org.imozerov.streetartview.ui.explore.favourites
 
 import org.imozerov.streetartview.ui.explore.base.AbstractListFragment
 import org.imozerov.streetartview.ui.explore.base.ArtListPresenter
-import org.imozerov.streetartview.ui.model.ArtObjectUi
+import org.imozerov.streetartview.ui.model.ArtObject
 import rx.Observable
 
 /**
@@ -11,7 +11,7 @@ import rx.Observable
 class FavouritesListFragment : AbstractListFragment() {
     override fun createPresenter(): ArtListPresenter {
         return object : ArtListPresenter(this) {
-            override fun fetchFromDataSource(): Observable<List<ArtObjectUi>> {
+            override fun fetchFromDataSource(): Observable<List<ArtObject>> {
                 return dataSource.listFavourites()
             }
         }

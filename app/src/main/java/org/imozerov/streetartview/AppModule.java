@@ -7,6 +7,9 @@ import dagger.Provides;
 
 import org.imozerov.streetartview.storage.DataSource;
 import org.imozerov.streetartview.storage.IDataSource;
+import org.imozerov.streetartviewsdk.ArtObjectProviderCreator;
+import org.imozerov.streetartviewsdk.ArtObjectsProvider;
+import org.imozerov.streetartviewsdk.IArtObjectsProvider;
 
 import javax.inject.Singleton;
 
@@ -29,7 +32,7 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public IDataSource provideDataSource() {
-        return new DataSource();
+    public IArtObjectsProvider provideDataSource(Application application) {
+        return ArtObjectProviderCreator.createArtObjectsProvider(application);
     }
 }

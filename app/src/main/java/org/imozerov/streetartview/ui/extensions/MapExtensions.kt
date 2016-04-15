@@ -11,7 +11,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import org.imozerov.streetartview.R
-import org.imozerov.streetartview.ui.model.ArtObjectUi
+import org.imozerov.streetartview.ui.model.ArtObject
 
 /**
  * Created by imozerov on 19.02.16.
@@ -55,7 +55,7 @@ fun GoogleMap.addUserLocationMarker(userLocation: LatLng) {
     }
 }
 
-fun GoogleMap.addArtObjectSimpleMarker(artObject: ArtObjectUi) : Marker {
+fun GoogleMap.addArtObjectSimpleMarker(artObject: ArtObject) : Marker {
     val markerOptions = MarkerOptions().position(LatLng(artObject.lat, artObject.lng))
             .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
     return addMarker(markerOptions)
