@@ -30,7 +30,7 @@ import org.imozerov.streetartview.ui.explore.interfaces.Filterable
 import org.imozerov.streetartview.ui.extensions.addUserLocationMarker
 import org.imozerov.streetartview.ui.extensions.getCurrentLocation
 import org.imozerov.streetartview.ui.extensions.loadImage
-import org.imozerov.streetartview.ui.model.ArtObjectUi
+import org.imozerov.streetartview.ui.model.ArtObject
 
 class ArtMapFragment : Fragment(), Filterable, ArtView {
     val TAG = "ArtMapFragment"
@@ -119,7 +119,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
     private fun showArtObjectDigest(id: String) {
         Log.v(TAG, "showArtObjectDigest($id)")
-        var artObject: ArtObjectUi = presenter!!.getArtObject(id)
+        var artObject: ArtObject = presenter!!.getArtObject(id)
         bottom_detail_image.loadImage(artObject.picsUrls[0])
 
         bottom_sheet.visibility = View.VISIBLE
@@ -131,7 +131,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
+    override fun showArtObjects(artObjectUis: List<ArtObject>) {
         (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment).getMapAsync { googleMap ->
             with (clusterManager!!) {
                 clearItems()
@@ -139,6 +139,10 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
                 cluster()
             }
         }
+    }
+
+    override fun stopRefreshIndication() {
+
     }
 
     override fun applyFilter(queryToApply: String) {

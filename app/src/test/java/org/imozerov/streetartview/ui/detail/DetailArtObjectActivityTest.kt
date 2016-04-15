@@ -4,8 +4,9 @@ import android.content.Intent
 import kotlinx.android.synthetic.main.activity_detail.*
 import org.imozerov.streetartview.BuildConfig
 import org.imozerov.streetartview.TestAppModule
-import org.imozerov.streetartview.ui.model.ArtObjectUi
-import org.imozerov.streetartview.ui.model.AuthorUi
+import org.imozerov.streetartview.ui.model.ArtObject
+import org.imozerov.streetartview.ui.model.Author
+
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -23,21 +24,21 @@ import org.robolectric.util.ActivityController
 @Config(constants = BuildConfig::class, sdk = intArrayOf(21))
 @RunWith(RobolectricGradleTestRunner::class)
 class DetailArtObjectActivityTest {
-    var artObjectUi: ArtObjectUi? = null
+    var artObjectUi: ArtObject? = null
     var activityController: ActivityController<DetailArtObjectActivity>? = null
 
     @Before
     fun setUp() {
-        val author = AuthorUi(name = "name", id = "12", photoUrl = "photo")
+        val author = Author(name = "name", id = "12", photoUrl = "photo")
         val authors = listOf(author)
 
-        artObjectUi = ArtObjectUi("id", name = "name",
-                description = "desc",
-                lat = 34.34, lng = 34.34,
-                thumbPicUrl = "pic",
-                authors = authors,
-                picsUrls = listOf("art"),
-                address = "Some street, 34")
+//        artObjectUi = ArtObject("id", name = "name",
+//                description = "desc",
+//                lat = 34.34, lng = 34.34,
+//                thumbPicUrl = "pic",
+//                authors = authors,
+//                picsUrls = listOf("art"),
+//                address = "Some street, 34")
 
         Mockito.`when`(TestAppModule.dataSourceMock.getArtObject(Mockito.anyString())).thenReturn(
                 artObjectUi

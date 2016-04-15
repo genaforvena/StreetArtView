@@ -7,6 +7,7 @@ import dagger.Provides;
 
 import org.imozerov.streetartview.storage.DataSource;
 import org.imozerov.streetartview.storage.IDataSource;
+import org.imozerov.streetartviewsdk.IArtObjectsProvider;
 import org.mockito.Mockito;
 
 import javax.inject.Singleton;
@@ -16,7 +17,7 @@ import javax.inject.Singleton;
  */
 @Module
 public class TestAppModule extends AppModule {
-    public static final IDataSource dataSourceMock = Mockito.mock(IDataSource.class, Mockito.RETURNS_MOCKS);
+    public static final IArtObjectsProvider dataSourceMock = Mockito.mock(IArtObjectsProvider.class, Mockito.RETURNS_MOCKS);
 
     public TestAppModule(Application application) {
         super(application);
@@ -32,7 +33,7 @@ public class TestAppModule extends AppModule {
     @Provides
     @Singleton
     @Override
-    public IDataSource provideDataSource() {
+    public IArtObjectsProvider provideDataSource(Application application) {
         return dataSourceMock;
     }
 }

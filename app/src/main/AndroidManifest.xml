@@ -34,10 +34,6 @@
         <activity
             android:name=".ui.detail.ImageViewActivity"
             android:label="@string/title_activity_image_view" />
-
-        <service
-            android:name=".network.FetchService"
-            android:exported="false" />
     </application>
 
 </manifest>

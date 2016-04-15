@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.method.LinkMovementMethod
 import android.view.View
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
@@ -13,9 +12,9 @@ import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.activity_detail.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
-import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.extensions.*
-import org.imozerov.streetartview.ui.model.ArtObjectUi
+import org.imozerov.streetartview.ui.model.ArtObject
+import org.imozerov.streetartviewsdk.IArtObjectsProvider
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
@@ -26,10 +25,10 @@ class DetailArtObjectActivity : AppCompatActivity() {
     val PICK_IMAGE_REQUEST = 1
 
     @Inject
-    lateinit var dataSource: IDataSource
+    lateinit var dataSource: IArtObjectsProvider
 
     private var artObjectId: String? = null
-    private var artObjectUi: ArtObjectUi? = null
+    private var artObjectUi: ArtObject? = null
 
     val compositeSubscription: CompositeSubscription = CompositeSubscription()
 
@@ -37,7 +36,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        (application as StreetArtViewApp).appComponent.inject(this)
+        StreetArtViewApp.getAppComponent(this).inject(this)
 
         artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
 
