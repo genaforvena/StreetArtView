@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import com.google.android.gms.analytics.HitBuilders
+import com.google.android.gms.analytics.Tracker
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -31,6 +33,7 @@ import org.imozerov.streetartview.ui.extensions.addUserLocationMarker
 import org.imozerov.streetartview.ui.extensions.getCurrentLocation
 import org.imozerov.streetartview.ui.extensions.loadImage
 import org.imozerov.streetartview.ui.model.ArtObjectUi
+import javax.inject.Inject
 
 class ArtMapFragment : Fragment(), Filterable, ArtView {
     val TAG = "ArtMapFragment"
@@ -42,6 +45,9 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     private var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>? = null
     private var clusterManager: ClusterManager<ArtObjectClusterItem>? = null
 
+    @Inject
+    lateinit var tracker: Tracker
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         try {
@@ -49,6 +55,11 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         } catch (e: ClassCastException) {
             throw RuntimeException("$context must implement ArtObjectDetailOpener interface")
         }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        (activity.application as StreetArtViewApp).appComponent.inject(this);
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -86,6 +97,8 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     override fun onStart() {
         super.onStart()
         presenter.bindView(this, context)
+        tracker.setScreenName(TAG)
+        tracker.send(HitBuilders.ScreenViewBuilder().build());
     }
 
     override fun onStop() {

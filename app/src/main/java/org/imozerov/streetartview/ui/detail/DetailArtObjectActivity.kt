@@ -4,8 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.method.LinkMovementMethod
 import android.view.View
+import com.google.android.gms.analytics.HitBuilders
+import com.google.android.gms.analytics.Tracker
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -28,6 +29,9 @@ class DetailArtObjectActivity : AppCompatActivity() {
     @Inject
     lateinit var dataSource: IDataSource
 
+    @Inject
+    lateinit var tracker: Tracker
+
     private var artObjectId: String? = null
     private var artObjectUi: ArtObjectUi? = null
 
@@ -42,6 +46,10 @@ class DetailArtObjectActivity : AppCompatActivity() {
         artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
 
         artObjectUi = dataSource.getArtObject(artObjectId!!)
+
+        tracker.setScreenName("DetailArtObjectActivity: ${artObjectUi!!.name}")
+        tracker.send(HitBuilders.ScreenViewBuilder().build())
+
         art_object_detail_name.text = "\"${artObjectUi!!.name}\""
         art_object_detail_author.text = artObjectUi!!.authorsNames()
         if (artObjectUi!!.description.isBlank()) {
