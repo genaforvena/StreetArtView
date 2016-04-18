@@ -6,8 +6,10 @@ import android.content.Context;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import io.realm.DynamicRealm;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmMigration;
 
 import org.imozerov.streetartview.network.DaggerNetComponent;
 import org.imozerov.streetartview.network.FetchService;
@@ -32,9 +34,12 @@ public class StreetArtViewApp extends Application {
                 .name("art.realm")
                 .deleteRealmIfMigrationNeeded()
                 .schemaVersion(2)
-                .migration((realm, oldVersion, newVersion) -> {
-                    //TODO implemented migration strategy.
-                    })
+                .migration(new RealmMigration() {
+                    @Override
+                    public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+                        // TODO
+                    }
+                })
                 .build();
         Realm.setDefaultConfiguration(config);
 
