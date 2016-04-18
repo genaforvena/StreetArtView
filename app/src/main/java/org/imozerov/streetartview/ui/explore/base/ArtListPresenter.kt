@@ -7,6 +7,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
+import com.google.android.gms.analytics.HitBuilders
+import com.google.android.gms.analytics.Tracker
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.network.FetchService
 import org.imozerov.streetartview.storage.IDataSource
@@ -30,6 +32,9 @@ abstract class ArtListPresenter {
     private var filterQuery: String = ""
 
     @Inject
+    lateinit var tracker: Tracker
+
+    @Inject
     lateinit var dataSource: IDataSource
 
     @Inject
@@ -38,6 +43,9 @@ abstract class ArtListPresenter {
     fun bindView(view: ArtView, context: Context) {
         this.view = view
         (context.applicationContext as StreetArtViewApp).appComponent.inject(this)
+        tracker.setScreenName(view.javaClass.simpleName)
+        tracker.send(HitBuilders.ScreenViewBuilder().build());
+
         fetchSubscription = startFetchingArtObjectsFromDataSource()
 
         fetchFinishedBroadcastReceiver = object : BroadcastReceiver() {
