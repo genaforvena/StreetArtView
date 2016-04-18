@@ -78,6 +78,8 @@ abstract class ArtListPresenter {
 
     fun refreshData() {
         FetchService.startFetch(application)
+        tracker.setScreenName("Refresh data requested")
+        tracker.send(HitBuilders.ScreenViewBuilder().build());
     }
 
     private fun startFetchingArtObjectsFromDataSource(): Subscription {
