@@ -1,10 +1,9 @@
-package org.imozerov.streetartview.ui.explore.list
+package org.imozerov.streetartview.ui.explore.base
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import kotlinx.android.synthetic.main.art_object_in_list.view.*
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 

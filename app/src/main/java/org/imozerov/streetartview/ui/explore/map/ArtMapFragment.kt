@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_art_map.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
-import org.imozerov.streetartview.ui.explore.base.ArtListPresenter
+import org.imozerov.streetartview.ui.explore.all.AllPresenter
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
 import org.imozerov.streetartview.ui.extensions.addUserLocationMarker
@@ -36,7 +36,8 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     val TAG = "ArtMapFragment"
     val FRAGMENT_TAG = "MapFragment"
 
-    private var presenter: ArtListPresenter? = null
+    private val presenter = AllPresenter()
+
     private var artObjectDetailOpener: ArtObjectDetailOpener? = null
     private var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>? = null
     private var clusterManager: ClusterManager<ArtObjectClusterItem>? = null
@@ -52,7 +53,6 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        presenter = ArtListPresenter(this)
         val layout = inflater!!.inflate(R.layout.fragment_art_map, container, false)
         bottomSheetBehavior = BottomSheetBehavior.from(layout.bottom_sheet)
 
@@ -85,17 +85,16 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
     override fun onStart() {
         super.onStart()
-        presenter!!.onStart(activity.application as StreetArtViewApp)
+        presenter.bindView(this, context)
     }
 
     override fun onStop() {
         super.onStop()
-        presenter!!.onStop()
+        presenter.unbindView()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        presenter = null
     }
 
     override fun onDestroy() {
@@ -119,7 +118,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
     private fun showArtObjectDigest(id: String) {
         Log.v(TAG, "showArtObjectDigest($id)")
-        var artObject: ArtObjectUi = presenter!!.getArtObject(id)
+        var artObject: ArtObjectUi = presenter.getArtObject(id)
         bottom_detail_image.loadImage(artObject.picsUrls[0])
 
         bottom_sheet.visibility = View.VISIBLE
@@ -141,8 +140,12 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         }
     }
 
+    override fun stopRefresh() {
+        // TODO refactor this code as it smells. We have an interface method that we do not implement.
+    }
+
     override fun applyFilter(queryToApply: String) {
-        presenter!!.applyFilter(queryToApply)
+        presenter.applyFilter(queryToApply)
     }
 
     companion object {
