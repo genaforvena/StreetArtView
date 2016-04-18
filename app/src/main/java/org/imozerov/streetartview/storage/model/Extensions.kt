@@ -10,6 +10,8 @@ fun RealmArtObject.copyDataFromJson(artwork: Artwork) {
     id = artwork.id
     description = artwork.description
     name = artwork.name
+    createdAt = artwork.createdAt ?: 0
+    updatedAt = artwork.updatedAt ?: 0
 
     authors = RealmList()
     if (artwork.artists != null) {

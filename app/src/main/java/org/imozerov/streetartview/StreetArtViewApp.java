@@ -31,7 +31,7 @@ public class StreetArtViewApp extends Application {
         RealmConfiguration config = new RealmConfiguration.Builder(this)
                 .name("art.realm")
                 .deleteRealmIfMigrationNeeded()
-                .schemaVersion(1)
+                .schemaVersion(2)
                 .migration((realm, oldVersion, newVersion) -> {
                     //TODO implemented migration strategy.
                     })

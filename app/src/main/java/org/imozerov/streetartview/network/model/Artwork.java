@@ -31,6 +31,12 @@ public class Artwork {
     @SerializedName("photos")
     @Expose
     private List<Photo> photos = new ArrayList<Photo>();
+    @SerializedName("updatedAt")
+    @Expose
+    private Long updatedAt;
+    @SerializedName("createdAt")
+    @Expose
+    private Long createdAt;
 
     /**
      *
@@ -158,6 +164,22 @@ public class Artwork {
         this.photos = photos;
     }
 
+    public Long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Long updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public String toString() {
         return "Artwork{" +
@@ -168,6 +190,8 @@ public class Artwork {
                 ", status=" + status +
                 ", artists=" + artists +
                 ", photos=" + photos +
+                ", updatedAt=" + updatedAt +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

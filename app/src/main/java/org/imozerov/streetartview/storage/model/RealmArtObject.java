@@ -18,6 +18,8 @@ public class RealmArtObject extends RealmObject {
     private RealmList<RealmString> picsUrls;
     private boolean isFavourite;
     private int status;
+    private long createdAt;
+    private long updatedAt;
 
     public String getId() {
         return id;
@@ -89,5 +91,25 @@ public class RealmArtObject extends RealmObject {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public void setFavourite(boolean favourite) {
+        isFavourite = favourite;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(long updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
