@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="270dp"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <RelativeLayout
@@ -48,6 +47,11 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             </RelativeLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -121,6 +125,8 @@
                     android:layout_marginTop="@dimen/spacing_small"
                     android:text="Address, 34"
                     android:textAlignment="textEnd"
+                    android:drawableRight="@drawable/ic_directions_black_18dp"
+                    android:drawablePadding="5dp"
                     android:textAppearance="?android:attr/textAppearance" />
 
                 <TextView
