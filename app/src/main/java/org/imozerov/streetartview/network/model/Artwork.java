@@ -190,6 +190,8 @@ public class Artwork {
                 ", status=" + status +
                 ", artists=" + artists +
                 ", photos=" + photos +
+                ", updatedAt=" + updatedAt +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }
