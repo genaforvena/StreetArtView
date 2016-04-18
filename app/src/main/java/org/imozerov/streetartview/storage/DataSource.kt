@@ -3,6 +3,8 @@ package org.imozerov.streetartview.storage
 import android.util.Log
 import io.realm.Realm
 import io.realm.RealmObject
+import io.realm.RealmResults
+import io.realm.Sort
 import org.imozerov.streetartview.network.model.Artwork
 import org.imozerov.streetartview.storage.model.RealmArtObject
 import org.imozerov.streetartview.storage.model.copyDataFromJson
@@ -38,17 +40,14 @@ class DataSource() : IDataSource {
                 .where(RealmArtObject::class.java)
                 // TODO We're selecting only alive objects for now!
                 .equalTo("status", 0)
-                .findAll()
+                .findAllSorted("updatedAt", Sort.DESCENDING)
                 .asObservable()
                 .cache()
                 // Do not try to use flatMap().toList() here
                 // as onComplete() will never be called so
                 // No call to toList() will be performed.
                 .map {
-                    val listOfArtObjects = ArrayList<ArtObjectUi>(it.size)
-                    it.filter { it.picsUrls.isNotEmpty() }
-                            .forEach { listOfArtObjects.add(ArtObjectUi(it)) }
-                    listOfArtObjects
+                    realmToUi(it)
                 }
     }
 
@@ -58,18 +57,13 @@ class DataSource() : IDataSource {
                 .equalTo("isFavourite", true)
                 // TODO We're selecting only alive objects for now!
                 .equalTo("status", 0)
-                .findAll()
+                .findAllSorted("updatedAt", Sort.DESCENDING)
                 .asObservable()
                 .cache()
                 // Do not try to use flatMap().toList() here
                 // as onComplete() will never be called so
                 // No call to toList() will be performed.
-                .map {
-                    val listOfArtObjects = ArrayList<ArtObjectUi>(it.size)
-                    it.filter { it.picsUrls.isNotEmpty() }
-                            .forEach { listOfArtObjects.add(ArtObjectUi(it)) }
-                    listOfArtObjects
-                }
+                .map { realmToUi(it) }
     }
 
     override fun getArtObject(id: String): ArtObjectUi {
@@ -79,20 +73,27 @@ class DataSource() : IDataSource {
                 .findFirst())
     }
 
-    override fun changeFavouriteStatus(artObjectId: String): Boolean {
-        with (readOnlyRealm) {
-            val artObjectInRealm = where(RealmArtObject::class.java)
-                    .equalTo("id", artObjectId)
-                    .findFirst()
+    override fun changeFavouriteStatus(artObjectId: String) {
+        executeAsyncRealmOperation {
+            with (it) {
+                val artObjectInRealm = it.where(RealmArtObject::class.java)
+                        .equalTo("id", artObjectId)
+                        .findFirst()
 
-            beginTransaction()
-            val newStatus = !artObjectInRealm.isFavourite
-            artObjectInRealm.setIsFavourite(newStatus)
-            copyToRealmOrUpdate(artObjectInRealm)
-            commitTransaction()
-
-            return newStatus
+                beginTransaction()
+                val newStatus = !artObjectInRealm.isFavourite
+                artObjectInRealm.setIsFavourite(newStatus)
+                copyToRealmOrUpdate(artObjectInRealm)
+                commitTransaction()
+            }
         }
+    }
+
+    private fun realmToUi(realmObjects: RealmResults<RealmArtObject>) : List<ArtObjectUi> {
+        val listOfArtObjects = ArrayList<ArtObjectUi>(realmObjects.size)
+        realmObjects.filter { it.picsUrls.isNotEmpty() }
+                .forEach { listOfArtObjects.add(ArtObjectUi(it)) }
+        return listOfArtObjects
     }
 }
 
