@@ -1,12 +1,10 @@
-package org.imozerov.streetartview.ui.explore.list
+package org.imozerov.streetartview.ui.explore.all
 
-import org.imozerov.streetartview.ui.explore.base.ArtListPresenter
 import org.imozerov.streetartview.ui.explore.base.AbstractListFragment
+import org.imozerov.streetartview.ui.explore.base.ArtListPresenter
 
 class ArtListFragment : AbstractListFragment() {
-    override fun createPresenter(): ArtListPresenter {
-        return ArtListPresenter(this)
-    }
+    override val presenter: ArtListPresenter = AllPresenter()
 
     companion object {
         fun newInstance(): ArtListFragment {

@@ -1,7 +1,14 @@
 package org.imozerov.streetartview.ui.explore.base
 
+import android.app.Application
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import org.imozerov.streetartview.StreetArtViewApp
+import org.imozerov.streetartview.network.FetchService
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.model.ArtObjectUi
@@ -14,22 +21,40 @@ import javax.inject.Inject
 /**
  * Created by imozerov on 11.02.16.
  */
-open class ArtListPresenter(private val view: ArtView) {
+abstract class ArtListPresenter {
     val TAG = "ArtListPresenter"
 
+    private var view: ArtView? = null
+    private var fetchFinishedBroadcastReceiver: BroadcastReceiver? = null
     private var fetchSubscription: Subscription? = null
     private var filterQuery: String = ""
 
     @Inject
     lateinit var dataSource: IDataSource
 
-    fun onStart(application: StreetArtViewApp) {
-        application.appComponent.inject(this)
+    @Inject
+    lateinit var application: Application
+
+    fun bindView(view: ArtView, context: Context) {
+        this.view = view
+        (context.applicationContext as StreetArtViewApp).appComponent.inject(this)
         fetchSubscription = startFetchingArtObjectsFromDataSource()
+
+        fetchFinishedBroadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                view.stopRefresh()
+            }
+        }
+
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(FetchService.EVENT_FETCH_FINISHED)
+        LocalBroadcastManager.getInstance(application).registerReceiver(fetchFinishedBroadcastReceiver, intentFilter)
     }
 
-    fun onStop() {
+    fun unbindView() {
         fetchSubscription!!.unsubscribe()
+        LocalBroadcastManager.getInstance(application).unregisterReceiver(fetchFinishedBroadcastReceiver)
+        view = null
     }
 
     fun applyFilter(query: String) {
@@ -43,15 +68,17 @@ open class ArtListPresenter(private val view: ArtView) {
         return dataSource.getArtObject(id)
     }
 
+    fun refreshData() {
+        FetchService.startFetch(application)
+    }
+
     private fun startFetchingArtObjectsFromDataSource(): Subscription {
         return fetchFromDataSource()
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .map { it.filter { it.matches(filterQuery) } }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { view.showArtObjects(it) }
+                .subscribe { view?.showArtObjects(it) }
     }
 
-    open fun fetchFromDataSource() : Observable<List<ArtObjectUi>> {
-        return dataSource.listArtObjects()
-    }
+    abstract fun fetchFromDataSource() : Observable<List<ArtObjectUi>>
 }

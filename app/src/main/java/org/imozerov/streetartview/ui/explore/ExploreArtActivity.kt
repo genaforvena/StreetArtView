@@ -19,7 +19,7 @@ import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.favourites.FavouritesListFragment
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
-import org.imozerov.streetartview.ui.explore.list.ArtListFragment
+import org.imozerov.streetartview.ui.explore.all.ArtListFragment
 import org.imozerov.streetartview.ui.explore.map.ArtMapFragment
 import org.imozerov.streetartview.ui.extensions.addAll
 import org.imozerov.streetartview.ui.extensions.animateToGone

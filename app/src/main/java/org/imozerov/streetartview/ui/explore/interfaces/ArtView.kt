@@ -7,4 +7,5 @@ import org.imozerov.streetartview.ui.model.ArtObjectUi
  */
 interface ArtView {
     fun showArtObjects(artObjectUis: List<ArtObjectUi>)
+    fun stopRefresh()
 }
