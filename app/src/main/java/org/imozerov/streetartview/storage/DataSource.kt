@@ -30,7 +30,7 @@ class DataSource() : IDataSource {
             }
             val favouriteIds = it.where(RealmArtObject::class.java)
                     .equalTo("isFavourite", true).findAll().map { it.id }
-            realmObjects.filter { favouriteIds.contains(it.id) }.forEach { it.setIsFavourite(true) }
+            realmObjects.filter { favouriteIds.contains(it.id) }.forEach { it.isFavourite = true }
             it.batchInsertOrUpdate(realmObjects)
         }
     }
@@ -73,17 +73,17 @@ class DataSource() : IDataSource {
                 .findFirst())
     }
 
-    override fun changeFavouriteStatus(artObjectId: String) {
-        with (readOnlyRealm) {
-            val artObjectInRealm = where(RealmArtObject::class.java)
-                    .equalTo("id", artObjectId)
-                    .findFirst()
+    override fun setFavourite(artObjectId: String, isFavourite: Boolean) {
+        executeAsyncRealmOperation {
+            with (it) {
+                val artObjectInRealm = where(RealmArtObject::class.java)
+                        .equalTo("id", artObjectId)
+                        .findFirst()
 
-            beginTransaction()
-            val newStatus = !artObjectInRealm.isFavourite
-            artObjectInRealm.setIsFavourite(newStatus)
-            copyToRealmOrUpdate(artObjectInRealm)
-            commitTransaction()
+                beginTransaction()
+                artObjectInRealm.isFavourite = isFavourite
+                commitTransaction()
+            }
         }
     }
 

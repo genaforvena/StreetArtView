@@ -90,9 +90,9 @@ class DetailArtObjectActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         compositeSubscription.add(
-                RxView.clicks(detail_set_favourite_button).subscribe{
-                    dataSource.changeFavouriteStatus(artObjectId!!)
+                RxView.clicks(detail_set_favourite_button).subscribe {
                     artObjectUi!!.isFavourite = !artObjectUi!!.isFavourite
+                    dataSource.setFavourite(artObjectId!!, artObjectUi!!.isFavourite)
                     setFavouriteIcon(artObjectUi!!.isFavourite)
                 }
         )

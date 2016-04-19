@@ -12,5 +12,5 @@ interface IDataSource {
     fun listArtObjects(): Observable<List<ArtObjectUi>>
     fun getArtObject(id: String): ArtObjectUi
     fun listFavourites(): Observable<List<ArtObjectUi>>
-    fun changeFavouriteStatus(artObjectId: String)
+    fun setFavourite(artObjectId: String, isFavourite: Boolean)
 }
