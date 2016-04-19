@@ -57,7 +57,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
         }
         art_object_detail_address.text = artObjectUi!!.address
         setFavouriteIcon(artObjectUi!!.isFavourite)
-        detail_share_button.setImageDrawable(getDrawable(R.drawable.ic_share_black_24dp))
+        detail_share_button.setImageDrawable(getDrawableSafely(R.drawable.ic_share_black_24dp))
 
         val picsNumber = artObjectUi!!.picsUrls.size
         art_object_images_number.text = resources.getQuantityString(R.plurals.photos, picsNumber, picsNumber)
