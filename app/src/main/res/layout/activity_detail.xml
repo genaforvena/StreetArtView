@@ -57,16 +57,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/detail_set_favourite_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:clickable="true"
-        app:fabSize="mini"
-        app:layout_anchor="@id/collapsing_toolbar"
-        app:layout_anchorGravity="bottom|right|end" />
-
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
@@ -157,5 +147,15 @@
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/detail_set_favourite_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        app:fabSize="mini"
+        app:layout_anchor="@id/collapsing_toolbar"
+        app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>
