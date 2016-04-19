@@ -44,11 +44,9 @@ class DetailArtObjectActivity : AppCompatActivity() {
         (application as StreetArtViewApp).appComponent.inject(this)
 
         artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
-
         artObjectUi = dataSource.getArtObject(artObjectId!!)
 
-        tracker.setScreenName("DetailArtObjectActivity: ${artObjectUi!!.name}")
-        tracker.send(HitBuilders.ScreenViewBuilder().build())
+        tracker.sendScreen("DetailArtObjectActivity: ${artObjectUi!!.name}")
 
         art_object_detail_name.text = "\"${artObjectUi!!.name}\""
         art_object_detail_author.text = artObjectUi!!.authorsNames()
@@ -61,8 +59,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
         setFavouriteIcon(artObjectUi!!.isFavourite)
 
         val picsNumber = artObjectUi!!.picsUrls.size
-        art_object_images_number.text = resources
-                .getQuantityString(R.plurals.photos, picsNumber, picsNumber)
+        art_object_images_number.text = resources.getQuantityString(R.plurals.photos, picsNumber, picsNumber)
 
         art_object_detail_image.adapter = GalleryPagerAdapter(this, artObjectUi!!.picsUrls, { position ->
             val intent = Intent(this@DetailArtObjectActivity, ImageViewActivity::class.java)
@@ -82,9 +79,11 @@ class DetailArtObjectActivity : AppCompatActivity() {
                 art_object_detail_distance.visibility = View.VISIBLE
             }
 
-            it.addUserLocationMarker(userLocation)
-            it.addArtObjectSimpleMarker(artObjectUi!!)
-            it.moveCamera(CameraUpdateFactory.newLatLngZoom(artObjectLocation, 14f))
+            with (it) {
+                addUserLocationMarker(userLocation)
+                addArtObjectSimpleMarker(artObjectUi!!)
+                moveCamera(CameraUpdateFactory.newLatLngZoom(artObjectLocation, 14f))
+            }
         }
     }
 

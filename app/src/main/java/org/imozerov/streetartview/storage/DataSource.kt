@@ -74,22 +74,20 @@ class DataSource() : IDataSource {
     }
 
     override fun changeFavouriteStatus(artObjectId: String) {
-        executeAsyncRealmOperation {
-            with (it) {
-                val artObjectInRealm = it.where(RealmArtObject::class.java)
-                        .equalTo("id", artObjectId)
-                        .findFirst()
+        with (readOnlyRealm) {
+            val artObjectInRealm = where(RealmArtObject::class.java)
+                    .equalTo("id", artObjectId)
+                    .findFirst()
 
-                beginTransaction()
-                val newStatus = !artObjectInRealm.isFavourite
-                artObjectInRealm.setIsFavourite(newStatus)
-                copyToRealmOrUpdate(artObjectInRealm)
-                commitTransaction()
-            }
+            beginTransaction()
+            val newStatus = !artObjectInRealm.isFavourite
+            artObjectInRealm.setIsFavourite(newStatus)
+            copyToRealmOrUpdate(artObjectInRealm)
+            commitTransaction()
         }
     }
 
-    private fun realmToUi(realmObjects: RealmResults<RealmArtObject>) : List<ArtObjectUi> {
+    private fun realmToUi(realmObjects: RealmResults<RealmArtObject>): List<ArtObjectUi> {
         val listOfArtObjects = ArrayList<ArtObjectUi>(realmObjects.size)
         realmObjects.filter { it.picsUrls.isNotEmpty() }
                 .forEach { listOfArtObjects.add(ArtObjectUi(it)) }
@@ -97,7 +95,7 @@ class DataSource() : IDataSource {
     }
 }
 
-private fun executeAsyncRealmOperation(operation: ((realm: Realm) -> (Unit))) {
+private inline fun executeAsyncRealmOperation(crossinline operation: ((realm: Realm) -> (Unit))) {
     Thread() {
         val realm = Realm.getDefaultInstance();
         try {

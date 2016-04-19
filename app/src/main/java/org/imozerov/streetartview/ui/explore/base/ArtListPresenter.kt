@@ -7,12 +7,12 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
-import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.network.FetchService
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
+import org.imozerov.streetartview.ui.extensions.sendScreen
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.Observable
 import rx.Subscription
@@ -40,17 +40,16 @@ abstract class ArtListPresenter {
     @Inject
     lateinit var application: Application
 
-    fun bindView(view: ArtView, context: Context) {
-        this.view = view
+    fun bindView(artView: ArtView, context: Context) {
+        view = artView
         (context.applicationContext as StreetArtViewApp).appComponent.inject(this)
-        tracker.setScreenName(view.javaClass.simpleName)
-        tracker.send(HitBuilders.ScreenViewBuilder().build());
+        tracker.sendScreen(artView.javaClass.simpleName)
 
-        fetchSubscription = startFetchingArtObjectsFromDataSource()
+        fetchSubscription = createDataFetchSubscription()
 
         fetchFinishedBroadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                view.stopRefresh()
+                view?.stopRefresh()
             }
         }
 
@@ -69,7 +68,7 @@ abstract class ArtListPresenter {
         Log.v(TAG, "Applying filter $query")
         filterQuery = query
         fetchSubscription?.unsubscribe()
-        fetchSubscription = startFetchingArtObjectsFromDataSource()
+        fetchSubscription = createDataFetchSubscription()
     }
 
     fun getArtObject(id: String): ArtObjectUi {
@@ -78,11 +77,10 @@ abstract class ArtListPresenter {
 
     fun refreshData() {
         FetchService.startFetch(application)
-        tracker.setScreenName("Refresh data requested")
-        tracker.send(HitBuilders.ScreenViewBuilder().build());
+        tracker.sendScreen("Refresh data requested")
     }
 
-    private fun startFetchingArtObjectsFromDataSource(): Subscription {
+    private fun createDataFetchSubscription(): Subscription {
         return fetchFromDataSource()
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .map { it.filter { it.matches(filterQuery) } }
