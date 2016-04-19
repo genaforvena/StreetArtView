@@ -4,8 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.method.LinkMovementMethod
 import android.view.View
+import com.google.android.gms.analytics.HitBuilders
+import com.google.android.gms.analytics.Tracker
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -28,6 +29,9 @@ class DetailArtObjectActivity : AppCompatActivity() {
     @Inject
     lateinit var dataSource: IDataSource
 
+    @Inject
+    lateinit var tracker: Tracker
+
     private var artObjectId: String? = null
     private var artObjectUi: ArtObjectUi? = null
 
@@ -40,8 +44,10 @@ class DetailArtObjectActivity : AppCompatActivity() {
         (application as StreetArtViewApp).appComponent.inject(this)
 
         artObjectId = intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)
-
         artObjectUi = dataSource.getArtObject(artObjectId!!)
+
+        tracker.sendScreen("DetailArtObjectActivity: ${artObjectUi!!.name}")
+
         art_object_detail_name.text = "\"${artObjectUi!!.name}\""
         art_object_detail_author.text = artObjectUi!!.authorsNames()
         if (artObjectUi!!.description.isBlank()) {
@@ -53,8 +59,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
         setFavouriteIcon(artObjectUi!!.isFavourite)
 
         val picsNumber = artObjectUi!!.picsUrls.size
-        art_object_images_number.text = resources
-                .getQuantityString(R.plurals.photos, picsNumber, picsNumber)
+        art_object_images_number.text = resources.getQuantityString(R.plurals.photos, picsNumber, picsNumber)
 
         art_object_detail_image.adapter = GalleryPagerAdapter(this, artObjectUi!!.picsUrls, { position ->
             val intent = Intent(this@DetailArtObjectActivity, ImageViewActivity::class.java)
@@ -74,18 +79,20 @@ class DetailArtObjectActivity : AppCompatActivity() {
                 art_object_detail_distance.visibility = View.VISIBLE
             }
 
-            it.addUserLocationMarker(userLocation)
-            it.addArtObjectSimpleMarker(artObjectUi!!)
-            it.moveCamera(CameraUpdateFactory.newLatLngZoom(artObjectLocation, 14f))
+            with (it) {
+                addUserLocationMarker(userLocation)
+                addArtObjectSimpleMarker(artObjectUi!!)
+                moveCamera(CameraUpdateFactory.newLatLngZoom(artObjectLocation, 14f))
+            }
         }
     }
 
     override fun onStart() {
         super.onStart()
         compositeSubscription.add(
-                RxView.clicks(detail_set_favourite_button).subscribe{
-                    dataSource.changeFavouriteStatus(artObjectId!!)
+                RxView.clicks(detail_set_favourite_button).subscribe {
                     artObjectUi!!.isFavourite = !artObjectUi!!.isFavourite
+                    dataSource.setFavourite(artObjectId!!, artObjectUi!!.isFavourite)
                     setFavouriteIcon(artObjectUi!!.isFavourite)
                 }
         )

@@ -4,9 +4,9 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -34,7 +34,7 @@ fun ImageView.loadImage(imagePath: String?) {
                 .placeholder(placeholder)
                 .into(this)
     } else {
-        Glide.with(context).load(R.drawable.einstein).into(this)
+        Log.e(TAG, "No image found!")
     }
 }
 

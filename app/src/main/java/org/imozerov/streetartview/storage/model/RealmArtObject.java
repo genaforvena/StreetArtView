@@ -81,10 +81,6 @@ public class RealmArtObject extends RealmObject {
         return isFavourite;
     }
 
-    public void setIsFavourite(boolean isFavourite) {
-        this.isFavourite = isFavourite;
-    }
-
     public int getStatus() {
         return status;
     }

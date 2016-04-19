@@ -14,7 +14,7 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="270dp"
+            android:layout_height="350dp"
             android:fitsSystemWindows="true"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -28,7 +28,7 @@
                 <android.support.v4.view.ViewPager
                     android:id="@+id/art_object_detail_image"
                     android:layout_width="match_parent"
-                    android:layout_height="270dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
                     android:background="#ffffff" />
 
@@ -51,21 +51,11 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"/>
+                android:layout_height="50dp" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/detail_set_favourite_button"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        app:layout_anchor="@id/collapsing_toolbar"
-        app:layout_anchorGravity="bottom|right|end"
-        android:layout_margin="5dp"
-        app:fabSize="mini"
-        android:clickable="true"/>
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scroll"
@@ -74,82 +64,98 @@
         android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/art_object_textviews_layout"
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="@dimen/spacing_small"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/art_object_detail_name"
+                <LinearLayout
+                    android:id="@+id/art_object_textviews_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_small"
-                    android:capitalize="characters"
-                    android:text="Name"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/art_object_detail_author"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/spacing_small"
-                    android:layout_marginRight="@dimen/spacing_small"
-                    android:text="Author"
-                    android:textAlignment="textStart"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    <TextView
+                        android:id="@+id/art_object_detail_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/spacing_small"
+                        android:capitalize="characters"
+                        android:text="Name"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
-                <TextView
-                    android:id="@+id/art_object_detail_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_small"
-                    android:text="Description"
-                    android:autoLink="web"
-                    android:textColorLink="@color/colorPrimary"
-                    android:textAppearance="?android:attr/textAppearance" />
+                    <TextView
+                        android:id="@+id/art_object_detail_author"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/spacing_small"
+                        android:layout_marginRight="@dimen/spacing_small"
+                        android:text="Author"
+                        android:textAlignment="textStart"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <TextView
-                    android:id="@+id/art_object_detail_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/spacing_small"
-                    android:layout_marginRight="@dimen/spacing_small"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:text="Address, 34"
-                    android:textAlignment="textEnd"
-                    android:drawableRight="@drawable/ic_directions_black_18dp"
-                    android:drawablePadding="5dp"
-                    android:textAppearance="?android:attr/textAppearance" />
+                    <TextView
+                        android:id="@+id/art_object_detail_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/spacing_small"
+                        android:autoLink="web"
+                        android:text="Description"
+                        android:textAppearance="?android:attr/textAppearance"
+                        android:textColorLink="@color/colorPrimary" />
 
-                <TextView
-                    android:id="@+id/art_object_detail_distance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/spacing_small"
-                    android:layout_marginRight="@dimen/spacing_small"
-                    android:textAlignment="textEnd"
-                    android:textAppearance="?android:attr/textAppearance"
-                    android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/art_object_detail_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/spacing_small"
+                        android:layout_marginRight="@dimen/spacing_small"
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:drawablePadding="5dp"
+                        android:drawableRight="@drawable/ic_directions_black_18dp"
+                        android:text="Address, 34"
+                        android:textAlignment="textEnd"
+                        android:textAppearance="?android:attr/textAppearance" />
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/art_object_detail_distance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/spacing_small"
+                        android:layout_marginRight="@dimen/spacing_small"
+                        android:textAlignment="textEnd"
+                        android:textAppearance="?android:attr/textAppearance"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
 
             <FrameLayout
                 android:id="@+id/art_object_detail_map"
                 android:layout_width="match_parent"
                 android:layout_height="500dp"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@+id/art_object_textviews_layout" />
+                android:layout_alignParentBottom="true" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/detail_set_favourite_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        app:fabSize="mini"
+        app:layout_anchor="@id/collapsing_toolbar"
+        app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>
