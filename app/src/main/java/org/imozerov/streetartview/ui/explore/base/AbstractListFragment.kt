@@ -43,6 +43,7 @@ abstract class AbstractListFragment : Fragment(), Filterable, ArtView {
 
     override fun onStart() {
         super.onStart()
+        rootView!!.swipe_to_refresh_layout.isRefreshing = false
         presenter.bindView(this, context)
     }
 
