@@ -23,19 +23,18 @@ abstract class AbstractListFragment : Fragment(), Filterable, ArtView {
     protected abstract val presenter: ArtListPresenter
 
     private var rootView: View? = null
-    private var adapter: ArtListAdapter? = null
+    private val adapter by lazy { ArtListAdapter(context, ArrayList<ArtObjectUi>()) }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        rootView = inflater!!.inflate(R.layout.fragment_art_list, container, false)
-
-        adapter = ArtListAdapter(context, ArrayList<ArtObjectUi>())
-        adapter!!.setHasStableIds(true)
-        rootView!!.art_objects_recycler_view.setHasFixedSize(true)
-
         val layoutManager = GridLayoutManager(context, 3)
+        adapter.setHasStableIds(true)
+
+        rootView = inflater!!.inflate(R.layout.fragment_art_list, container, false)
+        rootView!!.art_objects_recycler_view.setHasFixedSize(true)
         rootView!!.art_objects_recycler_view.layoutManager = layoutManager
         rootView!!.art_objects_recycler_view.adapter = adapter
+
         rootView!!.swipe_to_refresh_layout.setOnRefreshListener { presenter.refreshData() }
 
         return rootView
@@ -52,10 +51,6 @@ abstract class AbstractListFragment : Fragment(), Filterable, ArtView {
         presenter.unbindView()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         val refWatcher = StreetArtViewApp.getRefWatcher(activity);
@@ -63,7 +58,7 @@ abstract class AbstractListFragment : Fragment(), Filterable, ArtView {
     }
 
     override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
-        adapter!!.setData(artObjectUis)
+        adapter.setData(artObjectUis)
     }
 
     override fun stopRefresh() {
