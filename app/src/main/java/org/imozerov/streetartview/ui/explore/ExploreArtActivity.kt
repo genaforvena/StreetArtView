@@ -38,42 +38,12 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         Log.d(TAG, "onCreate()")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_explore_art)
-
-        val adapter = Adapter(supportFragmentManager)
-        adapter.addFragment(ArtMapFragment.newInstance(), getString(R.string.map_fragment_pager_label))
-        adapter.addFragment(ArtListFragment.newInstance(), getString(R.string.list_fragment_pager_label))
-        adapter.addFragment(FavouritesListFragment.newInstance(), getString(R.string.favourites_fragment_pager_label))
-        viewpager.adapter = adapter
-        viewpager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
-            override fun onPageScrollStateChanged(p0: Int) {
-                compositeSubscription.clear()
-                rxInit()
-            }
-        })
-        viewpager.offscreenPageLimit = 3
-
-        tabs.setupWithViewPager(viewpager)
-        tabs.getTabAt(0)?.icon = getDrawableSafely(R.drawable.ic_explore_white_36dp)
-        tabs.getTabAt(1)?.icon = getDrawableSafely(R.drawable.ic_visibility_white_36dp)
-        tabs.getTabAt(2)?.icon = getDrawableSafely(R.drawable.ic_favorite_white_36dp)
+        initTabs()
     }
 
     override fun onStart() {
         super.onStart()
-        rxInit()
-    }
-
-    private fun rxInit() {
-        compositeSubscription.addAll(
-                RxView.clicks(explore_floating_action_button)
-                        .subscribe { openSearchView() },
-
-                RxView.clicks(search_view.findViewById(R.id.search_close_btn))
-                        .subscribe { closeSearchView() },
-
-                RxSearchView.queryTextChanges(search_view)
-                        .subscribe { applyFilter(it) }
-        )
+        initRxSubscriptions()
     }
 
     override fun onStop() {
@@ -98,6 +68,41 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         val intent = Intent(this, DetailArtObjectActivity::class.java)
         intent.putExtra(DetailArtObjectActivity.EXTRA_KEY_ART_OBJECT_DETAIL_ID, id)
         startActivity(intent)
+    }
+
+    private fun initTabs() {
+        val adapter = Adapter(supportFragmentManager)
+        adapter.addFragment(ArtMapFragment.newInstance(), getString(R.string.map_fragment_pager_label))
+        adapter.addFragment(ArtListFragment.newInstance(), getString(R.string.list_fragment_pager_label))
+        adapter.addFragment(FavouritesListFragment.newInstance(), getString(R.string.favourites_fragment_pager_label))
+        viewpager.adapter = adapter
+        viewpager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageScrollStateChanged(p0: Int) {
+                compositeSubscription.clear()
+                initRxSubscriptions()
+            }
+        })
+        viewpager.offscreenPageLimit = 3
+
+        tabs.setupWithViewPager(viewpager)
+        tabs.getTabAt(0)?.icon = getDrawableSafely(R.drawable.ic_explore_white_36dp)
+        tabs.getTabAt(1)?.icon = getDrawableSafely(R.drawable.ic_visibility_white_36dp)
+        tabs.getTabAt(2)?.icon = getDrawableSafely(R.drawable.ic_favorite_white_36dp)
+
+        viewpager.currentItem = 1
+    }
+
+    private fun initRxSubscriptions() {
+        compositeSubscription.addAll(
+                RxView.clicks(explore_floating_action_button)
+                        .subscribe { openSearchView() },
+
+                RxView.clicks(search_view.findViewById(R.id.search_close_btn))
+                        .subscribe { closeSearchView() },
+
+                RxSearchView.queryTextChanges(search_view)
+                        .subscribe { applyFilter(it) }
+        )
     }
 
     private fun applyFilter(query: CharSequence) {

@@ -27,9 +27,18 @@ abstract class ArtListPresenter {
     val TAG = "ArtListPresenter"
 
     private var view: ArtView? = null
-    private var fetchFinishedBroadcastReceiver: BroadcastReceiver? = null
     private var fetchSubscription: Subscription? = null
     private var filterQuery: String = ""
+
+    private val fetchFinishedBroadcastReceiver by lazy {
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action == FetchService.EVENT_FETCH_FINISHED) {
+                    view?.stopRefresh()
+                }
+            }
+        }
+    }
 
     @Inject
     lateinit var tracker: Tracker
@@ -46,12 +55,6 @@ abstract class ArtListPresenter {
         tracker.sendScreen(artView.javaClass.simpleName)
 
         fetchSubscription = createDataFetchSubscription()
-
-        fetchFinishedBroadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                view?.stopRefresh()
-            }
-        }
 
         val intentFilter = IntentFilter()
         intentFilter.addAction(FetchService.EVENT_FETCH_FINISHED)
@@ -81,12 +84,19 @@ abstract class ArtListPresenter {
     }
 
     private fun createDataFetchSubscription(): Subscription {
-        return fetchFromDataSource()
-                .debounce(200, TimeUnit.MILLISECONDS)
-                .map { it.filter { it.matches(filterQuery) } }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { view?.showArtObjects(it) }
+        if (filterQuery.isBlank()) {
+            return fetchFromDataSource()
+                    .debounce(200, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { view?.showArtObjects(it) }
+        } else {
+            return fetchFromDataSource()
+                    .debounce(200, TimeUnit.MILLISECONDS)
+                    .map { it.filter { it.matches(filterQuery) } }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { view?.showArtObjects(it) }
+        }
     }
 
-    abstract fun fetchFromDataSource() : Observable<List<ArtObjectUi>>
+    abstract fun fetchFromDataSource(): Observable<List<ArtObjectUi>>
 }
