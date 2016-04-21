@@ -19,7 +19,6 @@ import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.extensions.*
 import org.jetbrains.anko.async
-import org.jetbrains.anko.uiThread
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
@@ -122,6 +121,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
     }
 
     private fun shareArtObjectInfo() {
+        tracker.sendScreen("Sharing ${artObjectUi.name}")
         async() {
             val image = Glide.with(applicationContext)
                     .load(artObjectUi.picsUrls[art_object_detail_image.currentItem])
@@ -130,18 +130,17 @@ class DetailArtObjectActivity : AppCompatActivity() {
                     .get()
             val path = MediaStore.Images.Media.insertImage(contentResolver, image, "Street Art object temporary file", null)
             val uri = Uri.parse(path)
-            uiThread {
-                val shareImageIntent = Intent()
-                shareImageIntent.action = Intent.ACTION_SEND
-                shareImageIntent.putExtra(Intent.EXTRA_STREAM, uri)
-                shareImageIntent.putExtra(Intent.EXTRA_TEXT, "${artObjectUi.authorsNames()} - ${artObjectUi.name} \n${artObjectUi.address}")
-                shareImageIntent.type = "image/*"
-                startActivity(Intent.createChooser(shareImageIntent, resources.getText(R.string.share)))
-            }
+            val shareImageIntent = Intent()
+            shareImageIntent.action = Intent.ACTION_SEND
+            shareImageIntent.putExtra(Intent.EXTRA_STREAM, uri)
+            shareImageIntent.putExtra(Intent.EXTRA_TEXT, "${artObjectUi.authorsNames()} - ${artObjectUi.name} \n${artObjectUi.address}")
+            shareImageIntent.type = "image/*"
+            startActivity(Intent.createChooser(shareImageIntent, resources.getText(R.string.share)))
         }
     }
 
     private fun startNavigation() {
+        tracker.sendScreen("Navigation to ${artObjectUi.name}")
         val latitude = artObjectUi.lat
         val longitude = artObjectUi.lng
         val label = artObjectUi.address
