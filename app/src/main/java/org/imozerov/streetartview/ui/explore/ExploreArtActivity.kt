@@ -65,7 +65,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     override fun onBackPressed() {
-        if (getMapFragmentIfCurrentOrNull()?.onBackPressed() == true) {
+        if (getMapFragmentIfCurrent()?.onBackPressed() == true) {
             return
         }
 
@@ -155,14 +155,16 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     private fun openSearchView() {
-        getMapFragmentIfCurrentOrNull()?.hideArtObjectDigest()
+        getMapFragmentIfCurrent()?.hideArtObjectDigest()
         explore_floating_action_button_search.hide()
         search_view.animateToVisible()
     }
 
     private fun closeSearchView() {
         hideKeyboard()
-        explore_floating_action_button_search.show()
+        if (explore_floating_action_button_sort_by.isShown) {
+            explore_floating_action_button_search.show()
+        }
         search_view.animateToGone()
     }
 
@@ -173,7 +175,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         }
     }
 
-    private fun getMapFragmentIfCurrentOrNull(): ArtMapFragment? {
+    private fun getMapFragmentIfCurrent(): ArtMapFragment? {
         val currentFragment = (viewpager.adapter as FragmentPagerAdapter).getItem(viewpager.currentItem)
         if (currentFragment is ArtMapFragment) {
             return currentFragment
