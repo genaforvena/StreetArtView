@@ -3,9 +3,11 @@ package org.imozerov.streetartview.ui.detail
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
 import com.google.android.gms.analytics.Tracker
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
@@ -16,6 +18,8 @@ import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.extensions.*
+import org.jetbrains.anko.async
+import org.jetbrains.anko.uiThread
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
@@ -129,14 +133,23 @@ class DetailArtObjectActivity : AppCompatActivity() {
     }
 
     private fun shareArtObjectInfo() {
-        val curImage: ImageView = art_object_detail_image.findViewWithTag(GalleryPagerAdapter.TAG_CURRENT_DETAIL_IMAGE) as ImageView
-
-        val shareImageIntent = Intent()
-        shareImageIntent.action = Intent.ACTION_SEND
-        shareImageIntent.putExtra(Intent.EXTRA_STREAM, curImage.createUri(contentResolver))
-        shareImageIntent.putExtra(Intent.EXTRA_TEXT, "${artObjectUi.authorsNames()} - ${artObjectUi.name} \n${artObjectUi.address}")
-        shareImageIntent.type = "image/*"
-        startActivity(Intent.createChooser(shareImageIntent, resources.getText(R.string.share)))
+        async() {
+            val image = Glide.with(applicationContext)
+                    .load(artObjectUi.picsUrls[art_object_detail_image.currentItem])
+                    .asBitmap()
+                    .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                    .get()
+            val path = MediaStore.Images.Media.insertImage(contentResolver, image, "Street Art object temporary file", null)
+            val uri = Uri.parse(path)
+            uiThread {
+                val shareImageIntent = Intent()
+                shareImageIntent.action = Intent.ACTION_SEND
+                shareImageIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                shareImageIntent.putExtra(Intent.EXTRA_TEXT, "${artObjectUi.authorsNames()} - ${artObjectUi.name} \n${artObjectUi.address}")
+                shareImageIntent.type = "image/*"
+                startActivity(Intent.createChooser(shareImageIntent, resources.getText(R.string.share)))
+            }
+        }
     }
 
     private fun startNavigation() {
