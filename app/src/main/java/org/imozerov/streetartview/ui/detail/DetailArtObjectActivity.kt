@@ -20,6 +20,7 @@ import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
 class DetailArtObjectActivity : AppCompatActivity() {
+
     val PICK_IMAGE_REQUEST = 1
 
     @Inject
@@ -85,8 +86,10 @@ class DetailArtObjectActivity : AppCompatActivity() {
         } else {
             art_object_detail_description.text = artObjectUi.description
         }
+
         art_object_detail_address.text = artObjectUi.address
         setFavouriteIcon(artObjectUi.isFavourite)
+
 
         val picsNumber = artObjectUi.picsUrls.size
         if (picsNumber > 1) {
