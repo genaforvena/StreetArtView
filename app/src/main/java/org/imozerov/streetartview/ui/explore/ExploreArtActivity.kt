@@ -90,7 +90,12 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         adapter.addFragment(FavouritesListFragment.newInstance(), getString(R.string.favourites_fragment_pager_label))
         viewpager.adapter = adapter
         viewpager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
-            override fun onPageScrollStateChanged(p0: Int) {
+            override fun onPageScrollStateChanged(pageIndex: Int) {
+                if (viewpager.currentItem == 0) {
+                    ((viewpager.adapter as FragmentPagerAdapter).getItem(0) as ArtMapFragment).startLocationTracking()
+                } else {
+                    ((viewpager.adapter as FragmentPagerAdapter).getItem(0) as ArtMapFragment).stopLocationTracking()
+                }
                 compositeSubscription.clear()
                 initRxSubscriptions()
             }

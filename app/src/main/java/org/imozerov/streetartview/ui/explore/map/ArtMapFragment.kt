@@ -75,7 +75,6 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
                 uiSettings.isMapToolbarEnabled = false
                 val userLocation = getCurrentLocation(context)
-                addUserLocationMarker(userLocation)
                 moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11f))
                 setOnMapClickListener { hideArtObjectDigest() }
             }
@@ -93,10 +92,6 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         presenter.unbindView()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         val refWatcher = StreetArtViewApp.getRefWatcher(activity);
@@ -106,6 +101,18 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     override fun onDetach() {
         super.onDetach()
         artObjectDetailOpener = null
+    }
+
+    fun startLocationTracking() {
+        (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment).getMapAsync {
+            it.isMyLocationEnabled = true
+        }
+    }
+
+    fun stopLocationTracking() {
+        (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment).getMapAsync {
+            it.isMyLocationEnabled = false
+        }
     }
 
     fun onBackPressed(): Boolean {

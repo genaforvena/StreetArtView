@@ -30,10 +30,8 @@ fun LatLng.printableDistanceTo(point: LatLng) : String {
 }
 
 fun getCurrentLocation(context: Context): LatLng {
-    val criteria = Criteria()
     val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    val provider = locationManager.getBestProvider(criteria, false);
-    val location = locationManager.getLastKnownLocation(provider);
+    val location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
     var userLocation: LatLng
     if (location != null) {
         userLocation = LatLng(location.latitude, location.longitude);
