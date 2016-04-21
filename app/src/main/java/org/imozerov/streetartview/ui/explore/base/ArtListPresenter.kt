@@ -13,6 +13,7 @@ import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.sort.SortOrder
 import org.imozerov.streetartview.ui.explore.sort.getSortOrder
 import org.imozerov.streetartview.ui.extensions.distanceTo
+import org.imozerov.streetartview.ui.extensions.getCurrentLocation
 import org.imozerov.streetartview.ui.extensions.sendScreen
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.Observable
@@ -32,6 +33,8 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
     private var fetchSubscription: Subscription? = null
     private var filterQuery: String = ""
     private var sortOrder: Int? = SortOrder.byDate
+
+    private val currentLocation by lazy { getCurrentLocation(application) }
 
     private val fetchFinishedBroadcastReceiver by lazy {
         object : BroadcastReceiver() {
@@ -120,7 +123,7 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
                     if (sortOrder == SortOrder.byDistance) {
                         it.sortedWith(Comparator<ArtObjectUi> {
                             lhs, rhs ->
-                            LatLng(lhs.lat, lhs.lng).distanceTo(LatLng(rhs.lat, rhs.lng)).toInt()
+                            LatLng(lhs.lat, lhs.lng).distanceTo(currentLocation).toInt() - LatLng(rhs.lat, rhs.lng).distanceTo(currentLocation).toInt()
                         })
                     } else {
                         it

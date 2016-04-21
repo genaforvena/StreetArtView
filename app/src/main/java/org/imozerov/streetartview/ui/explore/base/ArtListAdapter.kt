@@ -30,6 +30,9 @@ class ArtListAdapter(private val context: Context, private var data: List<ArtObj
     override fun getItemId(position: Int) = data!![position].id.hashCode().toLong()
 
     fun setData(artObjectUis: List<ArtObjectUi>) {
+        if (artObjectUis == data) {
+            return
+        }
         data = artObjectUis
         notifyDataSetChanged()
     }
