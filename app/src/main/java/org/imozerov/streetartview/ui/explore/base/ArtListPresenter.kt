@@ -82,13 +82,15 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (SortOrder.KEY.equals(key)) {
-            Log.e(TAG, "Applying new sort order")
             fetchSubscription?.unsubscribe()
             fetchSubscription = createDataFetchSubscription()
         }
     }
 
     fun applyFilter(query: String) {
+        if (query == filterQuery) {
+            return
+        }
         Log.v(TAG, "Applying filter $query")
         filterQuery = query
         fetchSubscription?.unsubscribe()
@@ -105,34 +107,29 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
     }
 
     private fun createDataFetchSubscription(): Subscription {
-        if (sortOrder == SortOrder.byDate) {
-            if (filterQuery.isBlank()) {
-                return fetchData()
-                        .debounce(200, TimeUnit.MILLISECONDS)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { view?.showArtObjects(it) }
-            } else {
-                return fetchData()
-                        .debounce(200, TimeUnit.MILLISECONDS)
-                        .map { it.filter { it.matches(filterQuery) } }
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { view?.showArtObjects(it) }
-            }
-        } else {
-            if (filterQuery.isBlank()) {
-                return fetchData()
-                        .debounce(200, TimeUnit.MILLISECONDS)
-                        .map { it.sortedWith(Comparator<ArtObjectUi> { lhs, rhs -> LatLng(lhs.lat, lhs.lng).distanceTo(LatLng(rhs.lat, rhs.lng)).toInt() }) }
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { view?.showArtObjects(it) }
-            } else {
-                return fetchData()
-                        .debounce(200, TimeUnit.MILLISECONDS)
-                        .map { it.filter { it.matches(filterQuery) } }
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { view?.showArtObjects(it) }
-            }
-        }
+        return fetchData()
+                .debounce(200, TimeUnit.MILLISECONDS)
+                .map {
+                    if (filterQuery.isNotBlank()) {
+                        it.filter { it.matches(filterQuery) }
+                    } else {
+                        it
+                    }
+                }
+                .map {
+                    if (sortOrder == SortOrder.byDistance) {
+                        it.sortedWith(Comparator<ArtObjectUi> {
+                            lhs, rhs ->
+                            LatLng(lhs.lat, lhs.lng).distanceTo(LatLng(rhs.lat, rhs.lng)).toInt()
+                        })
+                    } else {
+                        it
+                    }
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    view?.showArtObjects(it)
+                }
     }
 
     abstract fun fetchData(): Observable<List<ArtObjectUi>>
