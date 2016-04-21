@@ -3,5 +3,7 @@
     <string name="map_fragment_pager_label">Карта</string>
     <string name="list_fragment_pager_label">Галерея</string>
     <string name="favourites_fragment_pager_label">Избранное</string>
+    <string name="toast_sort_by_date">Сортировка по времени</string>
+    <string name="toast_sort_by_distance">Сортировка по расстоянию</string>
     <string name="share">Поделиться</string>
 </resources>

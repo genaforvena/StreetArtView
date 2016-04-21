@@ -4,6 +4,7 @@ import dagger.Component;
 
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity;
 import org.imozerov.streetartview.ui.detail.ImageViewActivity;
+import org.imozerov.streetartview.ui.explore.ExploreArtActivity;
 import org.imozerov.streetartview.ui.explore.base.ArtListPresenter;
 
 import javax.inject.Singleton;
@@ -15,6 +16,7 @@ import javax.inject.Singleton;
 @Component(modules = AppModule.class)
 public interface AppComponent {
     void inject(ArtListPresenter artListPresenter);
+    void inject(ExploreArtActivity exploreArtActivity);
     void inject(DetailArtObjectActivity detailArtObjectActivity);
     void inject(ImageViewActivity imageViewActivity);
 }

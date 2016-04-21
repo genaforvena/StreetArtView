@@ -2,6 +2,7 @@ package org.imozerov.streetartview.ui.explore
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -14,19 +15,26 @@ import android.view.inputmethod.InputMethodManager
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
 import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.activity_explore_art.*
+import org.imozerov.streetartview.BuildConfig
 import org.imozerov.streetartview.R
+import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
+import org.imozerov.streetartview.ui.explore.all.ArtListFragment
 import org.imozerov.streetartview.ui.explore.favourites.FavouritesListFragment
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
-import org.imozerov.streetartview.ui.explore.all.ArtListFragment
 import org.imozerov.streetartview.ui.explore.map.ArtMapFragment
+import org.imozerov.streetartview.ui.explore.sort.SortOrder
+import org.imozerov.streetartview.ui.explore.sort.getSortOrder
+import org.imozerov.streetartview.ui.explore.sort.swapSortOrder
 import org.imozerov.streetartview.ui.extensions.addAll
 import org.imozerov.streetartview.ui.extensions.animateToGone
 import org.imozerov.streetartview.ui.extensions.animateToVisible
 import org.imozerov.streetartview.ui.extensions.getDrawableSafely
+import org.jetbrains.anko.toast
 import rx.subscriptions.CompositeSubscription
 import java.util.*
+import javax.inject.Inject
 
 class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
 
@@ -34,11 +42,16 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
 
     val compositeSubscription = CompositeSubscription()
 
+    @Inject
+    lateinit var prefs: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
         super.onCreate(savedInstanceState)
+        (application as StreetArtViewApp).appComponent.inject(this)
         setContentView(R.layout.activity_explore_art)
         initTabs()
+        initSortOrderIcon(prefs.getSortOrder())
     }
 
     override fun onStart() {
@@ -52,7 +65,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     override fun onBackPressed() {
-        if (getMapFragmentIfCurrentOrNull()?.onBackPressed() == true) {
+        if (getMapFragmentIfCurrent()?.onBackPressed() == true) {
             return
         }
 
@@ -92,16 +105,27 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         viewpager.currentItem = 1
     }
 
+    private fun initSortOrderIcon(sortOrder: Int) {
+        if (sortOrder == SortOrder.byDate) {
+            explore_floating_action_button_sort_by.setImageDrawable(getDrawableSafely(R.drawable.ic_schedule_black_24dp))
+        } else if (sortOrder == SortOrder.byDistance) {
+            explore_floating_action_button_sort_by.setImageDrawable(getDrawableSafely(R.drawable.ic_location_on_black_24dp))
+        } else {
+            val errorMsg = "Unknown sort order: $sortOrder"
+            if (BuildConfig.DEBUG) {
+                throw RuntimeException(errorMsg)
+            }
+            Log.e(TAG, errorMsg)
+        }
+    }
+
     private fun initRxSubscriptions() {
         compositeSubscription.addAll(
-                RxView.clicks(explore_floating_action_button)
-                        .subscribe { openSearchView() },
-
-                RxView.clicks(search_view.findViewById(R.id.search_close_btn))
-                        .subscribe { closeSearchView() },
-
-                RxSearchView.queryTextChanges(search_view)
-                        .subscribe { applyFilter(it) }
+                RxView.clicks(explore_floating_action_button_expand).subscribe { swapFloatingActionButtonsVisibility() },
+                RxView.clicks(explore_floating_action_button_search).subscribe { openSearchView() },
+                RxView.clicks(explore_floating_action_button_sort_by).subscribe { changeSortOrder() },
+                RxView.clicks(search_view.findViewById(R.id.search_close_btn)).subscribe { closeSearchView() },
+                RxSearchView.queryTextChanges(search_view).subscribe { applyFilter(it) }
         )
     }
 
@@ -111,15 +135,37 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         (fragment as? Filterable)?.applyFilter(query.toString())
     }
 
+    private fun changeSortOrder() {
+        val newSortOrder = prefs.swapSortOrder()
+        initSortOrderIcon(newSortOrder)
+        toast(SortOrder.getString(newSortOrder))
+    }
+
+    private fun swapFloatingActionButtonsVisibility() {
+        if (!explore_floating_action_button_sort_by.isShown) {
+            if (search_view.visibility != View.VISIBLE) {
+                explore_floating_action_button_search.show()
+            }
+            explore_floating_action_button_sort_by.show()
+            explore_floating_action_button_expand.setImageDrawable(getDrawableSafely(R.drawable.ic_remove_black_24dp))
+        } else {
+            explore_floating_action_button_search.hide()
+            explore_floating_action_button_sort_by.hide()
+            explore_floating_action_button_expand.setImageDrawable(getDrawableSafely(R.drawable.ic_build_black_24dp))
+        }
+    }
+
     private fun openSearchView() {
-        getMapFragmentIfCurrentOrNull()?.hideArtObjectDigest()
-        explore_floating_action_button.hide()
+        getMapFragmentIfCurrent()?.hideArtObjectDigest()
+        explore_floating_action_button_search.hide()
         search_view.animateToVisible()
     }
 
     private fun closeSearchView() {
         hideKeyboard()
-        explore_floating_action_button.show()
+        if (explore_floating_action_button_sort_by.isShown) {
+            explore_floating_action_button_search.show()
+        }
         search_view.animateToGone()
     }
 
@@ -130,7 +176,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         }
     }
 
-    private fun getMapFragmentIfCurrentOrNull(): ArtMapFragment? {
+    private fun getMapFragmentIfCurrent(): ArtMapFragment? {
         val currentFragment = (viewpager.adapter as FragmentPagerAdapter).getItem(viewpager.currentItem)
         if (currentFragment is ArtMapFragment) {
             return currentFragment

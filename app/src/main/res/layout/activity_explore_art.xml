@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -24,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:layout_scrollFlags="scroll|enterAlways|snap"/>
+            app:layout_scrollFlags="scroll|enterAlways|snap" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -32,17 +31,51 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/explore_floating_action_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_search_black_24dp"
-        app:fabSize="mini"
-        app:elevation="4dp"
-        app:layout_anchorGravity="bottom|right|end" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom|end">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/explore_floating_action_button_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_search_black_24dp"
+            app:elevation="4dp"
+            app:fabSize="mini"
+            android:layout_above="@+id/explore_floating_action_button_sort_by"
+            android:visibility="gone"
+            android:layout_alignEnd="@+id/explore_floating_action_button_expand" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/explore_floating_action_button_sort_by"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:elevation="4dp"
+            app:fabSize="mini"
+            android:layout_above="@+id/explore_floating_action_button_expand"
+            android:visibility="gone"
+            android:src="@drawable/ic_schedule_black_24dp"
+            android:layout_alignStart="@+id/explore_floating_action_button_expand" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/explore_floating_action_button_expand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="bottom|end"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_build_black_24dp"
+            app:elevation="4dp"
+            app:fabSize="mini" />
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -40,15 +40,13 @@ class DataSource() : IDataSource {
                 .where(RealmArtObject::class.java)
                 // TODO We're selecting only alive objects for now!
                 .equalTo("status", 0)
-                .findAllSorted("updatedAt", Sort.DESCENDING)
+                .findAllSortedAsync("updatedAt", Sort.DESCENDING)
                 .asObservable()
                 .cache()
                 // Do not try to use flatMap().toList() here
                 // as onComplete() will never be called so
                 // No call to toList() will be performed.
-                .map {
-                    realmToUi(it)
-                }
+                .map { realmToUi(it) }
     }
 
     override fun listFavourites(): Observable<List<ArtObjectUi>> {
@@ -57,7 +55,7 @@ class DataSource() : IDataSource {
                 .equalTo("isFavourite", true)
                 // TODO We're selecting only alive objects for now!
                 .equalTo("status", 0)
-                .findAllSorted("updatedAt", Sort.DESCENDING)
+                .findAllSortedAsync("updatedAt", Sort.DESCENDING)
                 .asObservable()
                 .cache()
                 // Do not try to use flatMap().toList() here
