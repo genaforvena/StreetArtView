@@ -84,7 +84,9 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        if (SortOrder.KEY.equals(key)) {
+        if (SortOrder.KEY.equals(key) && sharedPreferences != null) {
+            Log.v(TAG, "changing sort order")
+            sortOrder = sharedPreferences.getSortOrder()
             fetchSubscription?.unsubscribe()
             fetchSubscription = createDataFetchSubscription()
         }

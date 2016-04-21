@@ -5,6 +5,8 @@
     <string name="favourites_fragment_pager_label">Favourites</string>
 
     <string name="share">Share</string>
+    <string name="toast_sort_by_date">Sort by date</string>
+    <string name="toast_sort_by_distance">Sort by distance</string>
 
     <string name="title_activity_image_view" translatable="false">ImageViewActivity</string>
 </resources>

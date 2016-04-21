@@ -138,6 +138,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     private fun changeSortOrder() {
         val newSortOrder = prefs.swapSortOrder()
         initSortOrderIcon(newSortOrder)
+        toast(SortOrder.getString(newSortOrder))
     }
 
     private fun swapFloatingActionButtonsVisibility() {
