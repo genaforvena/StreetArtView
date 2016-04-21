@@ -32,16 +32,11 @@ class GalleryPagerAdapter(val context: Context, val images: List<String>, privat
                     height = matchParent
                 }
                 scaleType = ImageView.ScaleType.CENTER_CROP
-                tag = TAG_CURRENT_DETAIL_IMAGE
             }
         }
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, anyObject: Any) {
         container.removeView(anyObject as LinearLayout)
-    }
-
-    companion object {
-        val TAG_CURRENT_DETAIL_IMAGE = "TAG_CURRENT_DETAIL_IMAGE"
     }
 }

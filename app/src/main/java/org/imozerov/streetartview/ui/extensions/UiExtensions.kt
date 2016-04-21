@@ -3,18 +3,14 @@ package org.imozerov.streetartview.ui.extensions
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.net.Uri
-import android.provider.MediaStore
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable
 
 /**
  * Created by imozerov on 29.02.16.
@@ -27,12 +23,6 @@ fun ImageView.loadImage(imagePath: String?) {
     } else {
         Log.e(TAG, "No image found!")
     }
-}
-
-fun ImageView.createUri(contentResolver: ContentResolver): Uri {
-    val bitmap = (drawable as GlideBitmapDrawable).bitmap
-    val path = MediaStore.Images.Media.insertImage(contentResolver, bitmap, "Street Art object temporary file", null)
-    return Uri.parse(path)
 }
 
 private fun getDrawableSafely(id: Int, context: Context): Drawable {
