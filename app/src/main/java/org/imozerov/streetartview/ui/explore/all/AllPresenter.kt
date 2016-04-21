@@ -8,7 +8,7 @@ import rx.Observable
  * Created by imozerov on 18.04.16.
  */
 class AllPresenter : ArtListPresenter() {
-    override fun fetchFromDataSource(): Observable<List<ArtObjectUi>> {
+    override fun fetchData(): Observable<List<ArtObjectUi>> {
         return dataSource.listArtObjects()
     }
 }

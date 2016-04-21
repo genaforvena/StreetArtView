@@ -1,6 +1,8 @@
 package org.imozerov.streetartview;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -41,5 +43,11 @@ public class AppModule {
     public Tracker provideTracker(Application application) {
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(application);
         return analytics.newTracker("UA-76576531-1");
+    }
+
+    @Provides
+    @Singleton
+    public SharedPreferences provideSharedPreferences(Application application) {
+        return PreferenceManager.getDefaultSharedPreferences(application);
     }
 }

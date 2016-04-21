@@ -51,20 +51,10 @@ class DetailArtObjectActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        compositeSubscription.add(
-                RxView.clicks(detail_share_button).subscribe {
-                    shareArtObjectInfo()
-                }
-        )
-        compositeSubscription.add(
-                RxView.clicks(detail_set_favourite_button).subscribe {
-                    changeFavouriteStatus()
-                }
-        )
-        compositeSubscription.add(
-                RxView.clicks(art_object_detail_address).subscribe {
-                    startNavigation()
-                }
+        compositeSubscription.addAll(
+                RxView.clicks(detail_share_button).subscribe { shareArtObjectInfo() },
+                RxView.clicks(detail_set_favourite_button).subscribe { changeFavouriteStatus() },
+                RxView.clicks(art_object_detail_address).subscribe { startNavigation() }
         )
     }
 
@@ -93,7 +83,6 @@ class DetailArtObjectActivity : AppCompatActivity() {
 
         art_object_detail_address.text = artObjectUi.address
         setFavouriteIcon(artObjectUi.isFavourite)
-
 
         val picsNumber = artObjectUi.picsUrls.size
         if (picsNumber > 1) {
