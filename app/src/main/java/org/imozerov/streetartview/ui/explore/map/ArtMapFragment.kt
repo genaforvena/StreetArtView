@@ -104,13 +104,13 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     }
 
     fun startLocationTracking() {
-        (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment).getMapAsync {
+        (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as? SupportMapFragment)?.getMapAsync {
             it.isMyLocationEnabled = true
         }
     }
 
     fun stopLocationTracking() {
-        (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as SupportMapFragment).getMapAsync {
+        (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as? SupportMapFragment)?.getMapAsync {
             it.isMyLocationEnabled = false
         }
     }
