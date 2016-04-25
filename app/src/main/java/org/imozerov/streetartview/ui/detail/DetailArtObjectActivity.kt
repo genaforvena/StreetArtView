@@ -38,7 +38,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
-        (application as StreetArtViewApp).appComponent.inject(this)
+        (application as StreetArtViewApp).appComponent!!.inject(this)
 
         tracker.sendScreen("DetailArtObjectActivity: ${artObjectUi.name}")
 

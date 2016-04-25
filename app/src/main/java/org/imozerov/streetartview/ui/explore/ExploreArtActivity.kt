@@ -48,7 +48,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
         super.onCreate(savedInstanceState)
-        (application as StreetArtViewApp).appComponent.inject(this)
+        (application as StreetArtViewApp).appComponent!!.inject(this)
         setContentView(R.layout.activity_explore_art)
         initTabs()
         initSortOrderIcon(prefs.getSortOrder())
