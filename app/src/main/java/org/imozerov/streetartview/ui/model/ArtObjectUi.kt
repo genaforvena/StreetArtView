@@ -22,26 +22,26 @@ class ArtObjectUi {
 
     constructor(realmArtObject: RealmArtObject) {
         val picUrls = ArrayList<String>()
-        for (realmString in realmArtObject.picsUrls) {
-            picUrls.add(realmString.value)
+        for (realmString in realmArtObject.picsUrls!!) {
+            picUrls.add(realmString.value!!)
         }
 
-        id = realmArtObject.id
-        name = realmArtObject.name
-        authors = realmArtObject.authors.map {
+        id = realmArtObject.id!!
+        name = realmArtObject.name!!
+        authors = realmArtObject.authors!!.map {
             return@map AuthorUi(
-                    it.id,
-                    it.name,
+                    it.id!!,
+                    it.name!!,
                     it.photo ?: ""
             )
         }
-        description = realmArtObject.description
+        description = realmArtObject.description!!
         thumbPicUrl = realmArtObject.thumbPicUrl ?: ""
         picsUrls = picUrls
 
-        lat = realmArtObject.location.lat
-        lng = realmArtObject.location.lng
-        address = realmArtObject.location.address
+        lat = realmArtObject.location!!.lat
+        lng = realmArtObject.location!!.lng
+        address = realmArtObject.location!!.address!!
         isFavourite = realmArtObject.isFavourite
         status = realmArtObject.status
     }

@@ -18,7 +18,7 @@ class ImageViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as StreetArtViewApp).appComponent.inject(this)
+        (application as StreetArtViewApp).appComponent!!.inject(this)
 
         val artObjectId = intent.getStringExtra(DetailArtObjectActivity.EXTRA_KEY_ART_OBJECT_DETAIL_ID)
         val artObjectUi = dataSource.getArtObject(artObjectId)

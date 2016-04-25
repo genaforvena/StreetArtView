@@ -21,7 +21,7 @@ class FetchService : IntentService("FetchService") {
 
     override fun onCreate() {
         super.onCreate()
-        (application as StreetArtViewApp).netComponent.inject(this)
+        (application as StreetArtViewApp).netComponent!!.inject(this)
     }
 
     override fun onHandleIntent(intent: Intent?) {

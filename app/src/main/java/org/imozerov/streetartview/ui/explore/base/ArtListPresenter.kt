@@ -60,7 +60,7 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
 
     fun bindView(artView: ArtView, context: Context) {
         view = artView
-        (context.applicationContext as StreetArtViewApp).appComponent.inject(this)
+        (context.applicationContext as StreetArtViewApp).appComponent!!.inject(this)
 
         sortOrder = prefs.getSortOrder()
 
