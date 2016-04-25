@@ -6,4 +6,14 @@
 
     <color name="grey">#63000000</color>
     <color name="black">#000000</color>
+
+    <color name="tab_icon_selected">#FFFFFFFF</color>
+    <color name="tab_icon_unselected">#99FFFFFF</color>
+
+    <color name="background_dark">#ff333333</color>
+    <color name="background_super_dark">#ff292929</color>
+    <color name="dribbble_dark">#ec407a</color> <!-- pink 400 -->
+    <color name="dribbble_super_dark">#ff33292d</color>
+    <color name="light_grey">#cecece</color>
+
 </resources>
