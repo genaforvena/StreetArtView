@@ -19,7 +19,7 @@ fun RealmArtObject.copyDataFromJson(artwork: Artwork) {
             val realmAuthor = RealmAuthor()
             realmAuthor.id = it.id
             realmAuthor.name = it.name
-            authors.add(realmAuthor)
+            authors!!.add(realmAuthor)
         }
     }
 
@@ -29,12 +29,12 @@ fun RealmArtObject.copyDataFromJson(artwork: Artwork) {
         artwork.photos.forEach {
             val url = RealmString()
             url.value = it.big
-            picsUrls.add(url)
+            picsUrls!!.add(url)
         }
     }
 
     location = RealmLocation()
-    with(location) {
+    with(location!!) {
         address = artwork.location.address
         lat = artwork.location.lat
         lng = artwork.location.lng

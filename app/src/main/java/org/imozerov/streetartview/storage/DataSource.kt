@@ -87,7 +87,7 @@ class DataSource() : IDataSource {
 
     private fun realmToUi(realmObjects: RealmResults<RealmArtObject>): List<ArtObjectUi> {
         val listOfArtObjects = ArrayList<ArtObjectUi>(realmObjects.size)
-        realmObjects.filter { it.picsUrls.isNotEmpty() }
+        realmObjects.filter { it.picsUrls!!.isNotEmpty() }
                 .forEach { listOfArtObjects.add(ArtObjectUi(it)) }
         return listOfArtObjects
     }
