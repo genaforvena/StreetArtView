@@ -1,0 +1,15 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportHeight="512.0"
+    android:viewportWidth="512.0">
+
+    <group
+        android:name="compass"
+        android:pivotX="256"
+        android:pivotY="256">
+        <path
+            android:fillColor="@color/tab_icon_unselected"
+            android:pathData="M512,256l-157.8,-59.2l37.6,-76.6l-76.3,38.2L256,0l-59.2,157.8L120.3,120.3l38.2,76.3L0,256l157.8,59.2L120.3,391.8l76.3,-38.2L256,512l59.2,-157.8l76.6,37.6l-38.2,-76.3L512,256zM91.1,256l80.1,-30.1L224,256H91.1zM256,420.9l-30.1,-80.2L256,288V420.9zM256,224V91.1l30.1,80.1L256,224zM288,256h132.9l-80.2,30.1L288,256z" />
+    </group>
+</vector>

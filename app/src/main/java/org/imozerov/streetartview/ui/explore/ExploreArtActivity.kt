@@ -103,9 +103,9 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         viewpager.offscreenPageLimit = 3
 
         tabs.setupWithViewPager(viewpager)
-        tabs.getTabAt(0)?.icon = getDrawableSafely(R.drawable.ic_explore_white_36dp)
-        tabs.getTabAt(1)?.icon = getDrawableSafely(R.drawable.ic_visibility_white_36dp)
-        tabs.getTabAt(2)?.icon = getDrawableSafely(R.drawable.ic_favorite_white_36dp)
+        tabs.getTabAt(0)?.icon = getDrawableSafely(R.drawable.ic_compass)
+        tabs.getTabAt(1)?.icon = getDrawableSafely(R.drawable.ic_eye)
+        tabs.getTabAt(2)?.icon = getDrawableSafely(R.drawable.ic_heart)
 
         viewpager.currentItem = 1
     }
