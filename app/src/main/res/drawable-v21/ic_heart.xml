@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:drawable="@drawable/heart_unselected"
+        android:state_focused="true"
+        android:state_selected="false" />
+
+    <item
+        android:id="@+id/on"
+        android:drawable="@drawable/heart_selected"
+        android:state_selected="true" />
+
+    <item
+        android:id="@+id/off"
+        android:drawable="@drawable/heart_unselected" />
+
+    <transition
+        android:fromId="@id/off"
+        android:toId="@id/on">
+        <animated-vector android:drawable="@drawable/heart_selected">
+            <target
+                android:name="heart"
+                android:animation="@animator/heartbeat" />
+        </animated-vector>
+    </transition>
+
+</animated-selector>
