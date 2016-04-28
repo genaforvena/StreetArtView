@@ -85,11 +85,13 @@ dependencies {
 
     // anko
     compile 'org.jetbrains.anko:anko-sdk15:0.8.3'
+    compile 'org.jetbrains.anko:anko-support-v4:0.8.3'
 
     // rx
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
+    compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.3.0'
 
     // retrofit
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
