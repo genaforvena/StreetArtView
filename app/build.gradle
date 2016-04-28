@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0'
+        classpath 'com.android.tools.build:gradle:2.1.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -44,6 +44,9 @@ android {
 
 final RUNNER_VERSION = '0.4.1'
 final ESPRESSO_VERSION = '2.2.1'
+final SUPPORT_LIB_VERSION = '23.3.0'
+final PLAY_SERVICES_VERSION = '8.4.0'
+final REALM_VERSION = '0.87.4'
 
 kapt {
     generateStubs = true
@@ -51,7 +54,9 @@ kapt {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+
+    // kotlin
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     // dagger 2
     kapt 'com.google.dagger:dagger-compiler:2.2'
@@ -59,17 +64,42 @@ dependencies {
     compile 'javax.annotation:jsr250-api:1.0'
 
     // realm
-    compile 'io.realm:realm-android:0.87.4'
-    kapt "io.realm:realm-annotations:0.87.4"
-    kapt "io.realm:realm-annotations-processor:0.87.4"
+    compile "io.realm:realm-android:${REALM_VERSION}"
+    kapt "io.realm:realm-annotations:${REALM_VERSION}"
+    kapt "io.realm:realm-annotations-processor:${REALM_VERSION}"
 
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+    // support libs
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+    compile "com.android.support:design:${SUPPORT_LIB_VERSION}"
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    // play services
+    compile "com.google.android.gms:play-services-maps:${PLAY_SERVICES_VERSION}"
+    compile "com.google.android.gms:play-services-analytics:${PLAY_SERVICES_VERSION}"
+    compile "com.google.android.gms:play-services-location:${PLAY_SERVICES_VERSION}"
+    compile 'com.google.maps.android:android-maps-utils:0.4.3'
 
-    androidTestCompile 'com.android.support:support-annotations:23.2.1'
+    // anko
+    compile 'org.jetbrains.anko:anko-sdk15:0.8.3'
+
+    // rx
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
+
+    // retrofit
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+
+    // glide
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    // PhotoView to zoom ImageView in and out. Maybe we should reimplement this by ourselves.
+    compile 'com.commit451:PhotoView:1.2.5'
+
+    androidTestCompile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
     androidTestCompile "com.android.support.test:runner:${RUNNER_VERSION}"
     androidTestCompile "com.android.support.test:rules:${RUNNER_VERSION}"
     androidTestCompile "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
@@ -82,22 +112,7 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'org.mockito:mockito-core:1.10.19'
 
-    compile 'org.jetbrains.anko:anko-sdk15:0.8.3'
-    compile 'org.jetbrains.anko:anko-support-v4:0.8.3'
-    compile 'com.android.support:appcompat-v7:23.2.1'
-    compile 'com.google.android.gms:play-services-maps:8.4.0'
-    compile 'com.google.android.gms:play-services-analytics:8.4.0'
-    compile 'com.google.maps.android:android-maps-utils:0.4.3'
-    compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'io.reactivex:rxjava:1.1.0'
-    compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
-    compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.3.0'
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
-    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.android.support:recyclerview-v7:23.2.1'
-    compile 'com.android.support:cardview-v7:23.2.1'
-    compile 'com.android.support:support-v4:23.2.1'
-    compile 'com.android.support:design:23.2.1'
-    compile 'com.commit451:PhotoView:1.2.5'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
 }
