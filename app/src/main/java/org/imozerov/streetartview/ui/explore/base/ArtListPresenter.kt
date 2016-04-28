@@ -1,12 +1,14 @@
 package org.imozerov.streetartview.ui.explore.base
 
 import android.app.Application
-import android.content.*
-import android.support.v4.content.LocalBroadcastManager
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import com.google.android.gms.analytics.Tracker
 import com.google.android.gms.maps.model.LatLng
 import org.imozerov.streetartview.StreetArtViewApp
+import org.imozerov.streetartview.bus.RxBus
+import org.imozerov.streetartview.bus.events.FetchFinishedEvent
 import org.imozerov.streetartview.network.FetchService
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
@@ -31,20 +33,14 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
 
     private var view: ArtView? = null
     private var fetchSubscription: Subscription? = null
+    private var rxBusSubscription: Subscription? = null
     private var filterQuery: String = ""
     private var sortOrder: Int? = SortOrder.byDate
 
     private val currentLocation by lazy { getCurrentLocation(application) }
 
-    private val fetchFinishedBroadcastReceiver by lazy {
-        object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                if (intent?.action == FetchService.EVENT_FETCH_FINISHED) {
-                    view?.stopRefresh()
-                }
-            }
-        }
-    }
+    @Inject
+    lateinit var rxBus: RxBus
 
     @Inject
     lateinit var tracker: Tracker
@@ -70,16 +66,20 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
 
         fetchSubscription = createDataFetchSubscription()
 
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(FetchService.EVENT_FETCH_FINISHED)
-        LocalBroadcastManager.getInstance(application).registerReceiver(fetchFinishedBroadcastReceiver, intentFilter)
+        rxBusSubscription = rxBus.toObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    if (it is FetchFinishedEvent) {
+                        view?.stopRefresh()
+                    }
+                }
     }
 
     fun unbindView() {
         fetchSubscription!!.unsubscribe()
+        rxBusSubscription!!.unsubscribe()
 
         prefs.unregisterOnSharedPreferenceChangeListener(this)
-        LocalBroadcastManager.getInstance(application).unregisterReceiver(fetchFinishedBroadcastReceiver)
         view = null
     }
 

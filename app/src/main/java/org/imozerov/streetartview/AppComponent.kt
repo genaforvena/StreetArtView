@@ -1,6 +1,8 @@
 package org.imozerov.streetartview
 
 import dagger.Component
+import org.imozerov.streetartview.network.FetchService
+import org.imozerov.streetartview.network.NetModule
 
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
 import org.imozerov.streetartview.ui.detail.ImageViewActivity
@@ -10,8 +12,9 @@ import org.imozerov.streetartview.ui.explore.base.ArtListPresenter
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(AppModule::class))
+@Component(modules = arrayOf(AppModule::class, NetModule::class))
 interface AppComponent {
+    fun inject(fetchService: FetchService)
     fun inject(artListPresenter: ArtListPresenter)
     fun inject(exploreArtActivity: ExploreArtActivity)
     fun inject(detailArtObjectActivity: DetailArtObjectActivity)

@@ -3,16 +3,13 @@ package org.imozerov.streetartview
 import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.Tracker
-
 import dagger.Module
 import dagger.Provides
-
+import org.imozerov.streetartview.bus.RxBus
 import org.imozerov.streetartview.storage.DataSource
 import org.imozerov.streetartview.storage.IDataSource
-
 import javax.inject.Singleton
 
 @Module
@@ -28,6 +25,12 @@ open class AppModule(var application: Application) {
     @Singleton
     open fun provideDataSource(): IDataSource {
         return DataSource()
+    }
+
+    @Provides
+    @Singleton
+    fun provideBus() : RxBus {
+        return RxBus()
     }
 
     @Provides

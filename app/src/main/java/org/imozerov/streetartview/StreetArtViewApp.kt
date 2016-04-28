@@ -9,16 +9,12 @@ import com.squareup.leakcanary.RefWatcher
 import io.realm.Realm
 import io.realm.RealmConfiguration
 
-import org.imozerov.streetartview.network.DaggerNetComponent
 import org.imozerov.streetartview.network.FetchService
-import org.imozerov.streetartview.network.NetComponent
 import org.imozerov.streetartview.network.NetModule
 
 open class StreetArtViewApp : Application() {
 
     open var appComponent: AppComponent? = null
-    var netComponent: NetComponent? = null
-        private set
     private var refWatcher: RefWatcher? = null
 
     override fun onCreate() {
@@ -27,9 +23,7 @@ open class StreetArtViewApp : Application() {
         val config = RealmConfiguration.Builder(this).name("art.realm").deleteRealmIfMigrationNeeded().schemaVersion(2).migration { realm, oldVersion, newVersion -> }.build()
         Realm.setDefaultConfiguration(config)
 
-        appComponent = DaggerAppComponent.builder().appModule(AppModule(this)).build()
-
-        netComponent = DaggerNetComponent.builder().appModule(AppModule(this)).netModule(NetModule(PRODUCTION_API)).build()
+        appComponent = DaggerAppComponent.builder().appModule(AppModule(this)).netModule(NetModule(PRODUCTION_API)).build()
 
         refWatcher = LeakCanary.install(this)
 

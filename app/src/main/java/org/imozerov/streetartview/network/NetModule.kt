@@ -20,14 +20,7 @@ import retrofit.GsonConverterFactory
 import retrofit.Retrofit
 
 @Module
-class NetModule(internal var mBaseUrl: String) {
-
-    @Provides
-    @Singleton
-    internal fun providesSharedPreferences(application: Application): SharedPreferences {
-        return PreferenceManager.getDefaultSharedPreferences(application)
-    }
-
+class NetModule(private val mBaseUrl: String) {
     @Provides
     @Singleton
     internal fun provideOkHttpCache(application: Application): Cache {
