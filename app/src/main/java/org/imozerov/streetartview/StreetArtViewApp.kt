@@ -2,12 +2,14 @@ package org.imozerov.streetartview
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import org.imozerov.streetartview.location.LocationService
 
 import org.imozerov.streetartview.network.FetchService
 import org.imozerov.streetartview.network.NetModule
@@ -28,6 +30,7 @@ open class StreetArtViewApp : Application() {
         refWatcher = LeakCanary.install(this)
 
         FetchService.startFetch(this)
+        LocationService.getLocationOnce(this)
     }
 
     companion object {

@@ -8,7 +8,7 @@ import org.imozerov.streetartview.R
 /**
  * Created by imozerov on 21.04.16.
  */
-val TAG = "SortOrder"
+private val TAG = "SortOrder"
 
 object SortOrder {
     val KEY = "sort_order"
