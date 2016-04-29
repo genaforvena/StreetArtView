@@ -136,7 +136,6 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
                 .map {
                     if (sortOrder == SortOrder.byDistance) {
                         it.sortedWith(Comparator<ArtObjectUi> {
-
                             lhs, rhs ->
                             val currentLoc = currentLocation
                             if (currentLoc != null) {
