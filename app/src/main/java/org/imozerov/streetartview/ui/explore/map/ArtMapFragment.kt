@@ -77,7 +77,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
                 setOnMarkerClickListener(clusterManager);
 
                 uiSettings.isMapToolbarEnabled = false
-                moveTo(NIZHNY_NOVGOROD_LOCATION)
+                moveCamera(CameraUpdateFactory.newLatLngZoom(NIZHNY_NOVGOROD_LOCATION, 11f))
                 setOnMapClickListener { hideArtObjectDigest() }
             }
         }
