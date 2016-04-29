@@ -5,6 +5,7 @@ import android.location.Criteria
 import android.location.Location
 import android.location.LocationManager
 import android.util.Log
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -51,6 +52,14 @@ fun GoogleMap.addUserLocationMarker(userLocation: LatLng) {
     } else {
         Log.e(TAG, "Location of the user is unknown!")
     }
+}
+
+fun GoogleMap.zoomTo(latLng: LatLng) {
+    animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, Math.floor(cameraPosition.zoom.toDouble() + 1).toFloat()), 300, null)
+}
+
+fun GoogleMap.moveTo(latLng: LatLng) {
+    animateCamera(CameraUpdateFactory.newLatLng(latLng))
 }
 
 fun GoogleMap.addArtObjectSimpleMarker(artObject: ArtObjectUi) : Marker {

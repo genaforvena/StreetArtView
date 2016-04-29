@@ -29,6 +29,8 @@ import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
 import org.imozerov.streetartview.ui.extensions.getCurrentLocation
 import org.imozerov.streetartview.ui.extensions.loadImage
+import org.imozerov.streetartview.ui.extensions.moveTo
+import org.imozerov.streetartview.ui.extensions.zoomTo
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
 class ArtMapFragment : Fragment(), Filterable, ArtView {
@@ -60,16 +62,14 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
         mapFragment.getMapAsync { gMap ->
             clusterManager = ClusterManager(context, gMap)
-            clusterManager!!.setOnClusterClickListener {
-                gMap.animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(it.position, Math.floor(gMap.cameraPosition.zoom.toDouble() + 1).toFloat()),
-                        300,
-                        null);
-                true;
-            }
             with (clusterManager!!) {
+                setOnClusterClickListener {
+                    gMap.zoomTo(it.position)
+                    hideArtObjectDigest()
+                    true
+                }
                 setOnClusterItemClickListener {
-                    gMap.animateCamera(CameraUpdateFactory.newLatLng(LatLng(it.artObjectUi.lat, it.artObjectUi.lng)))
+                    gMap.moveTo(LatLng(it.artObjectUi.lat, it.artObjectUi.lng))
                     showArtObjectDigest(it.artObjectUi.id)
                     true
                 }
