@@ -10,6 +10,7 @@ import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.bus.RxBus
 import org.imozerov.streetartview.bus.events.FetchFinishedEvent
 import org.imozerov.streetartview.bus.events.LocationChangedEvent
+import org.imozerov.streetartview.location.LocationService
 import org.imozerov.streetartview.network.FetchService
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
@@ -115,6 +116,7 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
 
     fun refreshData() {
         FetchService.startFetch(application)
+        LocationService.checkLocation(application)
         tracker.sendScreen("Refresh data requested")
     }
 

@@ -38,8 +38,8 @@ fun SharedPreferences.getCachedLocation() : LatLng {
 }
 
 fun SharedPreferences.cacheLocation(latLng: LatLng) {
-    putDouble(LNG_KEY, latLng.latitude)
-    putDouble(LAT_KEY, latLng.longitude)
+    putDouble(LAT_KEY, latLng.latitude)
+    putDouble(LNG_KEY, latLng.longitude)
 }
 
 fun GoogleMap.addUserLocationMarker(userLocation: LatLng) {

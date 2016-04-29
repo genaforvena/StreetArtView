@@ -30,8 +30,7 @@ open class StreetArtViewApp : Application() {
         refWatcher = LeakCanary.install(this)
 
         FetchService.startFetch(this)
-
-        startService(Intent(this, LocationService::class.java))
+        LocationService.checkLocation(this)
     }
 
     companion object {

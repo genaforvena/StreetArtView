@@ -1,6 +1,7 @@
 package org.imozerov.streetartview.location
 
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.location.Location
@@ -22,10 +23,40 @@ import javax.inject.Inject
 class LocationService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private val TAG = "LocationService"
 
+    enum class Mode {
+        CHECK, TRACKING
+    }
+
+    companion object {
+        private val ACTION_CHECK_LOCATION = "check_location"
+        private val ACTION_START_TRACK_LOCATION = "track_location"
+        private val ACTION_STOP_TRACK_LOCATION = "track_location"
+
+        fun checkLocation(context: Context) {
+            val intent = Intent(context, LocationService::class.java)
+            intent.action = ACTION_CHECK_LOCATION
+            context.startService(intent)
+        }
+
+        fun startTrackingLocation(context: Context) {
+            val intent = Intent(context, LocationService::class.java)
+            intent.action = ACTION_START_TRACK_LOCATION
+            context.startService(intent)
+        }
+
+        fun stopTrackingLocation(context: Context) {
+            val intent = Intent(context, LocationService::class.java)
+            intent.action = ACTION_STOP_TRACK_LOCATION
+            context.startService(intent)
+        }
+    }
+
     @Inject
     lateinit var bus: RxBus
     @Inject
     lateinit var prefs: SharedPreferences
+
+    private var mode = Mode.CHECK
 
     private val googleApiClient by lazy {
         GoogleApiClient.Builder(this).addConnectionCallbacks(this)
@@ -46,6 +77,17 @@ class LocationService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleAp
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent != null) {
+            if (intent.action == ACTION_CHECK_LOCATION) {
+                if (mode != Mode.TRACKING) {
+                    mode = Mode.CHECK
+                }
+            } else if (intent.action == ACTION_START_TRACK_LOCATION) {
+                mode = Mode.TRACKING
+            } else if (intent.action == ACTION_STOP_TRACK_LOCATION) {
+                mode = Mode.CHECK
+            }
+        }
         return START_STICKY
     }
 
@@ -54,6 +96,10 @@ class LocationService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleAp
             val newLocation = LatLng(lastKnownLocation.latitude, lastKnownLocation.longitude)
             prefs.cacheLocation(newLocation)
             bus.post(LocationChangedEvent(newLocation))
+
+            if (mode == Mode.CHECK) {
+                stopSelf()
+            }
         }
     }
 
