@@ -53,7 +53,7 @@ class FetchService : IntentService("FetchService") {
             Log.w(TAG, "Unable to sync art objects with server", exception)
         }
 
-        rxBus.send(FetchFinishedEvent(isSuccess))
+        rxBus.post(FetchFinishedEvent(isSuccess))
     }
 
     companion object {

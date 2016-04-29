@@ -12,16 +12,12 @@ class RxBus {
     val TAG = "RxBus"
     val bus = SerializedSubject<Any, Any>(PublishSubject.create());
 
-    fun send(o: Any) {
+    fun post(o: Any) {
         Log.v(TAG, "Sending $o")
         bus.onNext(o);
     }
 
     fun toObservable() : Observable<Any> {
         return bus;
-    }
-
-    fun hasObservers() : Boolean {
-        return bus.hasObservers()
     }
 }
