@@ -19,7 +19,8 @@ import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.extensions.*
-import org.jetbrains.anko.async
+import rx.Observable
+import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
@@ -47,7 +48,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
 
         bindViews()
         initImagesGallery()
-        setupMap()
+        setupMapAndDistanceTo()
     }
 
     override fun onStart() {
@@ -56,7 +57,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
         compositeSubscription.addAll(
                 RxView.clicks(detail_share_button).subscribe { shareArtObjectInfo() },
                 RxView.clicks(detail_set_favourite_button).subscribe { changeFavouriteStatus() },
-                RxView.clicks(art_object_detail_address).subscribe { startNavigation() }
+                RxView.clicks(art_object_detail_address).subscribe { showInGoogleMaps() }
         )
     }
 
@@ -103,7 +104,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
         })
     }
 
-    private fun setupMap() {
+    private fun setupMapAndDistanceTo() {
         val mapFragment = SupportMapFragment.newInstance()
         supportFragmentManager.beginTransaction().replace(art_object_detail_map.id, mapFragment).commit()
         mapFragment.getMapAsync {
@@ -125,24 +126,28 @@ class DetailArtObjectActivity : AppCompatActivity() {
 
     private fun shareArtObjectInfo() {
         tracker.sendScreen("Sharing ${artObjectUi.name}")
-        async() {
+        Observable.create<Uri> {
             val image = Glide.with(applicationContext)
                     .load(artObjectUi.picsUrls[art_object_detail_image.currentItem])
                     .asBitmap()
                     .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .get()
             val path = MediaStore.Images.Media.insertImage(contentResolver, image, "Street Art object temporary file", null)
-            val uri = Uri.parse(path)
-            val shareImageIntent = Intent()
-            shareImageIntent.action = Intent.ACTION_SEND
-            shareImageIntent.putExtra(Intent.EXTRA_STREAM, uri)
-            shareImageIntent.putExtra(Intent.EXTRA_TEXT, "${artObjectUi.authorsNames()} - ${artObjectUi.name} \n${artObjectUi.address}")
-            shareImageIntent.type = "image/*"
-            startActivity(Intent.createChooser(shareImageIntent, resources.getText(R.string.share)))
+            it.onNext(Uri.parse(path))
         }
+                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
+                .subscribe {
+                    val shareImageIntent = Intent()
+                    shareImageIntent.action = Intent.ACTION_SEND
+                    shareImageIntent.putExtra(Intent.EXTRA_STREAM, it)
+                    shareImageIntent.putExtra(Intent.EXTRA_TEXT, "${artObjectUi.authorsNames()} - ${artObjectUi.name} \n${artObjectUi.address}")
+                    shareImageIntent.type = "image/*"
+                    startActivity(Intent.createChooser(shareImageIntent, resources.getText(R.string.share)))
+                }
     }
 
-    private fun startNavigation() {
+    private fun showInGoogleMaps() {
         tracker.sendScreen("Navigation to ${artObjectUi.name}")
         val latitude = artObjectUi.lat
         val longitude = artObjectUi.lng
