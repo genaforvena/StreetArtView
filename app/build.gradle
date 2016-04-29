@@ -126,3 +126,9 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'org.mockito:mockito-core:1.10.19'
 }
+
+// To prevent the "superClassName is empty" error for classes not annotated as tests
+tasks.withType(Test) {
+    scanForTestClasses = false
+    include "**/*Test.class" // whatever Ant pattern matches your test class files
+}
