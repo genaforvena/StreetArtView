@@ -1,9 +1,7 @@
 package org.imozerov.streetartview.ui.extensions
 
-import android.content.Context
-import android.location.Criteria
+import android.content.SharedPreferences
 import android.location.Location
-import android.location.LocationManager
 import android.util.Log
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -17,7 +15,10 @@ import org.imozerov.streetartview.ui.model.ArtObjectUi
 /**
  * Created by imozerov on 19.02.16.
  */
-val DEFAULT_USER_LOCATION = LatLng(56.3298063, 44.0095144)
+val NIZHNY_NOVGOROD_LOCATION = LatLng(56.3298063, 44.0095144)
+
+private val LAT_KEY = "lat_lat"
+private val LNG_KEY = "lng_lng"
 
 fun LatLng.distanceTo(point: LatLng) : Float {
     val distance = FloatArray(1)
@@ -30,21 +31,19 @@ fun LatLng.printableDistanceTo(point: LatLng) : String {
     return String.format("%.1f", distance)
 }
 
-fun getCurrentLocation(context: Context): LatLng {
-    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    val location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-    var userLocation: LatLng
-    if (location != null) {
-        userLocation = LatLng(location.latitude, location.longitude);
-    } else {
-        Log.e(TAG, "Current location is null!")
-        userLocation = DEFAULT_USER_LOCATION
-    }
-    return userLocation
+fun SharedPreferences.getCachedLocation() : LatLng {
+    val lat = getDouble(LAT_KEY, NIZHNY_NOVGOROD_LOCATION.latitude)
+    val lng = getDouble(LNG_KEY, NIZHNY_NOVGOROD_LOCATION.longitude)
+    return LatLng(lat, lng)
+}
+
+fun SharedPreferences.cacheLocation(latLng: LatLng) {
+    putDouble(LNG_KEY, latLng.latitude)
+    putDouble(LAT_KEY, latLng.longitude)
 }
 
 fun GoogleMap.addUserLocationMarker(userLocation: LatLng) {
-    if (userLocation != DEFAULT_USER_LOCATION) {
+    if (userLocation != NIZHNY_NOVGOROD_LOCATION) {
         Log.v(TAG, "Location: Setting user marker in $userLocation")
         val markerOptions = MarkerOptions().position(userLocation)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_black_36dp))

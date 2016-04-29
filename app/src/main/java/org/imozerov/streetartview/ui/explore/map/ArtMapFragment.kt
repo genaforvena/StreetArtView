@@ -27,10 +27,7 @@ import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.all.AllPresenter
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
-import org.imozerov.streetartview.ui.extensions.getCurrentLocation
-import org.imozerov.streetartview.ui.extensions.loadImage
-import org.imozerov.streetartview.ui.extensions.moveTo
-import org.imozerov.streetartview.ui.extensions.zoomTo
+import org.imozerov.streetartview.ui.extensions.*
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
 class ArtMapFragment : Fragment(), Filterable, ArtView {
@@ -80,8 +77,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
                 setOnMarkerClickListener(clusterManager);
 
                 uiSettings.isMapToolbarEnabled = false
-                val userLocation = getCurrentLocation(context)
-                moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 11f))
+                moveCamera(CameraUpdateFactory.newLatLngZoom(NIZHNY_NOVGOROD_LOCATION, 11f))
                 setOnMapClickListener { hideArtObjectDigest() }
             }
         }

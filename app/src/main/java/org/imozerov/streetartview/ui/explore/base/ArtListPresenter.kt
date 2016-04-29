@@ -9,13 +9,14 @@ import com.google.android.gms.maps.model.LatLng
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.bus.RxBus
 import org.imozerov.streetartview.bus.events.FetchFinishedEvent
+import org.imozerov.streetartview.bus.events.LocationChangedEvent
 import org.imozerov.streetartview.network.FetchService
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.sort.SortOrder
 import org.imozerov.streetartview.ui.explore.sort.getSortOrder
 import org.imozerov.streetartview.ui.extensions.distanceTo
-import org.imozerov.streetartview.ui.extensions.getCurrentLocation
+import org.imozerov.streetartview.ui.extensions.getCachedLocation
 import org.imozerov.streetartview.ui.extensions.sendScreen
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.Observable
@@ -37,7 +38,7 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
     private var filterQuery: String = ""
     private var sortOrder: Int? = SortOrder.byDate
 
-    private val currentLocation by lazy { getCurrentLocation(application) }
+    private var currentLocation: LatLng? = null
 
     @Inject
     lateinit var rxBus: RxBus
@@ -57,6 +58,7 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
     fun bindView(artView: ArtView, context: Context) {
         view = artView
         (context.applicationContext as StreetArtViewApp).appComponent!!.inject(this)
+        currentLocation = prefs.getCachedLocation()
 
         sortOrder = prefs.getSortOrder()
 
@@ -71,6 +73,11 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
                 .subscribe {
                     if (it is FetchFinishedEvent) {
                         view?.stopRefresh()
+                    }
+                    if (it is LocationChangedEvent) {
+                        currentLocation = it.newLocation
+                        fetchSubscription?.unsubscribe()
+                        fetchSubscription = createDataFetchSubscription()
                     }
                 }
     }
@@ -124,8 +131,14 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
                 .map {
                     if (sortOrder == SortOrder.byDistance) {
                         it.sortedWith(Comparator<ArtObjectUi> {
+
                             lhs, rhs ->
-                            LatLng(lhs.lat, lhs.lng).distanceTo(currentLocation).toInt() - LatLng(rhs.lat, rhs.lng).distanceTo(currentLocation).toInt()
+                            val currentLoc = currentLocation
+                            if (currentLoc != null) {
+                                LatLng(lhs.lat, lhs.lng).distanceTo(currentLoc).toInt() - LatLng(rhs.lat, rhs.lng).distanceTo(currentLoc).toInt()
+                            } else {
+                                0
+                            }
                         })
                     } else {
                         it

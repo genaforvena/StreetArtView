@@ -1,6 +1,7 @@
 package org.imozerov.streetartview.ui.detail
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -30,6 +31,8 @@ class DetailArtObjectActivity : AppCompatActivity() {
     lateinit var dataSource: IDataSource
     @Inject
     lateinit var tracker: Tracker
+    @Inject
+    lateinit var prefs: SharedPreferences
 
     private val artObjectUi by lazy { dataSource.getArtObject(intent.getStringExtra(EXTRA_KEY_ART_OBJECT_DETAIL_ID)) }
 
@@ -106,8 +109,8 @@ class DetailArtObjectActivity : AppCompatActivity() {
         mapFragment.getMapAsync {
             val artObjectLocation = LatLng(artObjectUi.lat, artObjectUi.lng)
 
-            val userLocation = getCurrentLocation(this)
-            if (userLocation != DEFAULT_USER_LOCATION) {
+            val userLocation = prefs.getCachedLocation()
+            if (userLocation != NIZHNY_NOVGOROD_LOCATION) {
                 art_object_detail_distance.text = "${userLocation.printableDistanceTo(artObjectLocation)} km"
                 art_object_detail_distance.visibility = View.VISIBLE
             }
