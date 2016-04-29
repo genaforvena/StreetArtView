@@ -1,6 +1,5 @@
 package org.imozerov.streetartview.storage
 
-import android.util.Log
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmResults
@@ -10,6 +9,7 @@ import org.imozerov.streetartview.storage.model.RealmArtObject
 import org.imozerov.streetartview.storage.model.copyDataFromJson
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.Observable
+import rx.schedulers.Schedulers
 import java.util.*
 
 /**
@@ -19,21 +19,6 @@ class DataSource() : IDataSource {
     val TAG = "DataSource"
     // This realm instance should be used only to read data
     val readOnlyRealm = Realm.getDefaultInstance()
-
-    override fun insert(artworks: List<Artwork>) {
-        executeAsyncRealmOperation {
-            Log.d(TAG, "inserting $artworks")
-            val realmObjects = artworks.map {
-                val realmArtObject = RealmArtObject()
-                realmArtObject.copyDataFromJson(it)
-                return@map realmArtObject
-            }
-            val favouriteIds = it.where(RealmArtObject::class.java)
-                    .equalTo("isFavourite", true).findAll().map { it.id }
-            realmObjects.filter { favouriteIds.contains(it.id) }.forEach { it.isFavourite = true }
-            it.batchInsertOrUpdate(realmObjects)
-        }
-    }
 
     override fun listArtObjects(): Observable<List<ArtObjectUi>> {
         return readOnlyRealm
@@ -71,18 +56,43 @@ class DataSource() : IDataSource {
                 .findFirst())
     }
 
-    override fun setFavourite(artObjectId: String, isFavourite: Boolean) {
-        executeAsyncRealmOperation {
-            with (it) {
-                val artObjectInRealm = where(RealmArtObject::class.java)
-                        .equalTo("id", artObjectId)
-                        .findFirst()
+    override fun insert(artworks: List<Artwork>) {
+        Observable.from(artworks)
+                .map {
+                    val realmArtObject = RealmArtObject()
+                    realmArtObject.copyDataFromJson(it)
+                    return@map realmArtObject
+                }
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe { realmArtWorks ->
+                    with (Realm.getDefaultInstance()) {
+                        use {
+                            val favouriteIds = where(RealmArtObject::class.java)
+                                    .equalTo("isFavourite", true).findAll().map { it.id }
+                            realmArtWorks.filter { favouriteIds.contains(it.id) }.forEach { it.isFavourite = true }
+                            batchInsertOrUpdate(realmArtWorks)
+                        }
+                    }
+                }
+    }
 
-                beginTransaction()
-                artObjectInRealm.isFavourite = isFavourite
-                commitTransaction()
+    override fun setFavourite(artObjectId: String, isFavourite: Boolean) {
+        Observable.create<Unit> {
+            with(Realm.getDefaultInstance()) {
+                use {
+                    val artObjectInRealm = where(RealmArtObject::class.java)
+                            .equalTo("id", artObjectId)
+                            .findFirst()
+
+                    beginTransaction()
+                    artObjectInRealm.isFavourite = isFavourite
+                    commitTransaction()
+                }
             }
-        }
+        }.subscribeOn(Schedulers.io())
+                .subscribe()
     }
 
     private fun realmToUi(realmObjects: RealmResults<RealmArtObject>): List<ArtObjectUi> {
@@ -91,17 +101,6 @@ class DataSource() : IDataSource {
                 .forEach { listOfArtObjects.add(ArtObjectUi(it)) }
         return listOfArtObjects
     }
-}
-
-private inline fun executeAsyncRealmOperation(crossinline operation: ((realm: Realm) -> (Unit))) {
-    Thread() {
-        val realm = Realm.getDefaultInstance();
-        try {
-            operation(realm)
-        } finally {
-            realm.close()
-        }
-    }.start()
 }
 
 private fun Realm.batchInsertOrUpdate(realmObjects: List<RealmObject>) {
