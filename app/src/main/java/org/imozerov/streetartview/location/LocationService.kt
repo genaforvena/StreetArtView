@@ -18,6 +18,8 @@ import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.bus.RxBus
 import org.imozerov.streetartview.bus.events.LocationChangedEvent
 import org.imozerov.streetartview.ui.extensions.cacheLocation
+import rx.Observable
+import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 class LocationService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -92,15 +94,17 @@ class LocationService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleAp
     }
 
     override fun onLocationChanged(lastKnownLocation: Location?) {
-        if (lastKnownLocation != null) {
-            val newLocation = LatLng(lastKnownLocation.latitude, lastKnownLocation.longitude)
-            prefs.cacheLocation(newLocation)
-            bus.post(LocationChangedEvent(newLocation))
-
-            if (mode == Mode.CHECK) {
-                stopSelf()
-            }
-        }
+        Observable.just(lastKnownLocation)
+                .filter { it != null }
+                .map { LatLng(it!!.latitude, it.longitude) }
+                .doOnNext { prefs.cacheLocation(it) }
+                .doOnNext { bus.post(LocationChangedEvent(it)) }
+                .observeOn(Schedulers.newThread())
+                .subscribe {
+                    if (mode == Mode.CHECK) {
+                        stopSelf()
+                    }
+                }
     }
 
     override fun onConnected(p0: Bundle?) {
