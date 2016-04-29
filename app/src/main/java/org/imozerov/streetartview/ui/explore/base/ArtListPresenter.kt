@@ -116,7 +116,7 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
 
     fun refreshData() {
         FetchService.startFetch(application)
-        LocationService.checkLocation(application)
+        LocationService.getLocationOnce(application)
         tracker.sendScreen("Refresh data requested")
     }
 

@@ -32,7 +32,7 @@ class LocationService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleAp
         private val ACTION_START_TRACK_LOCATION = "track_location"
         private val ACTION_STOP_TRACK_LOCATION = "track_location"
 
-        fun checkLocation(context: Context) {
+        fun getLocationOnce(context: Context) {
             val intent = Intent(context, LocationService::class.java)
             intent.action = ACTION_CHECK_LOCATION
             context.startService(intent)
