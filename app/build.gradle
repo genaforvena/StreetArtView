@@ -23,7 +23,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "org.imozerov.streetartview"
+        applicationId "org.imozerov.streetartview.android"
         minSdkVersion 17
         targetSdkVersion 21
         versionCode 4
