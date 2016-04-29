@@ -27,9 +27,10 @@ import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.all.AllPresenter
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
-import org.imozerov.streetartview.ui.extensions.addUserLocationMarker
 import org.imozerov.streetartview.ui.extensions.getCurrentLocation
 import org.imozerov.streetartview.ui.extensions.loadImage
+import org.imozerov.streetartview.ui.extensions.moveTo
+import org.imozerov.streetartview.ui.extensions.zoomTo
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
 class ArtMapFragment : Fragment(), Filterable, ArtView {
@@ -62,8 +63,13 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         mapFragment.getMapAsync { gMap ->
             clusterManager = ClusterManager(context, gMap)
             with (clusterManager!!) {
+                setOnClusterClickListener {
+                    gMap.zoomTo(it.position)
+                    hideArtObjectDigest()
+                    true
+                }
                 setOnClusterItemClickListener {
-                    gMap.animateCamera(CameraUpdateFactory.newLatLng(LatLng(it.artObjectUi.lat, it.artObjectUi.lng)))
+                    gMap.moveTo(LatLng(it.artObjectUi.lat, it.artObjectUi.lng))
                     showArtObjectDigest(it.artObjectUi.id)
                     true
                 }
@@ -178,7 +184,7 @@ class ArtObjectRenderer : DefaultClusterRenderer<ArtObjectClusterItem> {
         markerOptions!!.icon(BitmapDescriptorFactory.fromResource(drawable))
     }
 
-    override fun shouldRenderAsCluster(cluster: Cluster<ArtObjectClusterItem>?): Boolean = cluster!!.size > 1
+    override fun shouldRenderAsCluster(cluster: Cluster<ArtObjectClusterItem>?): Boolean = cluster!!.size > 3
 }
 
 

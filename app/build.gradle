@@ -26,8 +26,8 @@ android {
         applicationId "org.imozerov.streetartview"
         minSdkVersion 17
         targetSdkVersion 21
-        versionCode 3
-        versionName "1.2"
+        versionCode 4
+        versionName "1.2.1"
     }
 
     buildTypes {
@@ -47,6 +47,12 @@ final ESPRESSO_VERSION = '2.2.1'
 final SUPPORT_LIB_VERSION = '23.3.0'
 final PLAY_SERVICES_VERSION = '8.4.0'
 final REALM_VERSION = '0.87.4'
+final DAGGER2_VERSION = '2.2'
+final ANKO_VERSION = '0.8.3'
+final RX_VERSION = '1.1.0'
+final RX_BINDING_VERSION = '0.3.0'
+final RETROFIT_VERSION = '2.0.0-beta2'
+final LEAK_CANARY_VERSION = '1.3.1'
 
 kapt {
     generateStubs = true
@@ -61,8 +67,8 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     // dagger 2
-    kapt 'com.google.dagger:dagger-compiler:2.2'
-    compile 'com.google.dagger:dagger:2.2'
+    kapt "com.google.dagger:dagger-compiler:${DAGGER2_VERSION}"
+    compile "com.google.dagger:dagger:${DAGGER2_VERSION}"
     compile 'javax.annotation:jsr250-api:1.0'
 
     // realm
@@ -84,18 +90,18 @@ dependencies {
     compile 'com.google.maps.android:android-maps-utils:0.4.3'
 
     // anko
-    compile 'org.jetbrains.anko:anko-sdk15:0.8.3'
-    compile 'org.jetbrains.anko:anko-support-v4:0.8.3'
+    compile "org.jetbrains.anko:anko-sdk15:${ANKO_VERSION}"
+    compile "org.jetbrains.anko:anko-support-v4:${ANKO_VERSION}"
 
     // rx
-    compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'io.reactivex:rxjava:1.1.0'
-    compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
-    compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.3.0'
+    compile "io.reactivex:rxandroid:${RX_VERSION}"
+    compile "io.reactivex:rxjava:${RX_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding:${RX_BINDING_VERSION}"
+    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${RX_BINDING_VERSION}"
 
     // retrofit
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
-    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    compile "com.squareup.retrofit:retrofit:${RETROFIT_VERSION}"
+    compile "com.squareup.retrofit:converter-gson:${RETROFIT_VERSION}"
 
     // glide
     compile 'com.github.bumptech.glide:glide:3.7.0'
@@ -107,9 +113,9 @@ dependencies {
     // DEBUGGING, TESTING //
 
     // leak canary
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+    debugCompile "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
+    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${LEAK_CANARY_VERSION}"
 
     // on-device tests
     androidTestCompile "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
@@ -125,4 +131,10 @@ dependencies {
     testCompile 'org.hamcrest:hamcrest-integration:1.1'
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'org.mockito:mockito-core:1.10.19'
+}
+
+// To prevent the "superClassName is empty" error for classes not annotated as tests
+tasks.withType(Test) {
+    scanForTestClasses = false
+    include "**/*Test.class" // whatever Ant pattern matches your test class files
 }
