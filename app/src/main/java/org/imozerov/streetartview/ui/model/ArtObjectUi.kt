@@ -19,6 +19,7 @@ class ArtObjectUi {
     val address: String
     var isFavourite: Boolean
     val status: Int
+    var distanceTo: Int = 0
 
     constructor(realmArtObject: RealmArtObject) {
         val picUrls = ArrayList<String>()

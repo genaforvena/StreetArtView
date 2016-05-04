@@ -23,6 +23,9 @@ import kotlinx.android.synthetic.main.bottom_details.view.*
 import kotlinx.android.synthetic.main.fragment_art_map.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
+import org.imozerov.streetartview.location.NIZHNY_NOVGOROD_LOCATION
+import org.imozerov.streetartview.location.moveTo
+import org.imozerov.streetartview.location.zoomTo
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.all.AllPresenter
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView

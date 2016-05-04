@@ -14,7 +14,7 @@ import com.google.android.gms.maps.model.LatLng
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.bus.RxBus
 import org.imozerov.streetartview.bus.events.LocationChangedEvent
-import org.imozerov.streetartview.ui.extensions.cacheLocation
+import org.imozerov.streetartview.location.cacheLocation
 import rx.Observable
 import rx.schedulers.Schedulers
 import javax.inject.Inject

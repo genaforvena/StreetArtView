@@ -17,6 +17,10 @@ import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.activity_detail.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
+import org.imozerov.streetartview.location.NIZHNY_NOVGOROD_LOCATION
+import org.imozerov.streetartview.location.addArtObjectSimpleMarker
+import org.imozerov.streetartview.location.getCachedLocation
+import org.imozerov.streetartview.location.printableDistanceTo
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.extensions.*
 import rx.Observable
@@ -117,7 +121,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
             }
 
             with (it) {
-                addUserLocationMarker(userLocation)
+                isMyLocationEnabled = true
                 addArtObjectSimpleMarker(artObjectUi)
                 moveCamera(CameraUpdateFactory.newLatLngZoom(artObjectLocation, 14f))
             }
