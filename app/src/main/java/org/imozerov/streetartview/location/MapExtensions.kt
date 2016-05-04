@@ -1,4 +1,4 @@
-package org.imozerov.streetartview.ui.extensions
+package org.imozerov.streetartview.location
 
 import android.content.SharedPreferences
 import android.location.Location
@@ -10,6 +10,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import org.imozerov.streetartview.R
+import org.imozerov.streetartview.ui.extensions.getDouble
+import org.imozerov.streetartview.ui.extensions.putDouble
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
 /**
@@ -23,11 +25,11 @@ private val LNG_KEY = "lng_lng"
 fun LatLng.distanceTo(point: LatLng) : Float {
     val distance = FloatArray(1)
     Location.distanceBetween(point.latitude, point.longitude, this.latitude, this.longitude, distance);
-    return (distance[0] / 1000)
+    return (distance[0])
 }
 
 fun LatLng.printableDistanceTo(point: LatLng) : String {
-    val distance = distanceTo(point)
+    val distance = distanceTo(point) / 1000
     return String.format("%.1f", distance)
 }
 
@@ -40,17 +42,6 @@ fun SharedPreferences.getCachedLocation() : LatLng {
 fun SharedPreferences.cacheLocation(latLng: LatLng) {
     putDouble(LAT_KEY, latLng.latitude)
     putDouble(LNG_KEY, latLng.longitude)
-}
-
-fun GoogleMap.addUserLocationMarker(userLocation: LatLng) {
-    if (userLocation != NIZHNY_NOVGOROD_LOCATION) {
-        Log.v(TAG, "Location: Setting user marker in $userLocation")
-        val markerOptions = MarkerOptions().position(userLocation)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_black_36dp))
-        addMarker(markerOptions)
-    } else {
-        Log.e(TAG, "Location of the user is unknown!")
-    }
 }
 
 fun GoogleMap.zoomTo(latLng: LatLng) {

@@ -16,8 +16,8 @@ import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.sort.SortOrder
 import org.imozerov.streetartview.ui.explore.sort.getSortOrder
-import org.imozerov.streetartview.ui.extensions.distanceTo
-import org.imozerov.streetartview.ui.extensions.getCachedLocation
+import org.imozerov.streetartview.location.distanceTo
+import org.imozerov.streetartview.location.getCachedLocation
 import org.imozerov.streetartview.ui.extensions.sendScreen
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.Observable
