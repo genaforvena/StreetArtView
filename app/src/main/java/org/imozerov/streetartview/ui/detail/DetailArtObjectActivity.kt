@@ -2,6 +2,7 @@ package org.imozerov.streetartview.ui.detail
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -13,6 +14,7 @@ import com.google.android.gms.analytics.Tracker
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.jakewharton.rxbinding.view.RxView
 import com.liuguangqiang.swipeback.SwipeBackLayout
 import kotlinx.android.synthetic.main.activity_detail.*
@@ -23,7 +25,9 @@ import org.imozerov.streetartview.location.addArtObjectSimpleMarker
 import org.imozerov.streetartview.location.getCachedLocation
 import org.imozerov.streetartview.location.printableDistanceTo
 import org.imozerov.streetartview.storage.IDataSource
-import org.imozerov.streetartview.ui.extensions.*
+import org.imozerov.streetartview.ui.extensions.addAll
+import org.imozerov.streetartview.ui.extensions.getDrawableSafely
+import org.imozerov.streetartview.ui.extensions.sendScreen
 import rx.Observable
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
@@ -127,22 +131,25 @@ class DetailArtObjectActivity : AppCompatActivity() {
                 isMyLocationEnabled = true
                 addArtObjectSimpleMarker(artObjectUi)
                 moveCamera(CameraUpdateFactory.newLatLngZoom(artObjectLocation, 14f))
+
+                setOnMapLoadedCallback {
+                    val builder = LatLngBounds.Builder()
+                    builder.include(artObjectLocation)
+                    builder.include(userLocation)
+                    animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 80))
+                }
             }
         }
     }
 
     private fun shareArtObjectInfo() {
-        tracker.sendScreen("Sharing ${artObjectUi.name}")
-        Observable.create<Uri> {
-            val image = Glide.with(applicationContext)
-                    .load(artObjectUi.picsUrls[art_object_detail_image.currentItem])
-                    .asBitmap()
-                    .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                    .get()
-            val path = MediaStore.Images.Media.insertImage(contentResolver, image, "Street Art object temporary file", null)
-            it.onNext(Uri.parse(path))
+        Observable.create<Bitmap> {
+            it.onNext(Glide.with(applicationContext).load(artObjectUi.picsUrls[art_object_detail_image.currentItem]).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get())
+            it.onCompleted()
         }
-                .observeOn(Schedulers.io())
+                .map { MediaStore.Images.Media.insertImage(contentResolver, it, "Street Art object temporary file", null) }
+                .map { Uri.parse(it) }
+                .doOnNext { tracker.sendScreen("Sharing ${artObjectUi.name}") }
                 .subscribeOn(Schedulers.io())
                 .subscribe {
                     val shareImageIntent = Intent()
