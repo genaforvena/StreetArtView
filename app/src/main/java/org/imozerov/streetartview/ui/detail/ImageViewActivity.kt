@@ -1,9 +1,9 @@
 package org.imozerov.streetartview.ui.detail
 
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
 import android.view.ViewManager
-import com.liuguangqiang.swipeback.SwipeBackActivity
 import com.liuguangqiang.swipeback.SwipeBackLayout
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.storage.IDataSource
@@ -14,7 +14,7 @@ import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.support.v4.viewPager
 import javax.inject.Inject
 
-class ImageViewActivity : SwipeBackActivity() {
+class ImageViewActivity : AppCompatActivity() {
 
     @Inject
     lateinit var dataSource: IDataSource
