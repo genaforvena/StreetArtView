@@ -11,6 +11,7 @@ import org.imozerov.streetartview.bus.RxBus
 import org.imozerov.streetartview.bus.events.FetchFinishedEvent
 import org.imozerov.streetartview.bus.events.LocationChangedEvent
 import org.imozerov.streetartview.location.LocationService
+import org.imozerov.streetartview.location.NIZHNY_NOVGOROD_LOCATION
 import org.imozerov.streetartview.network.FetchService
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
@@ -23,6 +24,7 @@ import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -126,6 +128,14 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
     private fun createDataFetchSubscription(): Subscription {
         return fetchData()
                 .debounce(200, TimeUnit.MILLISECONDS)
+                .observeOn(Schedulers.computation())
+                .map {
+                    val currentLoc = currentLocation ?: NIZHNY_NOVGOROD_LOCATION
+                    it.forEach {
+                        it.distanceTo = LatLng(it.lat, it.lng).distanceTo(currentLoc).toInt()
+                    }
+                    return@map it
+                }
                 .map {
                     if (filterQuery.isNotBlank()) {
                         it.filter { it.matches(filterQuery) }
@@ -135,15 +145,7 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
                 }
                 .map {
                     if (sortOrder == SortOrder.byDistance) {
-                        it.sortedWith(Comparator<ArtObjectUi> {
-                            lhs, rhs ->
-                            val currentLoc = currentLocation
-                            if (currentLoc != null) {
-                                LatLng(lhs.lat, lhs.lng).distanceTo(currentLoc).toInt() - LatLng(rhs.lat, rhs.lng).distanceTo(currentLoc).toInt()
-                            } else {
-                                0
-                            }
-                        })
+                        it.sortedWith(Comparator<ArtObjectUi> { lhs, rhs -> lhs.distanceTo - rhs.distanceTo })
                     } else {
                         it
                     }

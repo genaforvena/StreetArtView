@@ -65,7 +65,6 @@ class DataSource() : IDataSource {
                 }
                 .toList()
                 .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
                 .subscribe { realmArtWorks ->
                     with (Realm.getDefaultInstance()) {
                         use {
