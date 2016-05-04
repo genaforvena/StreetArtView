@@ -14,6 +14,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.jakewharton.rxbinding.view.RxView
+import com.liuguangqiang.swipeback.SwipeBackLayout
 import kotlinx.android.synthetic.main.activity_detail.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
@@ -47,6 +48,8 @@ class DetailArtObjectActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
         (application as StreetArtViewApp).appComponent!!.inject(this)
+
+        swipeBackLayout.setDragEdge(SwipeBackLayout.DragEdge.LEFT)
 
         tracker.sendScreen("DetailArtObjectActivity: ${artObjectUi.name}")
 
