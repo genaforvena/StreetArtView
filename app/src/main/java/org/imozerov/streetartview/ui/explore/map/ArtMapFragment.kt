@@ -30,7 +30,7 @@ import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.all.AllPresenter
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
-import org.imozerov.streetartview.ui.extensions.*
+import org.imozerov.streetartview.ui.extensions.loadImage
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
 class ArtMapFragment : Fragment(), Filterable, ArtView {
@@ -132,10 +132,11 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         Log.v(TAG, "showArtObjectDigest($id)")
         var artObject: ArtObjectUi = presenter.getArtObject(id)
         bottom_detail_image.loadImage(artObject.picsUrls[0])
+        bottom_detail_address.text = artObject.address
 
         bottom_sheet.visibility = View.VISIBLE
         bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_EXPANDED
-        bottom_info_go_to_detail_button.setOnClickListener { artObjectDetailOpener!!.openArtObjectDetails(artObject.id) }
+        bottom_detail_image.setOnClickListener { artObjectDetailOpener!!.openArtObjectDetails(artObject.id) }
     }
 
     fun hideArtObjectDigest() {

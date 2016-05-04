@@ -109,6 +109,9 @@ dependencies {
     // PhotoView to zoom ImageView in and out. Maybe we should reimplement this by ourselves.
     compile 'com.commit451:PhotoView:1.2.5'
 
+    // Swipe back to detail view
+    compile 'com.github.liuguangqiang.swipeback:library:1.0.2@aar'
+
 
     // DEBUGGING, TESTING //
 

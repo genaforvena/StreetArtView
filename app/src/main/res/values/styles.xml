@@ -18,4 +18,11 @@
         <item name="android:statusBarColor">@color/dribbble_super_dark</item>
     </style>
 
+    <style name="Theme.Swipe.Back" parent="StreetArtViewTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
 </resources>
