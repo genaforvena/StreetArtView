@@ -12,20 +12,19 @@ import org.imozerov.streetartview.bus.events.FetchFinishedEvent
 import org.imozerov.streetartview.bus.events.LocationChangedEvent
 import org.imozerov.streetartview.location.LocationService
 import org.imozerov.streetartview.location.NIZHNY_NOVGOROD_LOCATION
+import org.imozerov.streetartview.location.distanceTo
+import org.imozerov.streetartview.location.getCachedLocation
 import org.imozerov.streetartview.network.FetchService
 import org.imozerov.streetartview.storage.IDataSource
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.sort.SortOrder
 import org.imozerov.streetartview.ui.explore.sort.getSortOrder
-import org.imozerov.streetartview.location.distanceTo
-import org.imozerov.streetartview.location.getCachedLocation
 import org.imozerov.streetartview.ui.extensions.sendScreen
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -129,31 +128,24 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
         return fetchData()
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .observeOn(Schedulers.computation())
-                .map {
-                    val currentLoc = currentLocation ?: NIZHNY_NOVGOROD_LOCATION
-                    it.forEach {
-                        it.distanceTo = LatLng(it.lat, it.lng).distanceTo(currentLoc).toInt()
-                    }
-                    return@map it
+                .doOnNext {
+                    Observable.from(it)
+                            .observeOn(Schedulers.computation())
+                            .doOnNext { it.distanceTo = LatLng(it.lat, it.lng).distanceTo(currentLocation ?: NIZHNY_NOVGOROD_LOCATION).toInt() }
+                            .filter { it.matches(filterQuery) }
+                            .toSortedList { artObjectUi, artObjectUi2 ->
+                                if (sortOrder == SortOrder.byDistance) {
+                                    artObjectUi.distanceTo - artObjectUi2.distanceTo
+                                } else {
+                                    (artObjectUi2.updatedAt - artObjectUi.updatedAt).toInt()
+                                }
+                            }
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doOnNext { view?.showArtObjects(it) }
+                            .subscribeOn(Schedulers.computation())
+                            .subscribe()
                 }
-                .map {
-                    if (filterQuery.isNotBlank()) {
-                        it.filter { it.matches(filterQuery) }
-                    } else {
-                        it
-                    }
-                }
-                .map {
-                    if (sortOrder == SortOrder.byDistance) {
-                        it.sortedWith(Comparator<ArtObjectUi> { lhs, rhs -> lhs.distanceTo - rhs.distanceTo })
-                    } else {
-                        it
-                    }
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    view?.showArtObjects(it)
-                }
+                .subscribe()
     }
 
     abstract fun fetchData(): Observable<List<ArtObjectUi>>
