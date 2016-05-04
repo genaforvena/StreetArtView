@@ -120,6 +120,7 @@ class DetailArtObjectActivity : AppCompatActivity() {
             }
 
             with (it) {
+                isMyLocationEnabled = true
                 addArtObjectSimpleMarker(artObjectUi)
                 moveCamera(CameraUpdateFactory.newLatLngZoom(artObjectLocation, 14f))
             }
