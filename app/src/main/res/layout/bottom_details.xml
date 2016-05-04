@@ -26,8 +26,10 @@
                 android:id="@+id/bottom_detail_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_small"
-                android:drawablePadding="5dp"
+                android:layout_marginLeft="@dimen/spacing_small"
+                android:layout_marginTop="@dimen/spacing_xsmall"
+                android:layout_marginBottom="@dimen/spacing_xsmall"
+                android:layout_marginRight="@dimen/spacing_small"
                 android:text="Address, 34"
                 android:textAlignment="textEnd"
                 android:textAppearance="?android:attr/textAppearance" />

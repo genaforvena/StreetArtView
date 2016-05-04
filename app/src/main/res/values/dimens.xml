@@ -5,6 +5,7 @@
     <dimen name="spacing_large">20dp</dimen>
     <dimen name="spacing_medium">16dp</dimen>
     <dimen name="spacing_small">12dp</dimen>
+    <dimen name="spacing_xsmall">6dp</dimen>
     <dimen name="cluster_item_width">50dp</dimen>
     <dimen name="cluster_item_height">35dp</dimen>
 </resources>
