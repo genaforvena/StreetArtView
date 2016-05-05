@@ -36,7 +36,8 @@
 
         <activity
             android:name=".ui.detail.ImageViewActivity"
-            android:label="@string/title_activity_image_view" />
+            android:label="@string/title_activity_image_view"
+            android:theme="@style/Theme.Swipe.Back" />
 
         <service
             android:name=".network.FetchService"

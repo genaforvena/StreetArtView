@@ -21,6 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
                 android:fitsSystemWindows="true"
+                app:statusBarScrim="@android:color/transparent"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <RelativeLayout
@@ -56,7 +57,7 @@
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp" />
+                    android:layout_height="60dp" />
 
             </android.support.design.widget.CollapsingToolbarLayout>
 
