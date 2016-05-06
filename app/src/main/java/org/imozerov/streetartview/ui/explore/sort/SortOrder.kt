@@ -1,6 +1,7 @@
 package org.imozerov.streetartview.ui.explore.sort
 
 import android.content.SharedPreferences
+import android.support.annotation.VisibleForTesting
 import android.util.Log
 import org.imozerov.streetartview.BuildConfig
 import org.imozerov.streetartview.R
@@ -41,6 +42,11 @@ fun SharedPreferences.swapSortOrder(): Int {
     }
     edit().putInt(SortOrder.KEY, newSortOrder).apply()
     return newSortOrder
+}
+
+@VisibleForTesting
+fun SharedPreferences.storeSortOrder(sortOrder: Int) {
+    edit().putInt(SortOrder.KEY, sortOrder).commit()
 }
 
 fun SharedPreferences.getSortOrder(): Int {
