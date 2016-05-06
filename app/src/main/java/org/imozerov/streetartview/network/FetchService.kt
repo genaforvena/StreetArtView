@@ -9,6 +9,8 @@ import org.imozerov.streetartview.bus.RxBus
 import org.imozerov.streetartview.bus.events.FetchFinishedEvent
 import org.imozerov.streetartview.network.internal.RestClient
 import org.imozerov.streetartview.storage.IDataSource
+import rx.Observable
+import rx.Subscriber
 import javax.inject.Inject
 
 class FetchService : IntentService("FetchService") {
@@ -39,21 +41,12 @@ class FetchService : IntentService("FetchService") {
     }
 
     private fun handleStartFetchAction() {
-        var isSuccess = false
-        try {
-            val response = restClient.artWorksEndpoint.list().execute()
-
-            isSuccess = response.isSuccess
-            if (isSuccess) {
-                dataSource.insert(response.body())
-            } else {
-                Log.e(TAG, "Unable to fetch data from server! ${response.code()}")
-            }
-        } catch (exception: java.io.IOException) {
-            Log.w(TAG, "Unable to sync art objects with server", exception)
-        }
-
-        rxBus.post(FetchFinishedEvent(isSuccess))
+        Observable.just(restClient.artWorksEndpoint.list().execute())
+                .doOnNext { rxBus.post(FetchFinishedEvent(it.isSuccess)) }
+                .map { it.body() }
+                .doOnNext { dataSource.insert(it) }
+                .doOnError { Log.w(TAG, "Unable to sync art objects with server", it) }
+                .subscribe()
     }
 
     companion object {

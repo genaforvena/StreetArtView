@@ -22,6 +22,7 @@ import org.imozerov.streetartview.ui.explore.sort.getSortOrder
 import org.imozerov.streetartview.ui.extensions.sendScreen
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 import rx.Observable
+import rx.Scheduler
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -127,10 +128,9 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
     private fun createDataFetchSubscription(): Subscription {
         return fetchData()
                 .debounce(200, TimeUnit.MILLISECONDS)
-                .observeOn(Schedulers.computation())
+                .observeOn(computationScheduler())
                 .doOnNext {
                     Observable.from(it)
-                            .observeOn(Schedulers.computation())
                             .doOnNext { it.distanceTo = LatLng(it.lat, it.lng).distanceTo(currentLocation ?: NIZHNY_NOVGOROD_LOCATION).toInt() }
                             .filter { it.matches(filterQuery) }
                             .toSortedList { artObjectUi, artObjectUi2 ->
@@ -142,10 +142,13 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
                             }
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnNext { view?.showArtObjects(it) }
-                            .subscribeOn(Schedulers.computation())
                             .subscribe()
                 }
                 .subscribe()
+    }
+
+    open protected fun computationScheduler() : Scheduler {
+        return Schedulers.computation()
     }
 
     abstract fun fetchData(): Observable<List<ArtObjectUi>>
