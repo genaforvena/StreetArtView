@@ -76,13 +76,11 @@ class PresenterUnderTest : ArtListPresenter() {
 
 class MockView : ArtView {
     var artObjects = listOf<ArtObjectUi>()
-    var isRefreshing: Boolean = true
 
     override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
         artObjects = artObjectUis
     }
 
     override fun stopRefresh() {
-        isRefreshing = false
     }
 }
