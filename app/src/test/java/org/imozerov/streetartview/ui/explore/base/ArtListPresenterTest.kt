@@ -36,7 +36,7 @@ class ArtListPresenterTest {
         activityController = Robolectric.buildActivity(ExploreArtActivity::class.java)
         activityController!!.create().start()
 
-        presenterUnderTest = PresenterUnderTest()
+        presenterUnderTest = UnderTestPresenter()
         artView = MockView()
     }
 
@@ -56,31 +56,31 @@ class ArtListPresenterTest {
         assertEquals(1, artView!!.artObjects.size)
         assertTrue(artView!!.artObjects[0].name == "1")
     }
-}
 
-class PresenterUnderTest : ArtListPresenter() {
-    override fun computationScheduler(): Scheduler {
-        return Schedulers.immediate()
+    class UnderTestPresenter : ArtListPresenter() {
+        override fun computationScheduler(): Scheduler {
+            return Schedulers.immediate()
+        }
+
+        override fun fetchData(): Observable<List<ArtObjectUi>> {
+            return Observable.just(
+                    listOf(
+                            ArtObjectUi(id = "1", name = "1", authors = listOf(AuthorUi(id = "1", name = "1", photoUrl = "1")), description = "1", thumbPicUrl = "1", picsUrls = listOf<String>(), lat = 34.toDouble(), lng = 34.toDouble(), address = "1", distanceTo = 1),
+                            ArtObjectUi(id = "2", name = "2", authors = listOf(AuthorUi(id = "2", name = "2", photoUrl = "2")), description = "2", thumbPicUrl = "1", picsUrls = listOf<String>(), lat = 34.toDouble(), lng = 34.toDouble(), address = "1", distanceTo = 2),
+                            ArtObjectUi(id = "3", name = "3", authors = listOf(AuthorUi(id = "3", name = "3", photoUrl = "3")), description = "3", thumbPicUrl = "1", picsUrls = listOf<String>(), lat = 34.toDouble(), lng = 34.toDouble(), address = "1", distanceTo = 3)
+                    )
+            )
+        }
     }
 
-    override fun fetchData(): Observable<List<ArtObjectUi>> {
-        return Observable.just(
-                listOf(
-                        ArtObjectUi(id = "1", name = "1", authors = listOf(AuthorUi(id = "1", name = "1", photoUrl = "1")), description = "1", thumbPicUrl = "1", picsUrls = listOf<String>(), lat = 34.toDouble(), lng = 34.toDouble(), address = "1", distanceTo = 1),
-                        ArtObjectUi(id = "2", name = "2", authors = listOf(AuthorUi(id = "2", name = "2", photoUrl = "2")), description = "2", thumbPicUrl = "1", picsUrls = listOf<String>(), lat = 34.toDouble(), lng = 34.toDouble(), address = "1", distanceTo = 2),
-                        ArtObjectUi(id = "3", name = "3", authors = listOf(AuthorUi(id = "3", name = "3", photoUrl = "3")), description = "3", thumbPicUrl = "1", picsUrls = listOf<String>(), lat = 34.toDouble(), lng = 34.toDouble(), address = "1", distanceTo = 3)
-                )
-        )
-    }
-}
+    class MockView : ArtView {
+        var artObjects = listOf<ArtObjectUi>()
 
-class MockView : ArtView {
-    var artObjects = listOf<ArtObjectUi>()
+        override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
+            artObjects = artObjectUis
+        }
 
-    override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
-        artObjects = artObjectUis
-    }
-
-    override fun stopRefresh() {
+        override fun stopRefresh() {
+        }
     }
 }
