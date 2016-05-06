@@ -50,7 +50,7 @@ class ArtObjectUi {
     }
 
     @VisibleForTesting
-    constructor(id: String, name: String, authors: List<AuthorUi>, description: String, thumbPicUrl: String, picsUrls: List<String>, lat: Double, lng: Double, address: String) {
+    constructor(id: String, name: String, authors: List<AuthorUi>, description: String, thumbPicUrl: String, picsUrls: List<String>, lat: Double, lng: Double, address: String, distanceTo: Int = 0) {
         this.id = id
         this.name = name
         this.authors = authors
@@ -63,6 +63,7 @@ class ArtObjectUi {
         this.isFavourite = false
         this.status = 0
         this.updatedAt = 0
+        this.distanceTo = distanceTo
     }
 
     fun authorsNames() : String {
