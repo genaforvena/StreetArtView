@@ -1,23 +1,18 @@
 package org.imozerov.streetartview.network
 
 import android.app.Application
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
-
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.squareup.okhttp.Cache
 import com.squareup.okhttp.OkHttpClient
-
-import org.imozerov.streetartview.network.internal.RestClient
-
-import javax.inject.Singleton
-
 import dagger.Module
 import dagger.Provides
+import org.imozerov.streetartview.network.internal.RestClient
 import retrofit.GsonConverterFactory
 import retrofit.Retrofit
+import retrofit.RxJavaCallAdapterFactory
+import javax.inject.Singleton
 
 @Module
 class NetModule(private val mBaseUrl: String) {
@@ -48,7 +43,7 @@ class NetModule(private val mBaseUrl: String) {
     @Provides
     @Singleton
     internal fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
-        val retrofit = Retrofit.Builder().addConverterFactory(GsonConverterFactory.create(gson)).baseUrl(mBaseUrl).client(okHttpClient).build()
+        val retrofit = Retrofit.Builder().addConverterFactory(GsonConverterFactory.create(gson)).addCallAdapterFactory(RxJavaCallAdapterFactory.create()).baseUrl(mBaseUrl).client(okHttpClient).build()
         return retrofit
     }
 
