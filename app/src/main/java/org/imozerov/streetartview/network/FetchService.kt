@@ -8,9 +8,10 @@ import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.bus.RxBus
 import org.imozerov.streetartview.bus.events.FetchFinishedEvent
 import org.imozerov.streetartview.network.internal.RestClient
+import org.imozerov.streetartview.network.model.Artwork
 import org.imozerov.streetartview.storage.IDataSource
+import retrofit.Response
 import rx.Observable
-import rx.Subscriber
 import javax.inject.Inject
 
 class FetchService : IntentService("FetchService") {
@@ -41,12 +42,13 @@ class FetchService : IntentService("FetchService") {
     }
 
     private fun handleStartFetchAction() {
-        Observable.just(restClient.artWorksEndpoint.list().execute())
-                .doOnNext { rxBus.post(FetchFinishedEvent(it.isSuccess)) }
-                .map { it.body() }
-                .doOnNext { dataSource.insert(it) }
-                .doOnError { Log.w(TAG, "Unable to sync art objects with server", it) }
-                .subscribe()
+       restClient.artWorksEndpoint.list()
+                .doOnNext { rxBus.post(FetchFinishedEvent(true)) }
+                .doOnError { rxBus.post(FetchFinishedEvent(false)) }
+                .subscribe(
+                        { dataSource.insert(it) },
+                        { Log.w(TAG, "Unable to sync art objects with server", it) }
+                )
     }
 
     companion object {

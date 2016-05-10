@@ -106,6 +106,7 @@ dependencies {
     // retrofit
     compile "com.squareup.retrofit:retrofit:${RETROFIT_VERSION}"
     compile "com.squareup.retrofit:converter-gson:${RETROFIT_VERSION}"
+    compile "com.squareup.retrofit:adapter-rxjava:${RETROFIT_VERSION}"
 
     // glide
     compile 'com.github.bumptech.glide:glide:3.7.0'

@@ -4,8 +4,9 @@ import org.imozerov.streetartview.network.model.Artwork
 
 import retrofit.Call
 import retrofit.http.GET
+import rx.Observable
 
 interface ArtWorksEndpoint {
     @GET("artworks/")
-    fun list(): Call<List<Artwork>>
+    fun list(): Observable<List<Artwork>>
 }
