@@ -73,7 +73,7 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
 
         rxBusSubscription = rxBus.toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .doOnNext {
                     Observable.just(it)
                             .ofType(LocationChangedEvent::class.java)
                             .subscribe {
@@ -81,11 +81,13 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
                                 fetchSubscription?.unsubscribe()
                                 fetchSubscription = createDataFetchSubscription()
                             }
-
+                }
+                .doOnNext {
                     Observable.just(it)
                             .ofType(FetchFinishedEvent::class.java)
                             .subscribe { view?.stopRefresh() }
                 }
+                .subscribe()
     }
 
     fun unbindView() {
