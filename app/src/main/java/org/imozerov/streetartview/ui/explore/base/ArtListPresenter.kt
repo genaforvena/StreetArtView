@@ -74,14 +74,17 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
         rxBusSubscription = rxBus.toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    if (it is FetchFinishedEvent) {
-                        view?.stopRefresh()
-                    }
-                    if (it is LocationChangedEvent) {
-                        currentLocation = it.newLocation
-                        fetchSubscription?.unsubscribe()
-                        fetchSubscription = createDataFetchSubscription()
-                    }
+                    Observable.just(it)
+                            .ofType(LocationChangedEvent::class.java)
+                            .subscribe {
+                                currentLocation = it.newLocation
+                                fetchSubscription?.unsubscribe()
+                                fetchSubscription = createDataFetchSubscription()
+                            }
+
+                    Observable.just(it)
+                            .ofType(FetchFinishedEvent::class.java)
+                            .subscribe { view?.stopRefresh() }
                 }
     }
 
@@ -147,7 +150,7 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
                 .subscribe()
     }
 
-    open protected fun computationScheduler() : Scheduler {
+    open protected fun computationScheduler(): Scheduler {
         return Schedulers.computation()
     }
 
