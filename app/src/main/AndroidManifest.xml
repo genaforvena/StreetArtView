@@ -28,12 +28,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.detail.DetailArtObjectActivity"
             android:screenOrientation="userPortrait"
             android:theme="@style/Theme.Swipe.Back" />
-
         <activity
             android:name=".ui.detail.ImageViewActivity"
             android:label="@string/title_activity_image_view"
@@ -42,11 +40,15 @@
         <service
             android:name=".network.FetchService"
             android:exported="false" />
-
         <service
             android:name=".location.LocationService"
             android:enabled="true"
             android:exported="false" />
+
+        <activity
+            android:name=".ui.add.PickImageActivity"
+            android:label="@string/title_activity_add_art_object"
+            android:theme="@style/StreetArtViewTheme"></activity>
     </application>
 
 </manifest>

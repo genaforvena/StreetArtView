@@ -19,6 +19,7 @@ import org.imozerov.streetartview.BuildConfig
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.location.LocationService
+import org.imozerov.streetartview.ui.add.PickImageActivity
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.all.ArtListFragment
@@ -126,6 +127,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
 
     private fun initRxSubscriptions() {
         compositeSubscription.addAll(
+                RxView.clicks(explore_floating_action_button_add).subscribe { startActivity(Intent(this, PickImageActivity::class.java)) },
                 RxView.clicks(explore_floating_action_button_expand).subscribe { swapFloatingActionButtonsVisibility() },
                 RxView.clicks(explore_floating_action_button_search).subscribe { openSearchView() },
                 RxView.clicks(explore_floating_action_button_sort_by).subscribe { changeSortOrder() },
@@ -151,9 +153,11 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
             if (search_view.visibility != View.VISIBLE) {
                 explore_floating_action_button_search.show()
             }
+            explore_floating_action_button_add.show()
             explore_floating_action_button_sort_by.show()
             explore_floating_action_button_expand.setImageDrawable(getDrawableSafely(R.drawable.ic_remove_black_24dp))
         } else {
+            explore_floating_action_button_add.hide()
             explore_floating_action_button_search.hide()
             explore_floating_action_button_sort_by.hide()
             explore_floating_action_button_expand.setImageDrawable(getDrawableSafely(R.drawable.ic_build_black_24dp))

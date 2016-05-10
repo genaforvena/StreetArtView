@@ -39,6 +39,17 @@
         android:layout_gravity="bottom|end">
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/explore_floating_action_button_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:elevation="4dp"
+            app:fabSize="mini"
+            android:layout_above="@+id/explore_floating_action_button_search"
+            android:visibility="gone"
+            android:layout_alignEnd="@+id/explore_floating_action_button_expand" />
+
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/explore_floating_action_button_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
