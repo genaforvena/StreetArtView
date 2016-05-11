@@ -19,6 +19,7 @@ import org.imozerov.streetartview.BuildConfig
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
+import org.imozerov.streetartview.ui.detail.DetailArtObjectFragment
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.all.ArtListFragment
 import org.imozerov.streetartview.ui.explore.favourites.FavouritesListFragment
@@ -79,7 +80,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     override fun openArtObjectDetails(id: String?) {
         Log.d(TAG, "openArtObjectDetails($id)")
         val intent = Intent(this, DetailArtObjectActivity::class.java)
-        intent.putExtra(DetailArtObjectActivity.EXTRA_KEY_ART_OBJECT_DETAIL_ID, id)
+        intent.putExtra(DetailArtObjectFragment.EXTRA_KEY_ART_OBJECT_DETAIL_ID, id)
         startActivity(intent)
     }
 
