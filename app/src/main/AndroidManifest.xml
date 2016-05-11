@@ -47,8 +47,9 @@
 
         <activity
             android:name=".ui.add.PickImageActivity"
-            android:label="@string/title_activity_add_art_object"
-            android:theme="@style/StreetArtViewTheme"></activity>
+            android:label=""
+            android:parentActivityName=".ui.explore.ExploreArtActivity" />
+        <activity android:name=".ui.add.AddInfoActivity"></activity>
     </application>
 
 </manifest>
