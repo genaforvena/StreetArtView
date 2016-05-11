@@ -4,7 +4,7 @@ import dagger.Component
 import org.imozerov.streetartview.location.LocationService
 import org.imozerov.streetartview.network.FetchService
 import org.imozerov.streetartview.network.NetModule
-import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
+import org.imozerov.streetartview.ui.detail.DetailArtObjectFragment
 import org.imozerov.streetartview.ui.detail.ImageViewActivity
 import org.imozerov.streetartview.ui.explore.ExploreArtActivity
 import org.imozerov.streetartview.ui.explore.base.ArtListPresenter
@@ -17,6 +17,6 @@ interface AppComponent {
     fun inject(fetchService: FetchService)
     fun inject(artListPresenter: ArtListPresenter)
     fun inject(exploreArtActivity: ExploreArtActivity)
-    fun inject(detailArtObjectActivity: DetailArtObjectActivity)
+    fun inject(detailArtObjectFragment: DetailArtObjectFragment)
     fun inject(imageViewActivity: ImageViewActivity)
 }

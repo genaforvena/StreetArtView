@@ -23,9 +23,9 @@ class ImageViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         (application as StreetArtViewApp).appComponent!!.inject(this)
 
-        val artObjectId = intent.getStringExtra(DetailArtObjectActivity.EXTRA_KEY_ART_OBJECT_DETAIL_ID)
+        val artObjectId = intent.getStringExtra(DetailArtObjectFragment.EXTRA_KEY_ART_OBJECT_DETAIL_ID)
         val artObjectUi = dataSource.getArtObject(artObjectId)
-        val imageChosen = intent.getIntExtra(DetailArtObjectActivity.EXTRA_IMAGE_CHOSEN_IN_DETAILS, 0)
+        val imageChosen = intent.getIntExtra(DetailArtObjectFragment.EXTRA_IMAGE_CHOSEN_IN_DETAILS, 0)
 
         linearLayout {
             swipeBackLayout {
