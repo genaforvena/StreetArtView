@@ -10,15 +10,15 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
 import android.view.MenuItem
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_add_art_object.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
+import java.util.*
 import javax.inject.Inject
 
 class PickImageActivity : AppCompatActivity(), OnImagePickListener {
-    private val adapter by lazy { SdCardImagesAdapter(this, cursor!!) }
-
-    private var cursor: Cursor? = null
+    private val adapter by lazy { SdCardImagesAdapter(this) }
 
     @Inject
     lateinit var prefs: SharedPreferences
@@ -30,14 +30,12 @@ class PickImageActivity : AppCompatActivity(), OnImagePickListener {
 
         setSupportActionBar(pick_image_toolbar);
 
-        val list = arrayOf(MediaStore.Images.Media._ID)
-
-        cursor = contentResolver.query(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, list, null, null, MediaStore.Images.Thumbnails._ID);
-
         val layoutManager = GridLayoutManager(this, 3)
         adapter.setHasStableIds(true)
         sd_card_images.layoutManager = layoutManager
         sd_card_images.adapter = adapter
+
+        displayImages("Camera")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -48,18 +46,62 @@ class PickImageActivity : AppCompatActivity(), OnImagePickListener {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.action_proceed) {
             startActivity(Intent(this, AddInfoActivity::class.java))
+        } else if (item?.itemId == R.id.action_camera) {
+            displayImages("Camera")
+        } else if (item?.itemId == R.id.action_pictures) {
+            displayImages("Pictures")
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onImagePicked(imageId: Int?) {
-        // TODO this needs to be full image but not just thumbnail
-        val uri = Uri.withAppendedPath(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, imageId.toString())
-        image_picked.setImageURI(uri)
+    val IMAGES_ID = MediaStore.Images.Media._ID
+    val DISPLAY_NAME = MediaStore.Images.Media.DISPLAY_NAME
+    val BUCKET_ID = MediaStore.Images.Media.BUCKET_ID
+    val BUCKET_DISPLAY_NAME = MediaStore.Images.Media.BUCKET_DISPLAY_NAME
+    val DATE_TAKEN = MediaStore.Images.Media.DATE_TAKEN
+
+    private fun displayImages(bucket: String?) {
+        val projection = arrayOf<String>(IMAGES_ID,
+                DISPLAY_NAME,
+                BUCKET_ID,
+                BUCKET_DISPLAY_NAME,
+                DATE_TAKEN)
+
+        val cursor = contentResolver.query(
+                IMAGES_PATH,
+                projection,
+                null,
+                null,
+                DATE_TAKEN + " DESC")
+
+        adapter.updateDataset(cursorToList(cursor, bucket))
+    }
+
+    private fun cursorToList(cursor: Cursor, bucket: String?): List<PictureItem> {
+        val items = ArrayList<PictureItem>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val bucketName = cursor.getString(cursor.getColumnIndex(BUCKET_DISPLAY_NAME))
+                val id = cursor.getInt(cursor.getColumnIndex(IMAGES_ID))
+                if (bucket.equals(bucketName)) {
+                    items.add(PictureItem(id))
+                }
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        return items
+    }
+
+    override fun onImagePicked(imageId: Int) {
+        val uri = Uri.withAppendedPath(IMAGES_PATH, imageId.toString())
+        Glide.with(this).load(uri).into(image_picked)
         prefs.storeLastImageUri(uri)
     }
-}
 
-interface OnImagePickListener {
-    fun onImagePicked(imageId: Int?)
+    companion object {
+        val IMAGES_PATH = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+    }
+
 }

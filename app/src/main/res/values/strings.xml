@@ -10,4 +10,9 @@
 
     <string name="title_activity_image_view" translatable="false">ImageViewActivity</string>
     <string name="title_activity_add_art_object">AddArtObjectActivity</string>
+
+    <!-- pick image activity-->
+    <string name="action_path">Path</string>
+    <string name="camera">Camera</string>
+    <string name="pictures">Pictures</string>
 </resources>

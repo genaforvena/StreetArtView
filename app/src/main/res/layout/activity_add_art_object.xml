@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    tools:context=".ui.add.PickImageActivity">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical"
+              tools:context=".ui.add.PickImageActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/pick_image_toolbar"
@@ -20,13 +20,14 @@
     <ImageView
         android:id="@+id/image_picked"
         android:layout_width="match_parent"
-        android:layout_height="300dp" />
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/sd_card_images"
         android:layout_width="match_parent"
-        android:numColumns="auto_fit"
         android:layout_height="match_parent"
+        android:numColumns="auto_fit"
         android:scrollbars="vertical"/>
 
 </LinearLayout>
