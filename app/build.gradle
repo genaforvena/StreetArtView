@@ -117,6 +117,9 @@ dependencies {
     // Swipe back to detail view
     compile 'com.github.liuguangqiang.swipeback:library:1.0.2@aar'
 
+    // BottomSheet library
+    compile 'com.flipboard:bottomsheet-core:1.5.0'
+    compile 'com.flipboard:bottomsheet-commons:1.5.0'
 
     // DEBUGGING, TESTING //
 
