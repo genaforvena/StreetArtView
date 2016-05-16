@@ -1,5 +1,6 @@
 package org.imozerov.streetartview.ui.explore.map
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,12 +13,14 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import kotlinx.android.synthetic.main.fragment_art_map.*
 import kotlinx.android.synthetic.main.fragment_art_map.view.*
+import kotlinx.android.synthetic.main.info_window_art_object_on_map.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.location.NIZHNY_NOVGOROD_LOCATION
@@ -69,15 +72,17 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
                     true
                 }
                 setOnClusterItemClickListener {
-                    gMap.moveTo(LatLng(it.artObjectUi.lat, it.artObjectUi.lng))
                     showArtObjectDigest(it.artObjectUi.id)
-                    true
+                    false
                 }
                 setRenderer(ArtObjectRenderer(context, gMap, clusterManager))
+                markerCollection.setOnInfoWindowAdapter(WindowInfoAdapter(activity))
             }
             with (gMap) {
                 setOnCameraChangeListener(clusterManager);
                 setOnMarkerClickListener(clusterManager);
+                setOnInfoWindowClickListener(clusterManager)
+                setInfoWindowAdapter(clusterManager!!.markerManager)
 
                 uiSettings.isMapToolbarEnabled = false
                 isMyLocationEnabled = true
@@ -189,6 +194,24 @@ class ArtObjectRenderer : DefaultClusterRenderer<ArtObjectClusterItem> {
     }
 
     override fun shouldRenderAsCluster(cluster: Cluster<ArtObjectClusterItem>?): Boolean = cluster!!.size > 3
+}
+
+class WindowInfoAdapter(activity: Activity) : GoogleMap.InfoWindowAdapter {
+    val infoView by lazy {
+        activity.layoutInflater.inflate(R.layout.info_window_art_object_on_map, null)
+    }
+
+    override fun getInfoContents(p0: Marker?): View? {
+        return null
+    }
+
+    override fun getInfoWindow(p0: Marker?): View? {
+        infoView.info_window_address.text = "ADDD"
+        infoView.info_window_distance_to.text = "DSI"
+        infoView.info_window_name.text = "NAME"
+        return infoView
+    }
+
 }
 
 
