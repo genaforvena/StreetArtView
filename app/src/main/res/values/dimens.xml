@@ -9,6 +9,6 @@
     <dimen name="cluster_item_width">50dp</dimen>
     <dimen name="cluster_item_height">35dp</dimen>
     <dimen name="start_peek_translation">110dp</dimen>
-    <dimen name="detail_image_min_height">100dp</dimen>
+    <dimen name="detail_image_min_height">150dp</dimen>
     <dimen name="detail_image_max_height">350dp</dimen>
 </resources>

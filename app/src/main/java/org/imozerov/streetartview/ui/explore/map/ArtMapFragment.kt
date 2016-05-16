@@ -89,7 +89,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     }
 
     fun openBottomSheet(id: String?) {
-        if(bottom_sheet.isSheetShowing) {
+        if (bottom_sheet.isSheetShowing) {
             bottom_sheet.dismissSheet()
             bottom_sheet.addOnSheetDismissedListener {
                 DetailArtObjectFragment.newInstance(id!!).show(fragmentManager, R.id.bottom_sheet)
@@ -142,7 +142,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     }
 
     fun hideArtObjectDigest() {
-        if(bottom_sheet.isSheetShowing) {
+        if (bottom_sheet.isSheetShowing) {
             bottom_sheet.dismissSheet()
         }
     }
