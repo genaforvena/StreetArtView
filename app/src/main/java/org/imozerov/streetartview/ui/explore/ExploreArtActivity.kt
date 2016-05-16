@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_explore_art.*
 import org.imozerov.streetartview.BuildConfig
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
+import org.imozerov.streetartview.location.LocationService
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
 import org.imozerov.streetartview.ui.detail.DetailArtObjectFragment
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
@@ -58,6 +59,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     override fun onStart() {
         super.onStart()
         initRxSubscriptions()
+        LocationService.getLocationOnce(applicationContext)
     }
 
     override fun onStop() {
@@ -107,8 +109,6 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         tabs.getTabAt(0)?.icon = getDrawableSafely(R.drawable.ic_compass)
         tabs.getTabAt(1)?.icon = getDrawableSafely(R.drawable.ic_eye)
         tabs.getTabAt(2)?.icon = getDrawableSafely(R.drawable.ic_heart)
-
-        viewpager.currentItem = 1
     }
 
     private fun initSortOrderIcon(sortOrder: Int) {
