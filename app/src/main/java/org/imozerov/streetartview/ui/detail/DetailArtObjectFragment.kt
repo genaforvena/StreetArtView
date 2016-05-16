@@ -61,11 +61,11 @@ class DetailArtObjectFragment : BottomSheetFragment() {
 
     val compositeSubscription: CompositeSubscription = CompositeSubscription()
 
-    private val mDetailImageMinHeight by lazy {activity.resources.getDimension(R.dimen.detail_image_min_height)}
-    private val mDetailImageMaxHeight by lazy {activity.resources.getDimension(R.dimen.detail_image_max_height)}
+    private val detailImageMinHeight by lazy { activity.resources.getDimension(R.dimen.detail_image_min_height) }
+    private val detailImageMaxHeight by lazy { activity.resources.getDimension(R.dimen.detail_image_max_height) }
 
-    private var mDetailImageMinWidth: Float = 0f
-    private var mDetailImageMaxWidth: Float = 0f
+    private var detailImageMinWidth: Float = 0f
+    private var detailImageMaxWidth: Float = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,8 +78,6 @@ class DetailArtObjectFragment : BottomSheetFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-//        swipeBackLayout.setDragEdge(SwipeBackLayout.DragEdge.LEFT)
         tracker.sendScreen("DetailArtObjectFragment: ${artObjectUi.name}")
 
         bindViews()
@@ -113,11 +111,10 @@ class DetailArtObjectFragment : BottomSheetFragment() {
     }
 
     private fun bindViews() {
-
-        collapsing_toolbar.viewTreeObserver.addOnGlobalLayoutListener(object: ViewTreeObserver.OnGlobalLayoutListener {
+        collapsing_toolbar.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                mDetailImageMaxWidth = collapsing_toolbar.width.toFloat()
-                mDetailImageMinWidth = mDetailImageMaxWidth!! * mDetailImageMinHeight / mDetailImageMaxHeight
+                detailImageMaxWidth = collapsing_toolbar.width.toFloat()
+                detailImageMinWidth = detailImageMaxWidth * detailImageMinHeight / detailImageMaxHeight
                 collapsing_toolbar.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
@@ -231,17 +228,17 @@ class DetailArtObjectFragment : BottomSheetFragment() {
 
                 val progress = (translation - peekedTranslation) / (maxTranslation - peekedTranslation)
 
-                art_object_collapsing_content.layoutParams.height = (mDetailImageMinHeight + progress * (mDetailImageMaxHeight - mDetailImageMinHeight)).toInt()
-                collapsing_toolbar.layoutParams.height = (mDetailImageMinHeight + progress * (mDetailImageMaxHeight - mDetailImageMinHeight)).toInt()
+                art_object_collapsing_content.layoutParams.height = (detailImageMinHeight + progress * (detailImageMaxHeight - detailImageMinHeight)).toInt()
+                collapsing_toolbar.layoutParams.height = (detailImageMinHeight + progress * (detailImageMaxHeight - detailImageMinHeight)).toInt()
 
                 val lp: CollapsingToolbarLayout.LayoutParams = art_object_collapsing_content.layoutParams as CollapsingToolbarLayout.LayoutParams
 
-                if(translation == maxTranslation) {
+                if (translation == maxTranslation) {
                     lp.width = RelativeLayout.LayoutParams.MATCH_PARENT
-                    lp.height = mDetailImageMaxHeight.toInt()
+                    lp.height = detailImageMaxHeight.toInt()
                 } else {
-                    lp.width = (mDetailImageMinWidth + (mDetailImageMaxWidth - mDetailImageMinWidth) * progress).toInt();
-                    lp.height = (mDetailImageMinHeight + (mDetailImageMaxHeight - mDetailImageMinHeight) * progress).toInt();
+                    lp.width = (detailImageMinWidth + (detailImageMaxWidth - detailImageMinWidth) * progress).toInt();
+                    lp.height = (detailImageMinHeight + (detailImageMaxHeight - detailImageMinHeight) * progress).toInt();
                 }
 
                 art_object_collapsing_content.requestLayout()

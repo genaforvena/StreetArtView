@@ -37,7 +37,7 @@ class ImageViewActivity : AppCompatActivity() {
                         currentItem = imageChosen
                     }
                 }
-            }.setDragEdge(SwipeBackLayout.DragEdge.LEFT);
+            }.setDragEdge(SwipeBackLayout.DragEdge.BOTTOM);
         }
     }
 
