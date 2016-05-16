@@ -38,6 +38,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     val FRAGMENT_TAG = "MapFragment"
 
     private val presenter = AllPresenter()
+    private var clickedClusterItem: ArtObjectClusterItem? = null
 
     private var artObjectDetailOpener: ArtObjectDetailOpener? = null
     private var clusterManager: ClusterManager<ArtObjectClusterItem>? = null
@@ -73,10 +74,14 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
                 }
                 setOnClusterItemClickListener {
                     showArtObjectDigest(it.artObjectUi.id)
+                    clickedClusterItem = it
                     false
                 }
+                setOnClusterItemInfoWindowClickListener {
+                    bottom_sheet.expandSheet()
+                }
                 setRenderer(ArtObjectRenderer(context, gMap, clusterManager))
-                markerCollection.setOnInfoWindowAdapter(WindowInfoAdapter(activity))
+                markerCollection.setOnInfoWindowAdapter(WindowInfoAdapter(activity, { clickedClusterItem }))
             }
             with (gMap) {
                 setOnCameraChangeListener(clusterManager);
@@ -176,6 +181,26 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
             return fragment
         }
     }
+
+    private class WindowInfoAdapter(activity: Activity, val clusterItemGetter: (() -> ArtObjectClusterItem?)) : GoogleMap.InfoWindowAdapter {
+        val infoView by lazy {
+            activity.layoutInflater.inflate(R.layout.info_window_art_object_on_map, null)
+        }
+
+        override fun getInfoContents(p0: Marker?): View? {
+            return null
+        }
+
+        override fun getInfoWindow(p0: Marker?): View? {
+            val item = clusterItemGetter()
+            if (item != null) {
+                infoView.info_window_address.text = item.getAddress()
+                infoView.info_window_distance_to.text = "${item.getDistanceTo() / 1000} km"
+                infoView.info_window_name.text = clusterItemGetter()?.getTitle()
+            }
+            return infoView
+        }
+    }
 }
 
 class ArtObjectRenderer : DefaultClusterRenderer<ArtObjectClusterItem> {
@@ -196,22 +221,6 @@ class ArtObjectRenderer : DefaultClusterRenderer<ArtObjectClusterItem> {
     override fun shouldRenderAsCluster(cluster: Cluster<ArtObjectClusterItem>?): Boolean = cluster!!.size > 3
 }
 
-class WindowInfoAdapter(activity: Activity) : GoogleMap.InfoWindowAdapter {
-    val infoView by lazy {
-        activity.layoutInflater.inflate(R.layout.info_window_art_object_on_map, null)
-    }
 
-    override fun getInfoContents(p0: Marker?): View? {
-        return null
-    }
-
-    override fun getInfoWindow(p0: Marker?): View? {
-        infoView.info_window_address.text = "ADDD"
-        infoView.info_window_distance_to.text = "DSI"
-        infoView.info_window_name.text = "NAME"
-        return infoView
-    }
-
-}
 
 

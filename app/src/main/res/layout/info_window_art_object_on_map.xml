@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_super_dark"
     android:orientation="vertical">
 
     <TextView
@@ -9,6 +10,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
+        android:textColor="@color/colorAccent"
         android:id="@+id/info_window_name" />
 
     <TextView
@@ -16,6 +18,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
+        android:textColor="@color/colorAccent"
         android:id="@+id/info_window_address" />
 
     <TextView
@@ -23,6 +26,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
+        android:textColor="@color/colorAccent"
         android:id="@+id/info_window_distance_to" />
 
 </LinearLayout>
