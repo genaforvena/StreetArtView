@@ -249,7 +249,6 @@ class DetailArtObjectFragment : BottomSheetFragment() {
 
 
     companion object {
-
         val EXTRA_KEY_ART_OBJECT_DETAIL_ID = "EXTRA_KEY_ART_OBJECT_DETAIL_ID"
         val EXTRA_IMAGE_CHOSEN_IN_DETAILS = "EXTRA_IMAGE_CHOSEN_IN_DETAILS"
 

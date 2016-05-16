@@ -49,7 +49,7 @@ fun GoogleMap.zoomTo(latLng: LatLng) {
 }
 
 fun GoogleMap.moveTo(latLng: LatLng) {
-    animateCamera(CameraUpdateFactory.newLatLng(latLng), 200, null)
+    animateCamera(CameraUpdateFactory.newLatLng(latLng))
 }
 
 fun GoogleMap.addArtObjectSimpleMarker(artObject: ArtObjectUi) : Marker {
