@@ -2,13 +2,11 @@ package org.imozerov.streetartview.ui.explore.map
 
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -18,19 +16,18 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
-import kotlinx.android.synthetic.main.bottom_details.*
-import kotlinx.android.synthetic.main.bottom_details.view.*
+import kotlinx.android.synthetic.main.fragment_art_map.*
 import kotlinx.android.synthetic.main.fragment_art_map.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.location.NIZHNY_NOVGOROD_LOCATION
 import org.imozerov.streetartview.location.moveTo
 import org.imozerov.streetartview.location.zoomTo
+import org.imozerov.streetartview.ui.detail.DetailArtObjectFragment
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.all.AllPresenter
 import org.imozerov.streetartview.ui.explore.interfaces.ArtView
 import org.imozerov.streetartview.ui.explore.interfaces.Filterable
-import org.imozerov.streetartview.ui.extensions.loadImage
 import org.imozerov.streetartview.ui.model.ArtObjectUi
 
 class ArtMapFragment : Fragment(), Filterable, ArtView {
@@ -40,7 +37,6 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     private val presenter = AllPresenter()
 
     private var artObjectDetailOpener: ArtObjectDetailOpener? = null
-    private var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>? = null
     private var clusterManager: ClusterManager<ArtObjectClusterItem>? = null
 
     override fun onAttach(context: Context?) {
@@ -55,7 +51,11 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val layout = inflater!!.inflate(R.layout.fragment_art_map, container, false)
-        bottomSheetBehavior = BottomSheetBehavior.from(layout.bottom_sheet)
+
+        layout.bottom_sheet.setShouldDimContentView(false)
+        layout.bottom_sheet.peekOnDismiss = false
+        layout.bottom_sheet.peekSheetTranslation = resources.getDimensionPixelSize(R.dimen.detail_image_min_height).toFloat()
+        layout.bottom_sheet.interceptContentTouch = false
 
         val mapFragment: SupportMapFragment = SupportMapFragment.newInstance()
         childFragmentManager.beginTransaction().replace(layout.map.id, mapFragment, FRAGMENT_TAG).commit()
@@ -85,6 +85,17 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
             }
         }
         return layout
+    }
+
+    fun openBottomSheet(id: String?) {
+        if(bottom_sheet.isSheetShowing) {
+            bottom_sheet.dismissSheet()
+            bottom_sheet.addOnSheetDismissedListener {
+                DetailArtObjectFragment.newInstance(id!!).show(fragmentManager, R.id.bottom_sheet)
+            }
+        } else {
+            DetailArtObjectFragment.newInstance(id!!).show(fragmentManager, R.id.bottom_sheet)
+        }
     }
 
     override fun onStart() {
@@ -121,26 +132,18 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     }
 
     fun onBackPressed(): Boolean {
-        if (bottomSheetBehavior!!.state != BottomSheetBehavior.STATE_HIDDEN) {
-            hideArtObjectDigest()
-            return true
-        }
         return false
     }
 
     private fun showArtObjectDigest(id: String) {
         Log.v(TAG, "showArtObjectDigest($id)")
-        var artObject: ArtObjectUi = presenter.getArtObject(id)
-        bottom_detail_image.loadImage(artObject.picsUrls[0])
-        bottom_detail_address.text = artObject.address
-
-        bottom_sheet.visibility = View.VISIBLE
-        bottomSheetBehavior!!.state = BottomSheetBehavior.STATE_EXPANDED
-        bottom_detail_image.setOnClickListener { artObjectDetailOpener!!.openArtObjectDetails(artObject.id) }
+        openBottomSheet(id)
     }
 
     fun hideArtObjectDigest() {
-        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
+        if(bottom_sheet.isSheetShowing) {
+            bottom_sheet.dismissSheet()
+        }
     }
 
     override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {

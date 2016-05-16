@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_scrollFlags="scroll|exitUntilCollapsed"
-    tools:context=".ui.explore.ExploreArtActivity">
+    app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -42,25 +41,25 @@
             android:id="@+id/explore_floating_action_button_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/explore_floating_action_button_sort_by"
+            android:layout_alignEnd="@+id/explore_floating_action_button_expand"
             android:layout_marginBottom="16dp"
             android:src="@drawable/ic_search_black_24dp"
-            app:elevation="4dp"
-            app:fabSize="mini"
-            android:layout_above="@+id/explore_floating_action_button_sort_by"
             android:visibility="gone"
-            android:layout_alignEnd="@+id/explore_floating_action_button_expand" />
+            app:elevation="4dp"
+            app:fabSize="mini" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/explore_floating_action_button_sort_by"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:elevation="4dp"
-            app:fabSize="mini"
             android:layout_above="@+id/explore_floating_action_button_expand"
-            android:visibility="gone"
+            android:layout_alignStart="@+id/explore_floating_action_button_expand"
+            android:layout_marginBottom="16dp"
             android:src="@drawable/ic_schedule_black_24dp"
-            android:layout_alignStart="@+id/explore_floating_action_button_expand" />
+            android:visibility="gone"
+            app:elevation="4dp"
+            app:fabSize="mini" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/explore_floating_action_button_expand"
@@ -69,9 +68,9 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_gravity="bottom|end"
+            android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
             android:src="@drawable/ic_build_black_24dp"
             app:elevation="4dp"
             app:fabSize="mini" />
