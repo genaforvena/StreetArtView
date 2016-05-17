@@ -31,8 +31,7 @@
 
         <activity
             android:name=".ui.detail.DetailArtObjectActivity"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/Theme.Swipe.Back" />
+            android:screenOrientation="userPortrait" />
 
         <activity
             android:name=".ui.detail.ImageViewActivity"

@@ -30,8 +30,8 @@ android {
         applicationId "org.imozerov.streetartview"
         minSdkVersion 17
         targetSdkVersion 21
-        versionCode 4
-        versionName "1.2.1"
+        versionCode 5
+        versionName "1.3.0"
     }
 
     buildTypes {
@@ -117,6 +117,12 @@ dependencies {
     // Swipe back to detail view
     compile 'com.github.liuguangqiang.swipeback:library:1.0.2@aar'
 
+    // BottomSheet library
+    compile 'com.flipboard:bottomsheet-core:1.5.0'
+    compile 'com.flipboard:bottomsheet-commons:1.5.0'
+
+    // Bottom navigation bar
+    compile 'com.roughike:bottom-bar:1.3.3'
 
     // DEBUGGING, TESTING //
 
