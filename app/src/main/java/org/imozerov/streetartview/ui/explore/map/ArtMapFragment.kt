@@ -196,13 +196,7 @@ class ArtObjectRenderer : DefaultClusterRenderer<ArtObjectClusterItem> {
     constructor(context: Context?, map: GoogleMap?, clusterManager: ClusterManager<ArtObjectClusterItem>?) : super(context, map, clusterManager)
 
     override fun onBeforeClusterItemRendered(item: ArtObjectClusterItem?, markerOptions: MarkerOptions?) {
-        val drawable: Int
-        if (item!!.artObjectUi.isFavourite) {
-            drawable = R.drawable.ic_favorite_black_36dp
-        } else {
-            drawable = R.drawable.ic_place_black_36dp
-        }
-        markerOptions!!.icon(BitmapDescriptorFactory.fromResource(drawable))
+        markerOptions!!.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
     }
 
     override fun shouldRenderAsCluster(cluster: Cluster<ArtObjectClusterItem>?): Boolean = cluster!!.size > 3
