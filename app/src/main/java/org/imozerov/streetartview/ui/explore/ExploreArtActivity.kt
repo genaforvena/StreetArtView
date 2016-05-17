@@ -4,10 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -38,7 +35,6 @@ import org.imozerov.streetartview.ui.extensions.animateToVisible
 import org.imozerov.streetartview.ui.extensions.getDrawableSafely
 import org.jetbrains.anko.toast
 import rx.subscriptions.CompositeSubscription
-import java.util.*
 import javax.inject.Inject
 
 class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
@@ -106,24 +102,27 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
                 BottomBarTab(getDrawableSafely(R.drawable.ic_star_white_24dp), getString(R.string.favourites_fragment_pager_label))
         )
 
-        bottomBar!!.setOnTabClickListener(object: OnTabClickListener {
+        bottomBar!!.setOnTabClickListener(object : OnTabClickListener {
             override fun onTabReSelected(position: Int) {
 
             }
 
             override fun onTabSelected(position: Int) {
-                val fragmentToShow: Fragment
-                if (position == 0) {
-                    fragmentToShow = ArtMapFragment.newInstance()
+                val fragmentToShow: Fragment = if (position == 0) {
+                    ArtMapFragment.newInstance()
                 } else if (position == 1) {
-                    fragmentToShow = ArtListFragment.newInstance()
+                    ArtListFragment.newInstance()
                 } else {
-                    fragmentToShow = FavouritesListFragment.newInstance()
+                    FavouritesListFragment.newInstance()
                 }
 
                 supportFragmentManager.beginTransaction().replace(R.id.main_content, fragmentToShow, CURRENT_FRAGMENT_TAG).commit()
-                search_view.setQuery("", true)
                 closeSearchView()
+
+                if (explore_floating_action_button_sort_by.isShown) {
+                    explore_floating_action_button_search.hide()
+                    explore_floating_action_button_sort_by.hide()
+                }
             }
         })
     }
@@ -182,6 +181,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     private fun closeSearchView() {
+        search_view.setQuery("", true)
         hideKeyboard()
         if (explore_floating_action_button_sort_by.isShown) {
             explore_floating_action_button_search.show()

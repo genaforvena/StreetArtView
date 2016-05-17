@@ -21,8 +21,7 @@
 
         <activity
             android:name=".ui.explore.ExploreArtActivity"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:screenOrientation="userPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,8 +31,7 @@
 
         <activity
             android:name=".ui.detail.DetailArtObjectActivity"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/Theme.Swipe.Back" />
+            android:screenOrientation="userPortrait" />
 
         <activity
             android:name=".ui.detail.ImageViewActivity"
