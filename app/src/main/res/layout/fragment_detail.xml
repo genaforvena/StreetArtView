@@ -98,7 +98,8 @@
                             android:capitalize="characters"
                             android:text="Name"
                             android:textAlignment="center"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                            android:typeface="monospace" />
 
                         <TextView
                             android:id="@+id/art_object_detail_author"
@@ -108,7 +109,7 @@
                             android:layout_marginRight="@dimen/spacing_small"
                             android:text="Author"
                             android:textAlignment="textStart"
-                            android:textAppearance="?android:attr/textAppearanceMedium" />
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Button" />
 
                         <TextView
                             android:id="@+id/art_object_detail_description"
@@ -131,7 +132,7 @@
                             android:drawableRight="@drawable/ic_directions_black_18dp"
                             android:text="Address, 34"
                             android:textAlignment="textEnd"
-                            android:textAppearance="?android:attr/textAppearance" />
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
 
                         <TextView
                             android:id="@+id/art_object_detail_distance"
