@@ -47,13 +47,6 @@ class ExploreArtActivityTest {
     }
 
     @Test
-    fun adapterInstantiated() {
-        activityController!!.create()
-
-        assertNotNull(activityController!!.get().viewpager.adapter)
-    }
-
-    @Test
     fun isAbleToRecreateActivity() {
         activityController!!.create().start().resume().restart()
     }
