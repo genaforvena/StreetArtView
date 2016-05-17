@@ -122,8 +122,9 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
                 }
 
                 supportFragmentManager.beginTransaction().replace(R.id.main_content, fragmentToShow, CURRENT_FRAGMENT_TAG).commit()
+                search_view.setQuery("", true)
+                closeSearchView()
             }
-
         })
     }
 
