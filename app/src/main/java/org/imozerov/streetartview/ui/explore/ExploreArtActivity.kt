@@ -108,7 +108,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         tabs.setupWithViewPager(viewpager)
         tabs.getTabAt(0)?.icon = getDrawableSafely(R.drawable.ic_compass)
         tabs.getTabAt(1)?.icon = getDrawableSafely(R.drawable.ic_eye)
-        tabs.getTabAt(2)?.icon = getDrawableSafely(R.drawable.ic_heart)
+        tabs.getTabAt(2)?.icon = getDrawableSafely(R.drawable.ic_star_white_24dp)
     }
 
     private fun initSortOrderIcon(sortOrder: Int) {

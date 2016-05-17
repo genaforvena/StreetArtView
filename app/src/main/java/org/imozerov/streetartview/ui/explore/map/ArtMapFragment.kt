@@ -82,7 +82,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
                     clickedClusterItem = it
                     renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_black_36dp))
                     showArtObjectDigest(it.artObjectUi.id)
-                    false
+                    true
                 }
             }
             with (gMap) {
@@ -199,7 +199,7 @@ class ArtObjectRenderer : DefaultClusterRenderer<ArtObjectClusterItem> {
         markerOptions!!.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
     }
 
-    override fun shouldRenderAsCluster(cluster: Cluster<ArtObjectClusterItem>?): Boolean = cluster!!.size > 1
+    override fun shouldRenderAsCluster(cluster: Cluster<ArtObjectClusterItem>?): Boolean = cluster!!.size > 3
 }
 
 

@@ -216,9 +216,9 @@ class DetailArtObjectFragment : BottomSheetFragment() {
 
     private fun setFavouriteIcon(isFavourite: Boolean) {
         if (isFavourite) {
-            detail_set_favourite_button.setImageDrawable(activity.getDrawableSafely(R.drawable.ic_favorite_black_24dp))
+            detail_set_favourite_button.setImageDrawable(activity.getDrawableSafely(R.drawable.ic_star_black_24dp))
         } else {
-            detail_set_favourite_button.setImageDrawable(activity.getDrawableSafely(R.drawable.ic_favorite_border_black_24dp))
+            detail_set_favourite_button.setImageDrawable(activity.getDrawableSafely(R.drawable.ic_star_border_black_24dp))
         }
     }
 

@@ -167,8 +167,7 @@
             android:src="@drawable/ic_share_black_24dp"
             app:fabSize="mini"
             app:layout_anchor="@id/collapsing_toolbar"
-            app:layout_anchorGravity="bottom|right|end"
-            android:visibility="gone"/>
+            app:layout_anchorGravity="bottom|right|end" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/detail_set_favourite_button"
@@ -178,8 +177,7 @@
             android:clickable="true"
             app:fabSize="mini"
             app:layout_anchor="@id/collapsing_toolbar"
-            app:layout_anchorGravity="bottom|right|end"
-            android:visibility="gone"/>
+            app:layout_anchorGravity="bottom|right|end" />
 
     </android.support.design.widget.CoordinatorLayout>
 </FrameLayout>
