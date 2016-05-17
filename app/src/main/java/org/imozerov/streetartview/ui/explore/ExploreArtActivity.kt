@@ -72,10 +72,6 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     override fun onBackPressed() {
-        if (getMapFragmentIfCurrent()?.onBackPressed() == true) {
-            return
-        }
-
         if (search_view.visibility == View.VISIBLE) {
             closeSearchView()
             return
@@ -175,7 +171,6 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     private fun openSearchView() {
-        getMapFragmentIfCurrent()?.hideArtObjectDigest()
         explore_floating_action_button_search.hide()
         search_view.animateToVisible()
     }
@@ -194,14 +189,5 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
             val inputMgr = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMgr.hideSoftInputFromWindow(currentFocus.windowToken, 0)
         }
-    }
-
-    private fun getMapFragmentIfCurrent(): ArtMapFragment? {
-        val currentFragment = supportFragmentManager.findFragmentByTag(CURRENT_FRAGMENT_TAG)
-        if (currentFragment is ArtMapFragment) {
-            return currentFragment
-        }
-
-        return null
     }
 }

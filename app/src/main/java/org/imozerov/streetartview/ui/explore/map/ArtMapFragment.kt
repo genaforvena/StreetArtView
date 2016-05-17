@@ -119,11 +119,13 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     override fun onStart() {
         super.onStart()
         presenter.bindView(this, context)
+        startLocationTracking()
     }
 
     override fun onStop() {
         super.onStop()
         presenter.unbindView()
+        stopLocationTracking()
     }
 
     override fun onDestroy() {
@@ -137,20 +139,16 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         artObjectDetailOpener = null
     }
 
-    fun startLocationTracking() {
+    private fun startLocationTracking() {
         (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as? SupportMapFragment)?.getMapAsync {
             it.isMyLocationEnabled = true
         }
     }
 
-    fun stopLocationTracking() {
+    private fun stopLocationTracking() {
         (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as? SupportMapFragment)?.getMapAsync {
             it.isMyLocationEnabled = false
         }
-    }
-
-    fun onBackPressed(): Boolean {
-        return false
     }
 
     private fun showArtObjectDigest(id: String) {
@@ -158,7 +156,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         openBottomSheet(id)
     }
 
-    fun hideArtObjectDigest() {
+    private fun hideArtObjectDigest() {
         if (bottom_sheet.isSheetShowing) {
             bottom_sheet.dismissSheet()
         }
