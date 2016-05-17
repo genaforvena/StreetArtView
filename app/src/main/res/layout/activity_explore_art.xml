@@ -22,7 +22,7 @@
     <FrameLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -33,9 +33,8 @@
             android:id="@+id/explore_floating_action_button_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/explore_floating_action_button_sort_by"
-            android:layout_alignEnd="@+id/explore_floating_action_button_expand"
-            android:layout_marginBottom="16dp"
+            android:layout_below="@+id/explore_floating_action_button_expand"
+            android:layout_toStartOf="@+id/explore_floating_action_button_expand"
             android:src="@drawable/ic_search_black_24dp"
             android:visibility="gone"
             app:elevation="4dp"
@@ -46,8 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/explore_floating_action_button_expand"
-            android:layout_alignStart="@+id/explore_floating_action_button_expand"
-            android:layout_marginBottom="16dp"
+            android:layout_toStartOf="@+id/explore_floating_action_button_expand"
             android:src="@drawable/ic_schedule_black_24dp"
             android:visibility="gone"
             app:elevation="4dp"
@@ -57,13 +55,11 @@
             android:id="@+id/explore_floating_action_button_expand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="16dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical|end"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:src="@drawable/ic_build_black_24dp"
+            android:layout_marginRight="-24dp"
             app:elevation="4dp"
             app:fabSize="mini" />
 

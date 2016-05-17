@@ -168,11 +168,9 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
                 explore_floating_action_button_search.show()
             }
             explore_floating_action_button_sort_by.show()
-            explore_floating_action_button_expand.setImageDrawable(getDrawableSafely(R.drawable.ic_remove_black_24dp))
         } else {
             explore_floating_action_button_search.hide()
             explore_floating_action_button_sort_by.hide()
-            explore_floating_action_button_expand.setImageDrawable(getDrawableSafely(R.drawable.ic_build_black_24dp))
         }
     }
 
