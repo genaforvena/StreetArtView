@@ -50,5 +50,5 @@ fun SharedPreferences.storeSortOrder(sortOrder: Int) {
 }
 
 fun SharedPreferences.getSortOrder(): Int {
-    return getInt(SortOrder.KEY, SortOrder.byDate)
+    return getInt(SortOrder.KEY, SortOrder.byDistance)
 }
