@@ -1,6 +1,5 @@
 package org.imozerov.streetartview.ui.explore.map
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,19 +11,15 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import kotlinx.android.synthetic.main.fragment_art_map.*
 import kotlinx.android.synthetic.main.fragment_art_map.view.*
-import kotlinx.android.synthetic.main.info_window_art_object_on_map.view.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.location.NIZHNY_NOVGOROD_LOCATION
-import org.imozerov.streetartview.location.moveTo
 import org.imozerov.streetartview.location.zoomTo
 import org.imozerov.streetartview.ui.detail.DetailArtObjectFragment
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
@@ -66,33 +61,45 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
         mapFragment.getMapAsync { gMap ->
             clusterManager = ClusterManager(context, gMap)
+            val renderer = ArtObjectRenderer(context, gMap, clusterManager)
             with (clusterManager!!) {
+                setRenderer(renderer)
+
                 setOnClusterClickListener {
+                    if (clickedClusterItem != null) {
+                        renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
+                    }
+                    clickedClusterItem = null
                     gMap.zoomTo(it.position)
                     hideArtObjectDigest()
                     true
                 }
+
                 setOnClusterItemClickListener {
-                    showArtObjectDigest(it.artObjectUi.id)
+                    if (clickedClusterItem != null) {
+                        renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
+                    }
                     clickedClusterItem = it
+                    renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_black_36dp))
+                    showArtObjectDigest(it.artObjectUi.id)
                     false
                 }
-                setOnClusterItemInfoWindowClickListener {
-                    bottom_sheet.expandSheet()
-                }
-                setRenderer(ArtObjectRenderer(context, gMap, clusterManager))
-                markerCollection.setOnInfoWindowAdapter(WindowInfoAdapter(activity, { clickedClusterItem }))
             }
             with (gMap) {
-                setOnCameraChangeListener(clusterManager);
-                setOnMarkerClickListener(clusterManager);
+                setOnCameraChangeListener(clusterManager)
+                setOnMarkerClickListener(clusterManager)
                 setOnInfoWindowClickListener(clusterManager)
-                setInfoWindowAdapter(clusterManager!!.markerManager)
 
                 uiSettings.isMapToolbarEnabled = false
                 isMyLocationEnabled = true
                 moveCamera(CameraUpdateFactory.newLatLngZoom(NIZHNY_NOVGOROD_LOCATION, 11f))
-                setOnMapClickListener { hideArtObjectDigest() }
+                setOnMapClickListener {
+                    if (clickedClusterItem != null) {
+                        renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
+                    }
+                    clickedClusterItem = null
+                    hideArtObjectDigest()
+                }
             }
         }
         return layout
@@ -179,26 +186,6 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         fun newInstance(): ArtMapFragment {
             val fragment = ArtMapFragment()
             return fragment
-        }
-    }
-
-    private class WindowInfoAdapter(activity: Activity, val clusterItemGetter: (() -> ArtObjectClusterItem?)) : GoogleMap.InfoWindowAdapter {
-        val infoView by lazy {
-            activity.layoutInflater.inflate(R.layout.info_window_art_object_on_map, null)
-        }
-
-        override fun getInfoContents(p0: Marker?): View? {
-            return null
-        }
-
-        override fun getInfoWindow(p0: Marker?): View? {
-            val item = clusterItemGetter()
-            if (item != null) {
-                infoView.info_window_address.text = item.getAddress()
-                infoView.info_window_distance_to.text = "${item.getDistanceTo() / 1000} km"
-                infoView.info_window_name.text = clusterItemGetter()?.getTitle()
-            }
-            return infoView
         }
     }
 }

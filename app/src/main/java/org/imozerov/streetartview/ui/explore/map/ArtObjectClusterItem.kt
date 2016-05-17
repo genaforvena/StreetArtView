@@ -9,7 +9,4 @@ import org.imozerov.streetartview.ui.model.ArtObjectUi
  */
 class ArtObjectClusterItem(val artObjectUi: ArtObjectUi) : ClusterItem {
     override fun getPosition(): LatLng? = LatLng(artObjectUi.lat, artObjectUi.lng)
-    fun getTitle() = artObjectUi.name
-    fun getDistanceTo() = artObjectUi.distanceTo
-    fun getAddress() = artObjectUi.address
 }
