@@ -4,16 +4,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
 import com.jakewharton.rxbinding.view.RxView
+import com.roughike.bottombar.BottomBar
+import com.roughike.bottombar.BottomBarTab
+import com.roughike.bottombar.OnTabClickListener
 import kotlinx.android.synthetic.main.activity_explore_art.*
 import org.imozerov.streetartview.BuildConfig
 import org.imozerov.streetartview.R
@@ -41,8 +44,11 @@ import javax.inject.Inject
 class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
 
     val TAG = "ExploreArtActivity"
+    val CURRENT_FRAGMENT_TAG = "Current fragment"
 
     val compositeSubscription = CompositeSubscription()
+
+    var bottomBar: BottomBar? = null
 
     @Inject
     lateinit var prefs: SharedPreferences
@@ -52,6 +58,8 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         super.onCreate(savedInstanceState)
         (application as StreetArtViewApp).appComponent!!.inject(this)
         setContentView(R.layout.activity_explore_art)
+
+        bottomBar = BottomBar.attach(this, savedInstanceState)
         initTabs()
         initSortOrderIcon(prefs.getSortOrder())
     }
@@ -79,6 +87,11 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         super.onBackPressed()
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        bottomBar!!.onSaveInstanceState(outState)
+    }
+
     override fun openArtObjectDetails(id: String?) {
         Log.d(TAG, "openArtObjectDetails($id)")
         val intent = Intent(this, DetailArtObjectActivity::class.java)
@@ -87,28 +100,31 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     private fun initTabs() {
-        val adapter = Adapter(supportFragmentManager)
-        adapter.addFragment(ArtMapFragment.newInstance(), getString(R.string.map_fragment_pager_label))
-        adapter.addFragment(ArtListFragment.newInstance(), getString(R.string.list_fragment_pager_label))
-        adapter.addFragment(FavouritesListFragment.newInstance(), getString(R.string.favourites_fragment_pager_label))
-        viewpager.adapter = adapter
-        viewpager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
-            override fun onPageScrollStateChanged(pageIndex: Int) {
-                if (viewpager.currentItem == 0) {
-                    ((viewpager.adapter as FragmentPagerAdapter).getItem(0) as ArtMapFragment).startLocationTracking()
-                } else {
-                    ((viewpager.adapter as FragmentPagerAdapter).getItem(0) as ArtMapFragment).stopLocationTracking()
-                }
-                compositeSubscription.clear()
-                initRxSubscriptions()
-            }
-        })
-        viewpager.offscreenPageLimit = 3
+        bottomBar!!.setItems(
+                BottomBarTab(getDrawableSafely(R.drawable.ic_compass), getString(R.string.map_fragment_pager_label)),
+                BottomBarTab(getDrawableSafely(R.drawable.ic_eye), getString(R.string.list_fragment_pager_label)),
+                BottomBarTab(getDrawableSafely(R.drawable.ic_star_white_24dp), getString(R.string.favourites_fragment_pager_label))
+        )
 
-        tabs.setupWithViewPager(viewpager)
-        tabs.getTabAt(0)?.icon = getDrawableSafely(R.drawable.ic_compass)
-        tabs.getTabAt(1)?.icon = getDrawableSafely(R.drawable.ic_eye)
-        tabs.getTabAt(2)?.icon = getDrawableSafely(R.drawable.ic_star_white_24dp)
+        bottomBar!!.setOnTabClickListener(object: OnTabClickListener {
+            override fun onTabReSelected(position: Int) {
+
+            }
+
+            override fun onTabSelected(position: Int) {
+                val fragmentToShow: Fragment
+                if (position == 0) {
+                    fragmentToShow = ArtMapFragment.newInstance()
+                } else if (position == 1) {
+                    fragmentToShow = ArtListFragment.newInstance()
+                } else {
+                    fragmentToShow = FavouritesListFragment.newInstance()
+                }
+
+                supportFragmentManager.beginTransaction().replace(R.id.main_content, fragmentToShow, CURRENT_FRAGMENT_TAG).commit()
+            }
+
+        })
     }
 
     private fun initSortOrderIcon(sortOrder: Int) {
@@ -136,8 +152,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     private fun applyFilter(query: CharSequence) {
-        val fragment = supportFragmentManager
-                .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewpager.currentItem)
+        val fragment = supportFragmentManager.findFragmentByTag(CURRENT_FRAGMENT_TAG)
         (fragment as? Filterable)?.applyFilter(query.toString())
     }
 
@@ -183,7 +198,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     private fun getMapFragmentIfCurrent(): ArtMapFragment? {
-        val currentFragment = (viewpager.adapter as FragmentPagerAdapter).getItem(viewpager.currentItem)
+        val currentFragment = supportFragmentManager.findFragmentByTag(CURRENT_FRAGMENT_TAG)
         if (currentFragment is ArtMapFragment) {
             return currentFragment
         }
