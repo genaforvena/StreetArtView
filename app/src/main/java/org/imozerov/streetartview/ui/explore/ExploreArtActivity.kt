@@ -63,7 +63,6 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     override fun onStart() {
         super.onStart()
         initRxSubscriptions()
-        LocationService.getLocationOnce(applicationContext)
     }
 
     override fun onStop() {
