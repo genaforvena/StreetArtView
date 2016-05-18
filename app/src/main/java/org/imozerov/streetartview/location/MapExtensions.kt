@@ -54,6 +54,5 @@ fun GoogleMap.moveTo(latLng: LatLng) {
 
 fun GoogleMap.addArtObjectSimpleMarker(artObject: ArtObjectUi) : Marker {
     val markerOptions = MarkerOptions().position(LatLng(artObject.lat, artObject.lng))
-            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
     return addMarker(markerOptions)
 }
