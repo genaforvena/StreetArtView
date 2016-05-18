@@ -67,7 +67,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
                 setOnClusterClickListener {
                     if (clickedClusterItem != null) {
-                        renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
+                        renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.defaultMarker())
                     }
                     clickedClusterItem = null
                     gMap.zoomTo(it.position)
@@ -77,10 +77,10 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
                 setOnClusterItemClickListener {
                     if (clickedClusterItem != null) {
-                        renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
+                        renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.defaultMarker())
                     }
                     clickedClusterItem = it
-                    renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_person_pin_circle_black_36dp))
+                    renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                     showArtObjectDigest(it.artObjectUi.id)
                     true
                 }
@@ -95,7 +95,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
                 moveCamera(CameraUpdateFactory.newLatLngZoom(NIZHNY_NOVGOROD_LOCATION, 11f))
                 setOnMapClickListener {
                     if (clickedClusterItem != null) {
-                        renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
+                        renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.defaultMarker())
                     }
                     clickedClusterItem = null
                     hideArtObjectDigest()
@@ -189,13 +189,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 }
 
 class ArtObjectRenderer : DefaultClusterRenderer<ArtObjectClusterItem> {
-
-    // TODO load images into icon
     constructor(context: Context?, map: GoogleMap?, clusterManager: ClusterManager<ArtObjectClusterItem>?) : super(context, map, clusterManager)
-
-    override fun onBeforeClusterItemRendered(item: ArtObjectClusterItem?, markerOptions: MarkerOptions?) {
-        markerOptions!!.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_36dp))
-    }
 
     override fun shouldRenderAsCluster(cluster: Cluster<ArtObjectClusterItem>?): Boolean = cluster!!.size > 3
 }
