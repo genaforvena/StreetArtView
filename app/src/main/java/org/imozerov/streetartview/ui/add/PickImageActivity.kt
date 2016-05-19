@@ -1,7 +1,6 @@
 package org.imozerov.streetartview.ui.add
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -10,32 +9,34 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_add_art_object.*
 import org.imozerov.streetartview.R
 import org.imozerov.streetartview.StreetArtViewApp
 import java.util.*
-import javax.inject.Inject
 
 class PickImageActivity : AppCompatActivity(), OnImagePickListener {
     private val adapter by lazy { SdCardImagesAdapter(this) }
 
-    @Inject
-    lateinit var prefs: SharedPreferences
+    private var pickedImageUri: Uri? = null
+
+    val CAMERA_FOLDER_NAME = "Camera"
+    val PICTURES_FOLDER_NAME = "Pictures"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as StreetArtViewApp).appComponent!!.inject(this)
         setContentView(R.layout.activity_add_art_object)
 
-        setSupportActionBar(pick_image_toolbar);
+        setSupportActionBar(pick_image_toolbar)
 
         val layoutManager = GridLayoutManager(this, 3)
         adapter.setHasStableIds(true)
         sd_card_images.layoutManager = layoutManager
         sd_card_images.adapter = adapter
 
-        displayImages("Camera")
+        displayImages(CAMERA_FOLDER_NAME)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -45,11 +46,17 @@ class PickImageActivity : AppCompatActivity(), OnImagePickListener {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.action_proceed) {
-            startActivity(Intent(this, AddInfoActivity::class.java))
+            if (pickedImageUri == null) {
+                Toast.makeText(this, getString(R.string.non_empty_photo), Toast.LENGTH_LONG).show()
+            } else {
+                val intent = Intent(this, FillActivity::class.java)
+                intent.putExtra(FillActivity.EXTRA_PICKED_IMAGE_URI, pickedImageUri)
+                startActivity(intent)
+            }
         } else if (item?.itemId == R.id.action_camera) {
-            displayImages("Camera")
+            displayImages(CAMERA_FOLDER_NAME)
         } else if (item?.itemId == R.id.action_pictures) {
-            displayImages("Pictures")
+            displayImages(PICTURES_FOLDER_NAME)
         }
         return super.onOptionsItemSelected(item)
     }
@@ -95,9 +102,8 @@ class PickImageActivity : AppCompatActivity(), OnImagePickListener {
     }
 
     override fun onImagePicked(imageId: Int) {
-        val uri = Uri.withAppendedPath(IMAGES_PATH, imageId.toString())
-        Glide.with(this).load(uri).into(image_picked)
-        prefs.storeLastImageUri(uri)
+        pickedImageUri = Uri.withAppendedPath(IMAGES_PATH, imageId.toString())
+        Glide.with(this).load(pickedImageUri).into(image_picked)
     }
 
     companion object {

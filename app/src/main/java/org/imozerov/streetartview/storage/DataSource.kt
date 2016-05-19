@@ -77,6 +77,12 @@ class DataSource() : IDataSource {
                 }
     }
 
+    fun insert(artwork: Artwork) {
+        val list = ArrayList<Artwork>()
+        list.add(artwork)
+        insert(list)
+    }
+
     override fun setFavourite(artObjectId: String, isFavourite: Boolean) {
         Observable.create<Unit> {
             with(Realm.getDefaultInstance()) {

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/fill_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="@color/white"/>
+
+    <ImageView
+        android:id="@+id/fill_image"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_below="@+id/fill_toolbar"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
+        android:scaleType="centerCrop"/>
+
+    <EditText
+        android:id="@+id/fill_address"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edittext_height"
+        android:layout_alignBottom="@+id/fill_image"
+        android:layout_alignTop="@+id/fill_image"
+        android:layout_below="@+id/fill_toolbar"
+        android:layout_marginRight="@dimen/edittext_horizontal_margin"
+        android:layout_toEndOf="@+id/fill_image"
+        android:layout_toRightOf="@+id/fill_image"
+        android:background="@android:color/transparent"
+        android:gravity="center_vertical"
+        android:hint="@string/address"/>
+
+    <View
+        android:id="@+id/fill_address_line"
+        style="@style/FillLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/fill_address"
+        android:layout_marginTop="4dp"
+        android:background="@color/colorPrimaryDark"/>
+
+    <EditText
+        android:id="@+id/fill_name"
+        style="@style/FillEditText"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edittext_height"
+        android:layout_below="@+id/fill_address_line"
+        android:gravity="center_vertical"
+        android:hint="@string/name"
+        android:paddingEnd="4dp"
+        android:paddingStart="4dp"/>
+
+    <View
+        android:id="@+id/fill_name_line"
+        style="@style/FillLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/fill_name"
+        android:background="@color/colorPrimaryDark"/>
+
+    <EditText
+        android:id="@+id/fill_description"
+        style="@style/FillEditText"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edittext_height"
+        android:layout_below="@+id/fill_name_line"
+        android:gravity="center_vertical"
+        android:hint="@string/description"
+        android:paddingEnd="4dp"
+        android:paddingStart="4dp"/>
+
+    <View
+        android:id="@+id/fill_description_line"
+        style="@style/FillLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/fill_description"
+        android:background="@color/colorPrimaryDark"/>
+
+    <EditText
+        android:id="@+id/fill_return_address"
+        style="@style/FillEditText"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edittext_height"
+        android:layout_below="@+id/fill_description_line"
+        android:gravity="center_vertical"
+        android:hint="@string/return_address"
+        android:paddingEnd="4dp"
+        android:paddingStart="4dp"/>
+
+    <View
+        android:id="@+id/fill_return_address_line"
+        style="@style/FillLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/fill_return_address"
+        android:background="@color/colorPrimaryDark"/>
+
+</RelativeLayout>

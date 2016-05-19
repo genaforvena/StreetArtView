@@ -6,4 +6,20 @@
     <string name="toast_sort_by_date">Сортировка по времени</string>
     <string name="toast_sort_by_distance">Сортировка по расстоянию</string>
     <string name="share">Поделиться</string>
+
+    <!-- pick image activity-->
+    <string name="action_path">Путь к фото</string>
+    <string name="camera">Камера</string>
+    <string name="pictures">Картинки</string>
+    <string name="non_empty_photo">Фото не должно быть пустым</string>
+    <!-- fill activity-->
+    <string name="name">Название</string>
+    <string name="address">Адрес</string>
+    <string name="description">Описание</string>
+    <string name="save">Сохранить</string>
+    <string name="locate">Определить локацию</string>
+    <string name="latitude">Широта</string>
+    <string name="longitude">Долгота</string>
+    <string name="non_empty_address">Адрес не может быть пустым</string>
+
 </resources>

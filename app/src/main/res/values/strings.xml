@@ -15,4 +15,16 @@
     <string name="action_path">Path</string>
     <string name="camera">Camera</string>
     <string name="pictures">Pictures</string>
+    <string name="non_empty_photo">Photo must be non-empty</string>
+    <!-- fill activity-->
+    <string name="name">Name</string>
+    <string name="address">Address</string>
+    <string name="description">Description</string>
+    <string name="return_address">Return address</string>
+    <string name="save">Save</string>
+    <string name="locate">Locate</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="non_empty_address">Address must be non-empty</string>
+
 </resources>
