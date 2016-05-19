@@ -7,6 +7,7 @@ import org.imozerov.streetartview.network.NetModule
 import org.imozerov.streetartview.ui.add.AddInfoActivity
 import org.imozerov.streetartview.ui.add.PickImageActivity
 import org.imozerov.streetartview.ui.detail.DetailArtObjectActivity
+import org.imozerov.streetartview.ui.detail.DetailArtObjectFragment
 import org.imozerov.streetartview.ui.detail.ImageViewActivity
 import org.imozerov.streetartview.ui.explore.ExploreArtActivity
 import org.imozerov.streetartview.ui.explore.base.ArtListPresenter
@@ -22,5 +23,6 @@ interface AppComponent {
     fun inject(pickImageActivity: PickImageActivity)
     fun inject(addInfoActivity: AddInfoActivity)
     fun inject(detailArtObjectActivity: DetailArtObjectActivity)
+    fun inject(detailArtObjectFragment: DetailArtObjectFragment)
     fun inject(imageViewActivity: ImageViewActivity)
 }

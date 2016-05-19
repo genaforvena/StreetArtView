@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/art_object_detail_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Small Text"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/art_object_detail_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/art_object_detail_author"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:text="Small Text"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+            android:textSize="16sp" />
+
+        <RelativeLayout
+            android:id="@+id/art_object_collapsing_content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_image_max_height"
+            android:layout_below="@+id/art_object_detail_name"
+            android:background="@android:color/white">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/art_object_detail_image"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/detail_image_max_height"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="#ffffff" />
+
+            <TextView
+                android:id="@+id/art_object_images_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="24dp"
+                android:background="@color/grey"
+                android:paddingBottom="6dp"
+                android:paddingEnd="12dp"
+                android:paddingStart="12dp"
+                android:paddingTop="6dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/detail_set_favourite_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/art_object_collapsing_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="4dp"
+            android:background="?android:selectableItemBackground" />
+
+        <ImageButton
+            android:id="@+id/detail_share_button"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignTop="@+id/detail_set_favourite_button"
+            android:layout_toEndOf="@+id/detail_set_favourite_button"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/ic_share_black_24dp" />
+
+        <View
+            android:id="@+id/detail_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/detail_share_button"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="#c7f2eb" />
+
+        <TextView
+            android:id="@+id/art_object_detail_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/detail_divider"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:autoLink="web"
+            android:background="@color/white"
+            android:text="Small Text"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+            android:textColorLink="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/art_object_detail_address"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/art_object_detail_description"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:drawableLeft="@drawable/ic_location_on_black_24dp"
+            android:text="Small Text"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
+
+        <TextView
+            android:id="@+id/art_object_detail_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/detail_divider"
+            android:layout_alignTop="@+id/art_object_detail_address"
+            android:layout_marginRight="10dp"
+            android:text="Small Text"
+            android:textAlignment="textEnd"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
+
+        <FrameLayout
+            android:id="@+id/art_object_detail_map"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/art_object_detail_address"
+            android:layout_marginTop="10dp" />
+
+    </RelativeLayout>
+</ScrollView>

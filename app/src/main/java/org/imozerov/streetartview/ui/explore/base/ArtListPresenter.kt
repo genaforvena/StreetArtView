@@ -62,6 +62,7 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
         view = artView
         (context.applicationContext as StreetArtViewApp).appComponent!!.inject(this)
         currentLocation = prefs.getCachedLocation()
+        LocationService.getLocationOnce(context.applicationContext)
 
         sortOrder = prefs.getSortOrder()
 
