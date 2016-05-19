@@ -9,41 +9,34 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/art_object_detail_name"
+            android:id="@+id/art_object_detail_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="Small Text"
-            android:layout_margin="10dp"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
-
-        <TextView
-            android:id="@+id/art_object_detail_address"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/art_object_detail_name"
-            android:text="Small Text"
             android:layout_marginLeft="10dp"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
+            android:layout_marginTop="10dp"
+            android:text="Small Text"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/art_object_detail_distance"
+            android:id="@+id/art_object_detail_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/art_object_detail_name"
+            android:layout_below="@+id/art_object_detail_author"
             android:text="Small Text"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-            android:textAlignment="textEnd" />
+            android:textSize="16sp" />
 
         <RelativeLayout
             android:id="@+id/art_object_collapsing_content"
             android:layout_width="match_parent"
             android:layout_height="@dimen/detail_image_max_height"
-            android:layout_below="@+id/art_object_detail_address"
+            android:layout_below="@+id/art_object_detail_name"
             android:background="@android:color/white">
 
             <android.support.v4.view.ViewPager
@@ -71,50 +64,76 @@
 
         <ImageButton
             android:id="@+id/detail_set_favourite_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_margin="10dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="10dp"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/art_object_collapsing_content"
             android:background="@color/white" />
 
         <ImageButton
             android:id="@+id/detail_share_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:background="@color/white"
             android:src="@drawable/ic_share_black_24dp"
-            android:layout_marginRight="10dp"
             android:layout_alignTop="@+id/detail_set_favourite_button"
             android:layout_toEndOf="@+id/detail_set_favourite_button" />
 
-        <TextView
-            android:id="@+id/art_object_detail_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/detail_set_favourite_button"
-            android:layout_margin="4dp"
-            android:text="Small Text"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
+        <View
+            android:id="@+id/detail_divider"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/detail_share_button"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#c7f2eb" />
 
         <TextView
             android:id="@+id/art_object_detail_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/art_object_detail_author"
+            android:layout_below="@+id/detail_divider"
             android:background="@color/white"
-            android:layout_margin="4dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:text="Small Text"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
+
+        <TextView
+            android:id="@+id/art_object_detail_address"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/art_object_detail_description"
+            android:text="Small Text"
+            android:drawableLeft="@drawable/ic_location_on_black_24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
+
+        <TextView
+            android:id="@+id/art_object_detail_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Small Text"
+            android:layout_marginRight="10dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+            android:textAlignment="textEnd"
+            android:layout_alignTop="@+id/art_object_detail_address"
+            android:layout_alignEnd="@+id/detail_divider" />
 
         <FrameLayout
             android:id="@+id/art_object_detail_map"
             android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
             android:layout_height="300dp"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/art_object_detail_description" />
+            android:layout_below="@+id/art_object_detail_address" />
 
     </RelativeLayout>
 </ScrollView>

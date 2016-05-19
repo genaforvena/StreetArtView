@@ -104,7 +104,7 @@ class DetailArtObjectFragment : BottomSheetFragment() {
     }
 
     private fun bindViews() {
-        art_object_detail_name.text = "\"${artObjectUi.name}\""
+        art_object_detail_name.text = artObjectUi.name.trim()
         art_object_detail_author.text = artObjectUi.authorsNames()
         if (artObjectUi.description.isBlank()) {
             art_object_detail_description.visibility = View.GONE

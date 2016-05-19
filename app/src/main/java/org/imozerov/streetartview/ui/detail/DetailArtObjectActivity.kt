@@ -2,6 +2,7 @@ package org.imozerov.streetartview.ui.detail
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import org.imozerov.streetartview.R
 
 class DetailArtObjectActivity : AppCompatActivity() {
@@ -15,10 +16,19 @@ class DetailArtObjectActivity : AppCompatActivity() {
         val fragment = DetailArtObjectFragment.newInstance(id)
 
         supportActionBar?.title = name
+        supportActionBar?.setHomeButtonEnabled(true)
 
         supportFragmentManager.beginTransaction()
                 .replace(R.id.detail_fragment_container, fragment)
                 .commit();
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     companion object {
