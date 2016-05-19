@@ -70,7 +70,7 @@
             android:layout_below="@+id/art_object_collapsing_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="4dp"
-            android:background="@color/white" />
+            android:background="?android:selectableItemBackground" />
 
         <ImageButton
             android:id="@+id/detail_share_button"
@@ -78,7 +78,7 @@
             android:layout_height="36dp"
             android:layout_alignTop="@+id/detail_set_favourite_button"
             android:layout_toEndOf="@+id/detail_set_favourite_button"
-            android:background="@color/white"
+            android:background="?android:selectableItemBackground"
             android:src="@drawable/ic_share_black_24dp" />
 
         <View
