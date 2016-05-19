@@ -30,7 +30,9 @@
         </activity>
 
         <activity
+            android:theme="@style/Theme.AppCompat.Light"
             android:name=".ui.detail.DetailArtObjectActivity"
+            android:parentActivityName=".ui.explore.ExploreArtActivity"
             android:screenOrientation="userPortrait" />
 
         <activity

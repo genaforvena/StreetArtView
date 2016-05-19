@@ -27,7 +27,6 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.fragment_detail.*
 import org.imozerov.streetartview.R
-import org.imozerov.streetartview.R.layout.fragment_detail
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.location.NIZHNY_NOVGOROD_LOCATION
 import org.imozerov.streetartview.location.addArtObjectSimpleMarker
@@ -61,19 +60,13 @@ class DetailArtObjectFragment : BottomSheetFragment() {
 
     val compositeSubscription: CompositeSubscription = CompositeSubscription()
 
-    private val detailImageMinHeight by lazy { activity.resources.getDimension(R.dimen.detail_image_min_height) }
-    private val detailImageMaxHeight by lazy { activity.resources.getDimension(R.dimen.detail_image_max_height) }
-
-    private var detailImageMinWidth: Float = 0f
-    private var detailImageMaxWidth: Float = 0f
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity.applicationContext as StreetArtViewApp).appComponent!!.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(fragment_detail, container, false)
+        return inflater!!.inflate(R.layout.fragment_detail, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -111,15 +104,7 @@ class DetailArtObjectFragment : BottomSheetFragment() {
     }
 
     private fun bindViews() {
-        collapsing_toolbar.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                detailImageMaxWidth = collapsing_toolbar.width.toFloat()
-                detailImageMinWidth = detailImageMaxWidth * detailImageMinHeight / detailImageMaxHeight
-                collapsing_toolbar.viewTreeObserver.removeOnGlobalLayoutListener(this)
-            }
-        })
-
-        art_object_detail_name.text = "\"${artObjectUi.name}\""
+        art_object_detail_name.text = artObjectUi.name.trim()
         art_object_detail_author.text = artObjectUi.authorsNames()
         if (artObjectUi.description.isBlank()) {
             art_object_detail_description.visibility = View.GONE
@@ -162,15 +147,11 @@ class DetailArtObjectFragment : BottomSheetFragment() {
 
             with (it) {
                 isMyLocationEnabled = true
+                uiSettings.isScrollGesturesEnabled = false
+                uiSettings.isMyLocationButtonEnabled = false
+                uiSettings.isZoomControlsEnabled = true
                 addArtObjectSimpleMarker(artObjectUi)
                 moveCamera(CameraUpdateFactory.newLatLngZoom(artObjectLocation, 14f))
-
-                setOnMapLoadedCallback {
-                    val builder = LatLngBounds.Builder()
-                    builder.include(artObjectLocation)
-                    builder.include(userLocation)
-                    animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 80))
-                }
             }
         }
     }
@@ -221,32 +202,6 @@ class DetailArtObjectFragment : BottomSheetFragment() {
             detail_set_favourite_button.setImageDrawable(activity.getDrawableSafely(R.drawable.ic_star_border_black_24dp))
         }
     }
-
-    override fun getViewTransformer(): ViewTransformer {
-        return object : BaseViewTransformer() {
-            override fun transformView(translation: Float, maxTranslation: Float, peekedTranslation: Float, parent: BottomSheetLayout, view: View) {
-
-                val progress = (translation - peekedTranslation) / (maxTranslation - peekedTranslation)
-
-                art_object_collapsing_content.layoutParams.height = (detailImageMinHeight + progress * (detailImageMaxHeight - detailImageMinHeight)).toInt()
-                collapsing_toolbar.layoutParams.height = (detailImageMinHeight + progress * (detailImageMaxHeight - detailImageMinHeight)).toInt()
-
-                val lp: CollapsingToolbarLayout.LayoutParams = art_object_collapsing_content.layoutParams as CollapsingToolbarLayout.LayoutParams
-
-                if (translation == maxTranslation) {
-                    lp.width = RelativeLayout.LayoutParams.MATCH_PARENT
-                    lp.height = detailImageMaxHeight.toInt()
-                } else {
-                    lp.width = (detailImageMinWidth + (detailImageMaxWidth - detailImageMinWidth) * progress).toInt();
-                    lp.height = (detailImageMinHeight + (detailImageMaxHeight - detailImageMinHeight) * progress).toInt();
-                }
-
-                art_object_collapsing_content.requestLayout()
-                collapsing_toolbar.requestLayout()
-            }
-        }
-    }
-
 
     companion object {
         val EXTRA_KEY_ART_OBJECT_DETAIL_ID = "EXTRA_KEY_ART_OBJECT_DETAIL_ID"
