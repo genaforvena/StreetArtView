@@ -147,15 +147,11 @@ class DetailArtObjectFragment : BottomSheetFragment() {
 
             with (it) {
                 isMyLocationEnabled = true
+                uiSettings.isScrollGesturesEnabled = false
+                uiSettings.isMyLocationButtonEnabled = false
+                uiSettings.isZoomControlsEnabled = true
                 addArtObjectSimpleMarker(artObjectUi)
                 moveCamera(CameraUpdateFactory.newLatLngZoom(artObjectLocation, 14f))
-
-                setOnMapLoadedCallback {
-                    val builder = LatLngBounds.Builder()
-                    builder.include(artObjectLocation)
-                    builder.include(userLocation)
-                    animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 80))
-                }
             }
         }
     }
