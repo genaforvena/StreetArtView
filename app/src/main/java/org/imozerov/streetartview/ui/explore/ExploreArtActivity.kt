@@ -33,6 +33,7 @@ import org.imozerov.streetartview.ui.extensions.addAll
 import org.imozerov.streetartview.ui.extensions.animateToGone
 import org.imozerov.streetartview.ui.extensions.animateToVisible
 import org.imozerov.streetartview.ui.extensions.getDrawableSafely
+import org.imozerov.streetartview.ui.model.ArtObjectUi
 import org.jetbrains.anko.toast
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
@@ -83,10 +84,11 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         bottomBar!!.onSaveInstanceState(outState)
     }
 
-    override fun openArtObjectDetails(id: String?) {
-        Log.d(TAG, "openArtObjectDetails($id)")
+    override fun openArtObjectDetails(artObjectUi: ArtObjectUi) {
+        Log.d(TAG, "openArtObjectDetails($artObjectUi)")
         val intent = Intent(this, DetailArtObjectActivity::class.java)
-        intent.putExtra(DetailArtObjectFragment.EXTRA_KEY_ART_OBJECT_DETAIL_ID, id)
+        intent.putExtra(DetailArtObjectFragment.EXTRA_KEY_ART_OBJECT_DETAIL_ID, artObjectUi.id)
+        intent.putExtra(DetailArtObjectActivity.EXTRA_KEY_NAME, artObjectUi.name)
         startActivity(intent)
     }
 

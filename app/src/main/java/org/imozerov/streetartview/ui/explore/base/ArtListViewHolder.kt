@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.art_object_in_list.view.*
 import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
+import org.imozerov.streetartview.ui.model.ArtObjectUi
 
 /**
  * Created by sergei on 09.02.16.
@@ -13,7 +14,7 @@ import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 class ArtListViewHolder(context: Context, itemView: View) : RecyclerView.ViewHolder(itemView) {
     internal var thumb: ImageView
 
-    internal var artObjectId: String? = null
+    internal var artObject: ArtObjectUi? = null
 
     init {
         val detailOpener: ArtObjectDetailOpener
@@ -24,6 +25,6 @@ class ArtListViewHolder(context: Context, itemView: View) : RecyclerView.ViewHol
         }
 
         thumb = itemView.art_object_in_list_image
-        itemView.setOnClickListener { v -> detailOpener.openArtObjectDetails(artObjectId) }
+        itemView.setOnClickListener { v -> detailOpener.openArtObjectDetails(artObject!!) }
     }
 }
