@@ -50,6 +50,14 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     @Inject
     lateinit var prefs: SharedPreferences
 
+    var artMapFragment: ArtMapFragment? = null
+    var artListFragment: ArtListFragment? = null
+    var favouritesListFragment: FavouritesListFragment? = null
+
+    val ART_MAP_FRAGMENT_TAG = "artMapFragment"
+    val ART_LIST_FRAGMENT_TAG = "artListFragment"
+    val FAVOURITES_LIST_FRAGMENT_TAG = "favouritesListFragment"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
         super.onCreate(savedInstanceState)
@@ -57,8 +65,37 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         setContentView(R.layout.activity_explore_art)
 
         bottomBar = BottomBar.attach(this, savedInstanceState)
+
+        initFragments()
         initTabs()
         initSortOrderIcon(prefs.getSortOrder())
+    }
+
+    fun initFragments() {
+        artMapFragment = supportFragmentManager.findFragmentByTag(ART_MAP_FRAGMENT_TAG) as ArtMapFragment?
+        artListFragment = supportFragmentManager.findFragmentByTag(ART_LIST_FRAGMENT_TAG) as ArtListFragment?
+        favouritesListFragment = supportFragmentManager.findFragmentByTag(FAVOURITES_LIST_FRAGMENT_TAG) as FavouritesListFragment?
+
+        if(artMapFragment == null) {
+            artMapFragment = ArtMapFragment.newInstance()
+            supportFragmentManager.beginTransaction()
+                    .add(R.id.main_content, artMapFragment!!, ART_MAP_FRAGMENT_TAG)
+                    .commit()
+        }
+
+        if(artListFragment == null) {
+            artListFragment = ArtListFragment.newInstance()
+            supportFragmentManager.beginTransaction()
+                    .add(R.id.main_content, artListFragment!!, ART_LIST_FRAGMENT_TAG)
+                    .commit()
+        }
+
+        if(favouritesListFragment == null) {
+            favouritesListFragment = FavouritesListFragment.newInstance()
+            supportFragmentManager.beginTransaction()
+                    .add(R.id.main_content, favouritesListFragment!!, FAVOURITES_LIST_FRAGMENT_TAG)
+                    .commit()
+        }
     }
 
     override fun onStart() {
@@ -105,15 +142,16 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
             }
 
             override fun onTabSelected(position: Int) {
-                val fragmentToShow: Fragment = if (position == 0) {
-                    ArtMapFragment.newInstance()
-                } else if (position == 1) {
-                    ArtListFragment.newInstance()
-                } else {
-                    FavouritesListFragment.newInstance()
+                val transaction = supportFragmentManager.beginTransaction()
+                if(position == 0) {
+                    transaction.show(artMapFragment).hide(artListFragment).hide(favouritesListFragment)
+                } else if(position == 1) {
+                    transaction.hide(artMapFragment).show(artListFragment).hide(favouritesListFragment)
+                } else if(position == 2) {
+                    transaction.hide(artMapFragment).hide(artListFragment).show(favouritesListFragment)
                 }
+                transaction.commit()
 
-                supportFragmentManager.beginTransaction().replace(R.id.main_content, fragmentToShow, CURRENT_FRAGMENT_TAG).commit()
                 closeSearchView()
 
                 if (explore_floating_action_button_sort_by.isShown) {
