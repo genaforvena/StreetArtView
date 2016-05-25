@@ -156,7 +156,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         openBottomSheet(id)
     }
 
-    private fun hideArtObjectDigest() {
+    fun hideArtObjectDigest() {
         if (bottom_sheet.isSheetShowing) {
             bottom_sheet.dismissSheet()
         }

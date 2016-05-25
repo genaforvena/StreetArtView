@@ -209,6 +209,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     private fun openSearchView() {
+        artMapFragment?.hideArtObjectDigest()
         mainMenu?.findItem(R.id.action_search)?.isVisible = false
         search_view.animateToVisible()
     }
