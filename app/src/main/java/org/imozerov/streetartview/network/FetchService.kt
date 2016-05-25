@@ -4,6 +4,8 @@ import android.app.IntentService
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.imozerov.streetartview.StreetArtViewApp
 import org.imozerov.streetartview.bus.RxBus
 import org.imozerov.streetartview.bus.events.FetchFinishedEvent
@@ -12,6 +14,8 @@ import org.imozerov.streetartview.network.model.Artwork
 import org.imozerov.streetartview.storage.IDataSource
 import retrofit.Response
 import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 class FetchService : IntentService("FetchService") {
@@ -45,6 +49,18 @@ class FetchService : IntentService("FetchService") {
        restClient.artWorksEndpoint.list()
                 .doOnNext { rxBus.post(FetchFinishedEvent(true)) }
                 .doOnError { rxBus.post(FetchFinishedEvent(false)) }
+                .doOnNext {
+                    Observable.from(it)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(Schedulers.io())
+                            .map { it.photos }
+                            .filter { it != null && it.size > 0 }
+                            .map { it[0].big }
+                            .filter { it != null && it.isNotBlank() }
+                            // Otherwise Glide throws an exception
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe { Glide.with(applicationContext).load(it).diskCacheStrategy(DiskCacheStrategy.ALL).preload() }
+                }
                 .subscribe(
                         { dataSource.insert(it) },
                         { Log.w(TAG, "Unable to sync art objects with server", it) }
