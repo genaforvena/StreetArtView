@@ -39,22 +39,17 @@ import javax.inject.Inject
 class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     val TAG = "ExploreArtActivity"
 
-    val compositeSubscription = CompositeSubscription()
-
-    var bottomBar: BottomBar? = null
-
-    var mainMenu: Menu? = null
-
     @Inject
     lateinit var prefs: SharedPreferences
+
+    val compositeSubscription = CompositeSubscription()
+
+    var mainMenu: Menu? = null
+    var bottomBar: BottomBar? = null
 
     var artMapFragment: ArtMapFragment? = null
     var artListFragment: ArtListFragment? = null
     var favouritesListFragment: FavouritesListFragment? = null
-
-    val ART_MAP_FRAGMENT_TAG = "artMapFragment"
-    val ART_LIST_FRAGMENT_TAG = "artListFragment"
-    val FAVOURITES_LIST_FRAGMENT_TAG = "favouritesListFragment"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate()")
@@ -71,6 +66,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         mainMenu = menu
+        mainMenu!!.findItem(R.id.action_sort)?.isVisible = false
         return true
     }
 
@@ -90,7 +86,6 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
 
     private fun initTopBar() {
         setSupportActionBar(main_toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
         initSortOrderIcon(prefs.getSortOrder())
     }
 
@@ -169,9 +164,18 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
             override fun onTabSelected(position: Int) {
                 val transaction = supportFragmentManager.beginTransaction()
                 when (position) {
-                    0 -> transaction.show(artMapFragment).hide(artListFragment).hide(favouritesListFragment)
-                    1 -> transaction.hide(artMapFragment).show(artListFragment).hide(favouritesListFragment)
-                    2 -> transaction.hide(artMapFragment).hide(artListFragment).show(favouritesListFragment)
+                    0 -> {
+                        transaction.show(artMapFragment).hide(artListFragment).hide(favouritesListFragment)
+                        mainMenu?.findItem(R.id.action_sort)?.isVisible = false
+                    }
+                    1 -> {
+                        transaction.hide(artMapFragment).show(artListFragment).hide(favouritesListFragment)
+                        mainMenu?.findItem(R.id.action_sort)?.isVisible = true
+                    }
+                    2 -> {
+                        transaction.hide(artMapFragment).hide(artListFragment).show(favouritesListFragment)
+                        mainMenu?.findItem(R.id.action_sort)?.isVisible = true
+                    }
                 }
                 transaction.commit()
             }
@@ -221,5 +225,11 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
             val inputMgr = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMgr.hideSoftInputFromWindow(currentFocus.windowToken, 0)
         }
+    }
+
+    companion object {
+        val ART_MAP_FRAGMENT_TAG = "artMapFragment"
+        val ART_LIST_FRAGMENT_TAG = "artListFragment"
+        val FAVOURITES_LIST_FRAGMENT_TAG = "favouritesListFragment"
     }
 }
