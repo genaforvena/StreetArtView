@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/main_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="4dp"
+        android:background="@color/colorAccent"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <android.support.v7.widget.SearchView
             android:id="@+id/search_view"
@@ -17,52 +21,11 @@
             android:layout_height="wrap_content"
             android:visibility="gone" />
 
-    </android.support.design.widget.AppBarLayout>
+    </android.support.v7.widget.Toolbar>
 
     <FrameLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom|end">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/explore_floating_action_button_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/explore_floating_action_button_expand"
-            android:layout_toStartOf="@+id/explore_floating_action_button_expand"
-            android:src="@drawable/ic_search_black_24dp"
-            android:visibility="gone"
-            app:elevation="4dp"
-            app:fabSize="mini" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/explore_floating_action_button_sort_by"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/explore_floating_action_button_expand"
-            android:layout_toStartOf="@+id/explore_floating_action_button_expand"
-            android:src="@drawable/ic_schedule_black_24dp"
-            android:visibility="gone"
-            app:elevation="4dp"
-            app:fabSize="mini" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/explore_floating_action_button_expand"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical|end"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="-24dp"
-            app:elevation="4dp"
-            app:fabSize="mini" />
-
-    </RelativeLayout>
-
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

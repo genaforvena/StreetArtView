@@ -38,7 +38,7 @@ fun Activity.getDrawableSafely(id: Int): Drawable {
 }
 
 fun SearchView.animateToGone() {
-    animate().translationY(height.toFloat())
+    animate().translationX(-height.toFloat())
             .alpha(0.0f)
             .setDuration(300)
             .setListener(object : AnimatorListenerAdapter() {
@@ -51,7 +51,7 @@ fun SearchView.animateToGone() {
 }
 
 fun SearchView.animateToVisible() {
-    animate().translationY(0f)
+    animate().translationX(0f)
             .alpha(1f)
             .setDuration(300)
             .setListener(object : AnimatorListenerAdapter() {

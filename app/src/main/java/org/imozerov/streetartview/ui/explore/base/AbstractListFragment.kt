@@ -18,8 +18,6 @@ import java.util.*
  * Created by imozerov on 21.03.16.
  */
 abstract class AbstractListFragment : Fragment(), Filterable, ArtView {
-    private val TAG = "AbstractListFragment"
-
     protected abstract val presenter: ArtListPresenter
 
     private var rootView: View? = null
