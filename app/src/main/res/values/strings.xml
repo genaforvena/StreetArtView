@@ -9,4 +9,6 @@
     <string name="toast_sort_by_distance">Sort by distance</string>
 
     <string name="title_activity_image_view" translatable="false">ImageViewActivity</string>
+    <string name="action_sort">Sort</string>
+    <string name="action_search">Search</string>
 </resources>
