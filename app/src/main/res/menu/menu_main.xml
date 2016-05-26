@@ -9,6 +9,12 @@
         android:title="@string/action_sort"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/action_track_location"
+        android:icon="@drawable/ic_gps_fixed_black_24dp"
+        android:title="@string/action_track_location"
+        app:showAsAction="ifRoom"/>
+
     <item android:id="@+id/action_search"
         android:title="@string/action_search"
         android:icon="@drawable/ic_search_black_24dp"
