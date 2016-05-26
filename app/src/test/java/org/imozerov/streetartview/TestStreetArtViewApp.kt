@@ -16,4 +16,8 @@ class TestStreetArtViewApp : StreetArtViewApp() {
                 .netModule(NetModule(mockUrl))
                 .build()
     }
+
+    override fun initRealm() {
+
+    }
 }
