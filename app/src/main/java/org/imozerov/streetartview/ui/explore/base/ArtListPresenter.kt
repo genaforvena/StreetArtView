@@ -137,6 +137,7 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
         return fetchData()
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .observeOn(computationScheduler())
+                .filter { it.size > 0 }
                 .doOnNext {
                     Observable.from(it)
                             .doOnNext { it.distanceTo = LatLng(it.lat, it.lng).distanceTo(currentLocation ?: NIZHNY_NOVGOROD_LOCATION).toInt() }
