@@ -2,7 +2,6 @@ package org.imozerov.streetartview
 
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
@@ -22,8 +21,7 @@ open class StreetArtViewApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val config = RealmConfiguration.Builder(this).name("art.realm").deleteRealmIfMigrationNeeded().schemaVersion(2).migration { realm, oldVersion, newVersion -> }.build()
-        Realm.setDefaultConfiguration(config)
+        initRealm()
 
         appComponent = DaggerAppComponent.builder().appModule(AppModule(this)).netModule(NetModule(PRODUCTION_API)).build()
 
@@ -31,6 +29,11 @@ open class StreetArtViewApp : Application() {
 
         FetchService.startFetch(this)
         LocationService.getLocationOnce(this)
+    }
+
+    open fun initRealm() {
+        val config = RealmConfiguration.Builder(this).name("art.realm").deleteRealmIfMigrationNeeded().schemaVersion(2).migration { realm, oldVersion, newVersion -> }.build()
+        Realm.setDefaultConfiguration(config)
     }
 
     companion object {

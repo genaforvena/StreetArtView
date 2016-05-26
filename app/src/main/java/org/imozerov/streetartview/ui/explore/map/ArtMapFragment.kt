@@ -91,6 +91,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
                 setOnInfoWindowClickListener(clusterManager)
 
                 uiSettings.isMapToolbarEnabled = false
+                uiSettings.isZoomControlsEnabled = true
                 isMyLocationEnabled = true
                 moveCamera(CameraUpdateFactory.newLatLngZoom(NIZHNY_NOVGOROD_LOCATION, 11f))
                 setOnMapClickListener {
