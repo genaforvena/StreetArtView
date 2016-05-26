@@ -123,10 +123,6 @@ abstract class ArtListPresenter : SharedPreferences.OnSharedPreferenceChangeList
         fetchSubscription = createDataFetchSubscription()
     }
 
-    fun getArtObject(id: String): ArtObjectUi {
-        return dataSource.getArtObject(id)
-    }
-
     fun refreshData() {
         FetchService.startFetch(application)
         LocationService.getLocationOnce(application)
