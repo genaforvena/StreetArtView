@@ -38,6 +38,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     private var clusterManager: ClusterManager<ArtObjectClusterItem>? = null
 
     var isLocationTracking = false
+        private set
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
