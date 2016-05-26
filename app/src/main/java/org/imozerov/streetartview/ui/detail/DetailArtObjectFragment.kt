@@ -114,13 +114,6 @@ class DetailArtObjectFragment : BottomSheetFragment() {
 
         art_object_detail_address.text = artObjectUi.address
         setFavouriteIcon(artObjectUi.isFavourite)
-
-        val picsNumber = artObjectUi.picsUrls.size
-        if (picsNumber > 1) {
-            art_object_images_number.text = resources.getQuantityString(R.plurals.photos, picsNumber, picsNumber)
-        } else {
-            art_object_images_number.visibility = View.GONE
-        }
     }
 
 
