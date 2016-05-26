@@ -216,7 +216,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     private fun changeLocationTracking() {
-        if (artMapFragment?.isLocationTracking() == true) {
+        if (artMapFragment?.isLocationTracking == true) {
             artMapFragment?.stopLocationTracking()
             mainMenu?.findItem(R.id.action_track_location)?.icon = getDrawableSafely(R.drawable.ic_gps_fixed_black_24dp)
         } else {

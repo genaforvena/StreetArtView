@@ -11,7 +11,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
@@ -38,7 +37,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     private var artObjectDetailOpener: ArtObjectDetailOpener? = null
     private var clusterManager: ClusterManager<ArtObjectClusterItem>? = null
 
-    private var isLocationTracking = false
+    var isLocationTracking = false
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -137,10 +136,6 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     override fun onDetach() {
         super.onDetach()
         artObjectDetailOpener = null
-    }
-
-    fun isLocationTracking() : Boolean {
-        return isLocationTracking
     }
 
     fun startLocationTracking() {
