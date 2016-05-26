@@ -11,7 +11,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
@@ -37,6 +36,9 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
     private var artObjectDetailOpener: ArtObjectDetailOpener? = null
     private var clusterManager: ClusterManager<ArtObjectClusterItem>? = null
+
+    var isLocationTracking = false
+        private set
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -92,7 +94,6 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
                 uiSettings.isMapToolbarEnabled = false
                 uiSettings.isZoomControlsEnabled = true
-                isMyLocationEnabled = true
                 moveCamera(CameraUpdateFactory.newLatLngZoom(NIZHNY_NOVGOROD_LOCATION, 11f))
                 setOnMapClickListener {
                     if (clickedClusterItem != null) {
@@ -120,13 +121,11 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     override fun onStart() {
         super.onStart()
         presenter.bindView(this, context)
-        startLocationTracking()
     }
 
     override fun onStop() {
         super.onStop()
         presenter.unbindView()
-        stopLocationTracking()
     }
 
     override fun onDestroy() {
@@ -140,19 +139,21 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         artObjectDetailOpener = null
     }
 
-    private fun startLocationTracking() {
+    fun startLocationTracking() {
         (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as? SupportMapFragment)?.getMapAsync {
             it.isMyLocationEnabled = true
+            isLocationTracking = true
         }
     }
 
-    private fun stopLocationTracking() {
+    fun stopLocationTracking() {
         (childFragmentManager.findFragmentByTag(FRAGMENT_TAG) as? SupportMapFragment)?.getMapAsync {
             it.isMyLocationEnabled = false
+            isLocationTracking = false
         }
     }
 
-    private fun showArtObjectDigest(id: String) {
+    fun showArtObjectDigest(id: String) {
         Log.v(TAG, "showArtObjectDigest($id)")
         openBottomSheet(id)
     }

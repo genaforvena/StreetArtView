@@ -80,6 +80,10 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
                 changeSortOrder()
                 true
             }
+            R.id.action_track_location -> {
+                changeLocationTracking()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -167,14 +171,23 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
                     0 -> {
                         transaction.show(artMapFragment).hide(artListFragment).hide(favouritesListFragment)
                         mainMenu?.findItem(R.id.action_sort)?.isVisible = false
+                        mainMenu?.findItem(R.id.action_track_location)?.isVisible = true
                     }
                     1 -> {
                         transaction.hide(artMapFragment).show(artListFragment).hide(favouritesListFragment)
                         mainMenu?.findItem(R.id.action_sort)?.isVisible = true
+                        mainMenu?.findItem(R.id.action_track_location)?.isVisible = false
+                        mainMenu?.findItem(R.id.action_track_location)?.icon = getDrawableSafely(R.drawable.ic_gps_fixed_black_24dp)
+                        artMapFragment?.stopLocationTracking()
+                        artMapFragment?.hideArtObjectDigest()
                     }
                     2 -> {
                         transaction.hide(artMapFragment).hide(artListFragment).show(favouritesListFragment)
                         mainMenu?.findItem(R.id.action_sort)?.isVisible = true
+                        mainMenu?.findItem(R.id.action_track_location)?.isVisible = false
+                        mainMenu?.findItem(R.id.action_track_location)?.icon = getDrawableSafely(R.drawable.ic_gps_fixed_black_24dp)
+                        artMapFragment?.stopLocationTracking()
+                        artMapFragment?.hideArtObjectDigest()
                     }
                 }
                 transaction.commit()
@@ -200,6 +213,16 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
         artMapFragment?.applyFilter(query.toString())
         artListFragment?.applyFilter(query.toString())
         favouritesListFragment?.applyFilter(query.toString())
+    }
+
+    private fun changeLocationTracking() {
+        if (artMapFragment?.isLocationTracking == true) {
+            artMapFragment?.stopLocationTracking()
+            mainMenu?.findItem(R.id.action_track_location)?.icon = getDrawableSafely(R.drawable.ic_gps_fixed_black_24dp)
+        } else {
+            artMapFragment?.startLocationTracking()
+            mainMenu?.findItem(R.id.action_track_location)?.icon = getDrawableSafely(R.drawable.ic_location_disabled_black_24dp)
+        }
     }
 
     private fun changeSortOrder() {

@@ -6,4 +6,7 @@
     <string name="toast_sort_by_date">Сортировка по времени</string>
     <string name="toast_sort_by_distance">Сортировка по расстоянию</string>
     <string name="share">Поделиться</string>
+    <string name="action_sort">Сортировка</string>
+    <string name="action_search">Поиск</string>
+    <string name="action_track_location">Отслеживание локации</string>
 </resources>
