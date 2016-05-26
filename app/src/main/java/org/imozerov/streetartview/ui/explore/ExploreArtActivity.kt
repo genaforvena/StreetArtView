@@ -177,6 +177,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
                         transaction.hide(artMapFragment).show(artListFragment).hide(favouritesListFragment)
                         mainMenu?.findItem(R.id.action_sort)?.isVisible = true
                         mainMenu?.findItem(R.id.action_track_location)?.isVisible = false
+                        mainMenu?.findItem(R.id.action_track_location)?.icon = getDrawableSafely(R.drawable.ic_gps_fixed_black_24dp)
                         artMapFragment?.stopLocationTracking()
                         artMapFragment?.hideArtObjectDigest()
                     }
@@ -184,6 +185,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
                         transaction.hide(artMapFragment).hide(artListFragment).show(favouritesListFragment)
                         mainMenu?.findItem(R.id.action_sort)?.isVisible = true
                         mainMenu?.findItem(R.id.action_track_location)?.isVisible = false
+                        mainMenu?.findItem(R.id.action_track_location)?.icon = getDrawableSafely(R.drawable.ic_gps_fixed_black_24dp)
                         artMapFragment?.stopLocationTracking()
                         artMapFragment?.hideArtObjectDigest()
                     }
