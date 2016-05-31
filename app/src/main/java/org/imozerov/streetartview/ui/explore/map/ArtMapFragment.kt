@@ -8,12 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
-import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import kotlinx.android.synthetic.main.fragment_art_map.*
 import kotlinx.android.synthetic.main.fragment_art_map.view.*
 import org.imozerov.streetartview.R
@@ -63,13 +59,13 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
         mapFragment.getMapAsync { gMap ->
             clusterManager = ClusterManager(context, gMap)
-            val renderer = ArtObjectRenderer(context, gMap, clusterManager)
+            val renderer = ArtObjectRenderer(context, gMap, clusterManager!!)
             with (clusterManager!!) {
                 setRenderer(renderer)
 
                 setOnClusterClickListener {
                     if (clickedClusterItem != null) {
-                        renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.defaultMarker())
+                        renderer.deselectItem(clickedClusterItem)
                     }
                     clickedClusterItem = null
                     gMap.zoomTo(it.position)
@@ -79,10 +75,10 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
                 setOnClusterItemClickListener {
                     if (clickedClusterItem != null) {
-                        renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.defaultMarker())
+                        renderer.deselectItem(clickedClusterItem)
                     }
                     clickedClusterItem = it
-                    renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    renderer.selectItem(clickedClusterItem)
                     showArtObjectDigest(it.artObjectUi.id)
                     true
                 }
@@ -97,7 +93,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
                 moveCamera(CameraUpdateFactory.newLatLngZoom(NIZHNY_NOVGOROD_LOCATION, 11f))
                 setOnMapClickListener {
                     if (clickedClusterItem != null) {
-                        renderer.getMarker(clickedClusterItem)?.setIcon(BitmapDescriptorFactory.defaultMarker())
+                        renderer.deselectItem(clickedClusterItem)
                     }
                     clickedClusterItem = null
                     hideArtObjectDigest()
@@ -189,13 +185,6 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         }
     }
 }
-
-class ArtObjectRenderer : DefaultClusterRenderer<ArtObjectClusterItem> {
-    constructor(context: Context?, map: GoogleMap?, clusterManager: ClusterManager<ArtObjectClusterItem>?) : super(context, map, clusterManager)
-
-    override fun shouldRenderAsCluster(cluster: Cluster<ArtObjectClusterItem>?): Boolean = cluster!!.size > 3
-}
-
 
 
 
