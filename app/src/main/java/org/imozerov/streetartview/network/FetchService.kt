@@ -49,18 +49,6 @@ class FetchService : IntentService("FetchService") {
        restClient.artWorksEndpoint.list()
                 .doOnNext { rxBus.post(FetchFinishedEvent(true)) }
                 .doOnError { rxBus.post(FetchFinishedEvent(false)) }
-                .doOnNext {
-                    Observable.from(it)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(Schedulers.io())
-                            .map { it.photos }
-                            .filter { it != null && it.size > 0 }
-                            .map { it[0].big }
-                            .filter { it != null && it.isNotBlank() }
-                            // Otherwise Glide throws an exception
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe { Glide.with(applicationContext).load(it).diskCacheStrategy(DiskCacheStrategy.ALL).preload() }
-                }
                 .subscribe(
                         { dataSource.insert(it) },
                         { Log.w(TAG, "Unable to sync art objects with server", it) }
