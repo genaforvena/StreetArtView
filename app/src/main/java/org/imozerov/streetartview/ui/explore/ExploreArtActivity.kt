@@ -9,6 +9,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView
 import com.jakewharton.rxbinding.view.RxView
@@ -24,6 +26,7 @@ import org.imozerov.streetartview.ui.detail.interfaces.ArtObjectDetailOpener
 import org.imozerov.streetartview.ui.explore.all.ArtListFragment
 import org.imozerov.streetartview.ui.explore.favourites.FavouritesListFragment
 import org.imozerov.streetartview.ui.explore.map.ArtMapFragment
+import org.imozerov.streetartview.ui.explore.map.TouchableWrapper
 import org.imozerov.streetartview.ui.explore.sort.SortOrder
 import org.imozerov.streetartview.ui.explore.sort.getSortOrder
 import org.imozerov.streetartview.ui.explore.sort.swapSortOrder
@@ -36,7 +39,8 @@ import org.jetbrains.anko.toast
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
-class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
+class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener, TouchableWrapper.UpdateMapAfterUserInteraction {
+
     val TAG = "ExploreArtActivity"
 
     @Inject
@@ -141,6 +145,14 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         bottomBar!!.onSaveInstanceState(outState)
+    }
+
+    override fun onUpdateMapAfterUserInteraction(state: TouchableWrapper.State) {
+        if (state === TouchableWrapper.State.DOWN) {
+            main_toolbar.animate().translationY((-main_toolbar.height).toFloat()).interpolator = AccelerateInterpolator(2f)
+        } else if (state === TouchableWrapper.State.UP) {
+            main_toolbar.animate().translationY(0f).interpolator = DecelerateInterpolator(2f)
+        }
     }
 
     override fun openArtObjectDetails(artObjectUi: ArtObjectUi) {

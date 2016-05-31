@@ -54,7 +54,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
         layout.bottom_sheet.peekSheetTranslation = resources.getDimensionPixelSize(R.dimen.detail_image_min_height).toFloat()
         layout.bottom_sheet.interceptContentTouch = false
 
-        val mapFragment: SupportMapFragment = SupportMapFragment.newInstance()
+        val mapFragment: TouchableSupportMapFragment = TouchableSupportMapFragment()
         childFragmentManager.beginTransaction().replace(layout.map.id, mapFragment, FRAGMENT_TAG).commit()
 
         mapFragment.getMapAsync { gMap ->
