@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.flipboard.bottomsheet.BottomSheetLayout
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.maps.android.clustering.ClusterManager
@@ -36,6 +37,8 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     var isLocationTracking = false
         private set
 
+    var layout: View? = null
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         try {
@@ -47,15 +50,15 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val layout = inflater!!.inflate(R.layout.fragment_art_map, container, false)
+        layout = inflater!!.inflate(R.layout.fragment_art_map, container, false)
 
-        layout.bottom_sheet.setShouldDimContentView(false)
-        layout.bottom_sheet.peekOnDismiss = false
-        layout.bottom_sheet.peekSheetTranslation = resources.getDimensionPixelSize(R.dimen.detail_image_min_height).toFloat()
-        layout.bottom_sheet.interceptContentTouch = false
+        layout!!.bottom_sheet.setShouldDimContentView(false)
+        layout!!.bottom_sheet.peekOnDismiss = false
+        layout!!.bottom_sheet.peekSheetTranslation = resources.getDimensionPixelSize(R.dimen.detail_image_min_height).toFloat()
+        layout!!.bottom_sheet.interceptContentTouch = false
 
         val mapFragment: SupportMapFragment = SupportMapFragment.newInstance()
-        childFragmentManager.beginTransaction().replace(layout.map.id, mapFragment, FRAGMENT_TAG).commit()
+        childFragmentManager.beginTransaction().replace(layout!!.map.id, mapFragment, FRAGMENT_TAG).commit()
 
         mapFragment.getMapAsync { gMap ->
             clusterManager = ClusterManager(context, gMap)
@@ -155,7 +158,7 @@ class ArtMapFragment : Fragment(), Filterable, ArtView {
     }
 
     fun hideArtObjectDigest() {
-        if (bottom_sheet.isSheetShowing) {
+        if ((layout?.findViewById(R.id.bottom_sheet) as? BottomSheetLayout)?.isSheetShowing == true) {
             bottom_sheet.dismissSheet()
         }
     }
