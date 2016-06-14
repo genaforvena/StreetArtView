@@ -76,11 +76,11 @@ class ArtObjectRenderer(context: Context, map: GoogleMap, clusterManager: Cluste
     }
 
     private fun makeClusterBackground(color: Int): LayerDrawable {
-        val mColoredCircleBackground = ShapeDrawable(OvalShape())
-        mColoredCircleBackground.paint.color = color
+        val coloredCircleBackground = ShapeDrawable(OvalShape())
+        coloredCircleBackground.paint.color = color
         val outline = ShapeDrawable(OvalShape())
         outline.paint.color = 0x80ffffff.toInt()
-        val background = LayerDrawable(arrayOf<Drawable>(outline, mColoredCircleBackground))
+        val background = LayerDrawable(arrayOf<Drawable>(outline, coloredCircleBackground))
         val strokeWidth = (density * 3.0f).toInt()
         background.setLayerInset(1, strokeWidth, strokeWidth, strokeWidth, strokeWidth)
         return background
@@ -98,6 +98,6 @@ class ArtObjectRenderer(context: Context, map: GoogleMap, clusterManager: Cluste
 
     companion object {
         private val CLUSTER_PADDING = 12
-        private val ITEM_PADDING = 7
+        private val ITEM_PADDING = 3
     }
 }
