@@ -31,8 +31,8 @@ android {
         applicationId "org.imozerov.streetartview"
         minSdkVersion 17
         targetSdkVersion 21
-        versionCode 9
-        versionName "1.4.3"
+        versionCode 10
+        versionName "1.4.4"
     }
 
     buildTypes {
