@@ -94,9 +94,9 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     private fun initContentFragments() {
-        artMapFragment = supportFragmentManager.findFragmentByTag(ART_MAP_FRAGMENT_TAG) as ArtMapFragment?
-        artListFragment = supportFragmentManager.findFragmentByTag(ART_LIST_FRAGMENT_TAG) as ArtListFragment?
-        favouritesListFragment = supportFragmentManager.findFragmentByTag(FAVOURITES_LIST_FRAGMENT_TAG) as FavouritesListFragment?
+        artMapFragment = supportFragmentManager.findFragmentByTag(ART_MAP_FRAGMENT_TAG) as? ArtMapFragment?
+        artListFragment = supportFragmentManager.findFragmentByTag(ART_LIST_FRAGMENT_TAG) as? ArtListFragment?
+        favouritesListFragment = supportFragmentManager.findFragmentByTag(FAVOURITES_LIST_FRAGMENT_TAG) as? FavouritesListFragment?
 
         if (artMapFragment == null) {
             artMapFragment = ArtMapFragment.newInstance()
@@ -162,18 +162,22 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
 
         bottomBar!!.setOnTabClickListener(object : OnTabClickListener {
             override fun onTabReSelected(position: Int) {
-
+                when (position) {
+                    MAP_NAVIGATION_POSITION -> artMapFragment?.hideArtObjectDigest()
+                    LIST_NAVIGATION_POSITION -> artListFragment?.scrollToTop()
+                    FAVOURITES_NAVIGATION_POSITION -> favouritesListFragment?.scrollToTop()
+                }
             }
 
             override fun onTabSelected(position: Int) {
                 val transaction = supportFragmentManager.beginTransaction()
                 when (position) {
-                    0 -> {
+                    MAP_NAVIGATION_POSITION -> {
                         transaction.show(artMapFragment).hide(artListFragment).hide(favouritesListFragment)
                         mainMenu?.findItem(R.id.action_sort)?.isVisible = false
                         mainMenu?.findItem(R.id.action_track_location)?.isVisible = true
                     }
-                    1 -> {
+                    LIST_NAVIGATION_POSITION -> {
                         transaction.hide(artMapFragment).show(artListFragment).hide(favouritesListFragment)
                         mainMenu?.findItem(R.id.action_sort)?.isVisible = true
                         mainMenu?.findItem(R.id.action_track_location)?.isVisible = false
@@ -181,7 +185,7 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
                         artMapFragment?.stopLocationTracking()
                         artMapFragment?.hideArtObjectDigest()
                     }
-                    2 -> {
+                    FAVOURITES_NAVIGATION_POSITION -> {
                         transaction.hide(artMapFragment).hide(artListFragment).show(favouritesListFragment)
                         mainMenu?.findItem(R.id.action_sort)?.isVisible = true
                         mainMenu?.findItem(R.id.action_track_location)?.isVisible = false
@@ -252,8 +256,12 @@ class ExploreArtActivity : AppCompatActivity(), ArtObjectDetailOpener {
     }
 
     companion object {
-        val ART_MAP_FRAGMENT_TAG = "artMapFragment"
-        val ART_LIST_FRAGMENT_TAG = "artListFragment"
-        val FAVOURITES_LIST_FRAGMENT_TAG = "favouritesListFragment"
+        private val ART_MAP_FRAGMENT_TAG = "artMapFragment"
+        private val ART_LIST_FRAGMENT_TAG = "artListFragment"
+        private val FAVOURITES_LIST_FRAGMENT_TAG = "favouritesListFragment"
+
+        private val MAP_NAVIGATION_POSITION = 0
+        private val LIST_NAVIGATION_POSITION = 1
+        private val FAVOURITES_NAVIGATION_POSITION = 2
     }
 }

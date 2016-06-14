@@ -55,6 +55,10 @@ abstract class AbstractListFragment : Fragment(), Filterable, ArtView {
         refWatcher.watch(this);
     }
 
+    fun scrollToTop() {
+        rootView?.art_objects_recycler_view?.smoothScrollToPosition(0)
+    }
+
     override fun showArtObjects(artObjectUis: List<ArtObjectUi>) {
         adapter.setData(artObjectUis)
     }
