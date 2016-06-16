@@ -1,8 +1,12 @@
 package org.imozerov.streetartview.robots
 
 import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.ViewActions
 import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
+import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
 import org.imozerov.streetartview.R
 
 /**
@@ -20,8 +24,11 @@ class ExploreRobot {
 
     fun openFavourites() {
         onView(withChild(withText(R.string.favourites_fragment_pager_label))).perform(click())
-        onView(withId(R.id.main_content)).check { view, noMatchingViewException ->
-            view
-        }
+    }
+
+    fun toggleSort() {
+        val sortButton = onView(
+                allOf(withId(R.id.action_sort), isDisplayed()))
+        sortButton.perform(click())
     }
 }

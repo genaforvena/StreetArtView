@@ -24,4 +24,14 @@ class NavigationTests {
             openMap()
         }
     }
+
+    @Test
+    fun isAbleToChangeSorting() {
+        with (ExploreRobot()) {
+            openArtList()
+            toggleSort()
+            toggleSort()
+            toggleSort()
+        }
+    }
 }
