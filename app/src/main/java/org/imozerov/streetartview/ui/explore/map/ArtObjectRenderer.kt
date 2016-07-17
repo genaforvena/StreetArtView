@@ -58,7 +58,7 @@ class ArtObjectRenderer(context: Context, map: GoogleMap, clusterManager: Cluste
 
     override fun shouldRenderAsCluster(cluster: Cluster<ArtObjectClusterItem>): Boolean {
         // Always render clusters.
-        return cluster.size > 1
+        return cluster.size > 4
     }
 
     override fun getColor(clusterSize: Int): Int {

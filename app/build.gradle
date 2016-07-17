@@ -21,7 +21,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
-apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
     compileSdkVersion 23
@@ -31,8 +30,8 @@ android {
         applicationId "org.imozerov.streetartview"
         minSdkVersion 17
         targetSdkVersion 21
-        versionCode 10
-        versionName "1.4.4"
+        versionCode 11
+        versionName "1.4.5"
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
 
